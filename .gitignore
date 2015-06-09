@@ -1,0 +1,43 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Private Keys #
+################
+cross/secret_keys.py
+
+
+# Running Vagrant Info #
+########################
+.vagrant/
+
+# Dev Tools #
+#############
+setup.sh
+reset.sh
+Vagrantfile
+
+# Compiled Code #
+#################
+*.pyc
+
+# testing tools #
+#################
+htmlcov/
+ghostdriver.log
+.coverage
+
+# media files #
+###############
+media/
+
+# workspace/project files #
+###########################
+cross.sublime-workspace
+cross.sublime-project
