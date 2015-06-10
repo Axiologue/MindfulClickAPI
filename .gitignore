@@ -22,6 +22,7 @@ cross/secret_keys.py
 setup.sh
 reset.sh
 Vagrantfile
+db_inits.py
 
 # Compiled Code #
 #################
@@ -41,3 +42,7 @@ media/
 ###########################
 cross.sublime-workspace
 cross.sublime-project
+
+# Raw Data Files #
+##################
+*.csv

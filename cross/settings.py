@@ -16,16 +16,26 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=(2)u13a1vun243iu91$x&lzn1njkn9=mkw1l=-@gin(yf6gm3'
+#Use Environment Variable DJANGO_LOCATION to determine location:
+#options are: local, staging, and production
+DJANGO_LOCATION = os.environ['DJANGO_LOCATION']
+ 
+from cross.secret_keys import DJANGO_KEY
+SECRET_KEY = DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: don't run with debug turned on in production!
+if DJANGO_LOCATION == 'local':
+    ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ['*']
+
+
+if DJANGO_LOCATION != 'production':
+    DEBUG = True
+else:
+    DEBUG = False
 
 
 # Application definition
@@ -37,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'refData',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -76,8 +87,11 @@ WSGI_APPLICATION = 'cross.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'axiologue_db',
+            'USER': 'postgres',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
     }
 }
 
@@ -87,7 +101,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -100,3 +114,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+
+#Set staticfiles for development
+if DJANGO_LOCATION == 'local':
+    STATIC_ROOT = '/vagrant/static/'
+    MEDIA_ROOT = '/vagrant/media/'
+else:
+    STATIC_ROOT = '/Flood/static/'
+    MEDIA_ROOT = '/Flood/media/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'extra_static'),
+)
