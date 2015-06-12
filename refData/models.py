@@ -18,6 +18,9 @@ class Article(models.Model):
 
     notes = models.TextField(blank=True,null=True)
 
+    def __str__(self):
+        return self.title
+
 # Model to hold product info
 class Product(models.Model):
     company = models.ForeignKey(Company,related_name='products')
