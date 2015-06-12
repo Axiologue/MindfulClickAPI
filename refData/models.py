@@ -5,7 +5,7 @@ from django.db import models
 class Company(models.Model):
     name = models.CharField(max_length=50,unique=True)
 
-    owns = models.ForeignKey('self',related_name='parent')
+    owns = models.ForeignKey('self',related_name='parent',blank=True,null=True)
 
     def __str__(self):
         return self.name
@@ -13,29 +13,18 @@ class Company(models.Model):
 # Article is the base link to outside information
 # an 'article' can actually be a report, journalism, or anything else relevant to our research
 class Article(models.Model):
-    tilte = models.CharField(max_length=200)
-    url = models.URLField()
+    title = models.CharField(max_length=200)
+    url = models.URLField(unique=True)
 
-    description = models.TextField()
+    notes = models.TextField(blank=True,null=True)
 
 # Model to hold product info
 class Product(models.Model):
-    Company = models.ForeignKey(Company,related_name='products')
+    company = models.ForeignKey(Company,related_name='products')
 
-    DIVISIONS = (
-        ('M','Men'),
-        ('W','Women'),
-        ('U','Unisex'),
-        ('K','Kids'),
-        ('P','Preschool'),
-        ('I','Infant/Toddler'),
-        ('B','Boys'),
-        ('G','Girls'),
-    )
-
-    name = models.CharField(max_length=50,unique=True)
-    division = models.CharField(max_length=1,choices=DIVISIONS,blank=True,null=True)
-    category = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
+    division = models.CharField(max_length=30,blank=True,null=True)
+    category = models.CharField(max_length=40,blank=True,null=True)
     price = models.DecimalField(decimal_places=2,max_digits=7)
 
     image_link = models.URLField()
@@ -43,9 +32,13 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ('name','division')
+
+
 # Model for our general categories
 class EthicsCategory(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30,unique=True)
 
     def __str__(self):
         return self.name
@@ -77,3 +70,5 @@ class CrossReference(models.Model):
     subcategory = models.ForeignKey(EthicsSubCategory, related_name='data')
 
     article = models.ManyToManyField(Article, related_name='data')
+
+    notes = models.TextField(blank=True,null=True)
