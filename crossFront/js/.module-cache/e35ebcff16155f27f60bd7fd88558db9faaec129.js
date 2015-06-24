@@ -1,0 +1,1 @@
+var ArticlrList = React.createClass 

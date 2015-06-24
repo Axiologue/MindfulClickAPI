@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Model to hold company Data
 # Can also reference other companies that it owns
 class Company(models.Model):
@@ -55,6 +56,10 @@ class EthicsSubCategory(models.Model):
     def __str__(self):
         return self.name
 
+# Custom Exception for CrossReference
+class ChooseOneException(Exception):
+    pass
+
 # Main link cross-referencing articles, Products, and Companies
 class CrossReference(models.Model):
     VALUES = ((-5,'-5'),
@@ -69,9 +74,19 @@ class CrossReference(models.Model):
               (5,'5'),)
 
     score = models.SmallIntegerField(choices=VALUES,blank=False,default=0)
+    notes = models.TextField(blank=True,null=True)
 
     subcategory = models.ForeignKey(EthicsSubCategory, related_name='data')
+    article = models.ForeignKey(Article, related_name='data')
+    product = models.ForeignKey(Product, related_name='data',blank=True,null=True)
+    company = models.ForeignKey(Company, related_name='data',blank=True,null=True)
 
-    article = models.ManyToManyField(Article, related_name='data')
+    def __str__(self):
+        return self.article.name + ":" + self.subcategory.name
 
-    notes = models.TextField(blank=True,null=True)
+    def save(self, *args, **kwargs):
+        if self.product == None and self.company == None:
+            raise ChooseOneException("You have to attach to either a Company or a Product")
+
+        return super(CrossReference, self).save(*args, **kwargs)
+
