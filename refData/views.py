@@ -14,3 +14,11 @@ class ArticleWithCrossView(generics.ListAPIView):
 
 class NewArticleView(generics.CreateAPIView):
     serializer_class = ArticleNoIDSerializer
+
+class UpdateArticleView(generics.UpdateAPIView):
+    serializer_class = ArticleSerializer
+    queryset= Article.objects.all()
+
+class DeleteArticleView(generics.DestroyAPIView):
+    serializer_class = ArticleSerializer
+    queryset= Article.objects.all()

@@ -82,7 +82,7 @@ class CrossReference(models.Model):
     company = models.ForeignKey(Company, related_name='data',blank=True,null=True)
 
     def __str__(self):
-        return self.article.name + ":" + self.subcategory.name
+        return self.article.title + ": " + self.subcategory.name
 
     def save(self, *args, **kwargs):
         if self.product == None and self.company == None:

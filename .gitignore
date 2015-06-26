@@ -46,3 +46,7 @@ cross.sublime-project
 # Raw Data Files #
 ##################
 *.csv
+
+# React cache #
+###############
+crossFront/js/.module-cache/

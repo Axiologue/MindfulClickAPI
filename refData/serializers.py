@@ -14,14 +14,16 @@ class ArticleNoIDSerializer(serializers.ModelSerializer):
 
 class CrossSerializer(serializers.ModelSerializer):
     subcategory = serializers.StringRelatedField()
+    company = serializers.StringRelatedField()
+    product = serializers.StringRelatedField()
 
     class Meta:
         model = CrossReference
-        fields = ('score','subcategory','notes')
+        fields = ('score','subcategory','notes','company','product')
 
 class CrossByArticle(serializers.ModelSerializer):
-    data = CrossSerializer(read_only=True)
+    data = CrossSerializer(read_only=True, many=True)
 
     class Meta:
         model = Article
-        fields = ('title','data')
+        fields = ('title','url','data')

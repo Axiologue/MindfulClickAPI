@@ -2,6 +2,7 @@ from import_export import resources, fields, widgets
 
 from refData.models import Article, Product, Company
 
+# Resource for importing CSV file of article
 class ArticleResource(resources.ModelResource):
 
     class Meta:
@@ -9,7 +10,7 @@ class ArticleResource(resources.ModelResource):
         fields = ('title','url','notes')
         import_id_fields = ('url',)
 
-
+# Resource for importing CSV file of company/brands
 class CompanyResource(resources.ModelResource):
     name = fields.Field(column_name='Brand',attribute='name')
 
@@ -18,7 +19,7 @@ class CompanyResource(resources.ModelResource):
         exclude = ('Scraping Status',)
         import_id_fields = ('name',)
 
-
+# Resource for importing Product info
 class ProductResource(resources.ModelResource):
     company = fields.Field(column_name='Brand',
                            attribute='company',

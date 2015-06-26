@@ -22,10 +22,20 @@
 }
 
 .btn-edit {
+    background: #5cb85c;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    background: #449d44;
+}
+
+.btn-delete {
     background: #d9534f;
 }
 
-.btn-edit:focus,
-.btn-edit:hover {
+.btn-delete:focus,
+.btn-delete:hover {
     background: #c9302c;
 }
+
