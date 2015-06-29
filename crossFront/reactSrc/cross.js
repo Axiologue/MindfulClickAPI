@@ -51,21 +51,22 @@ var ArticleList = React.createClass ({
   },
   deleteItem: function (id) {
     $.ajax({
-      url: this.props.url,
+      url: "http://localhost:8000/cross/articles/delete/" + id + "/",
       dataType: 'json',
+      type: 'DELETE',
       cache: false,
       success: function(data) {
         // 
         var index;
-        state.data.some(function(entry, i) {
+        this.state.data.some(function(entry, i) {
             if (entry.id == id) {
                 index = i;
                 return true;
             }
         });
-        state.data.splice(index,1);
+        this.state.data.splice(index,1);
 
-        setState({data: state.data});
+        this.setState({data: this.state.data});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -108,8 +109,6 @@ var ArticleWrapper = React.createClass ({
             </button>
           )
       },this);
-    
-    console.log(this.props.deleteItem);
     
     if (!this.state.cross && !this.state.edit) {
       var normalView = (
@@ -379,6 +378,16 @@ var FormHiddenElement = React.createClass ({
 })
 
 var WarningModal = React.createClass ({
+  handleClick: function() {
+    
+    this.props.action(this.props.id);
+
+    // Once the item has been deleted, close the modal
+    $('myModal' + this.props.id).modal('toggle');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+    
+  },
   render: function() {
     return (
       <div id={"myModal" + this.props.id} className="modal fade" tabindex="-1" role="dialog" aria-labelledby={"myModalLabel" + this.props.id} >
@@ -393,7 +402,7 @@ var WarningModal = React.createClass ({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary" onClick={this.props.action(this.props.id)}>{this.props.buttonText}</button>
+              <button type="button" className="btn btn-primary" onClick={this.handleClick} >{this.props.buttonText}</button>
             </div>
           </div>
         </div>
