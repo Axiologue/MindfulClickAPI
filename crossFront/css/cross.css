@@ -12,12 +12,25 @@
     list-style-type: none;
 }
 
-.btn-cross {
+.crossItem {
+    border: 1px #ccc solid;
+    border-radius: 15px;
+}
+
+.crossItem.positive {
+    background: #dff0d8;
+}
+
+.crossItem.negative {
+    background: #f2dede;
+}
+
+.btn-add_analysis {
     background: #337ab7;
 }
 
-.btn-cross:focus,
-.btn-cross:hover {
+.btn-add_analysis:focus,
+.btn-add_analysis:hover {
     background: #286090
 }
 

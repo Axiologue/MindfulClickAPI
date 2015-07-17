@@ -37,6 +37,7 @@ if DJANGO_LOCATION != 'production':
 else:
     DEBUG = False
 
+TEMPLATE_DEBUG = DEBUG
 
 # Application definition
 
@@ -50,9 +51,15 @@ INSTALLED_APPS = (
     'refData',
     'rest_framework',
     'corsheaders',
+    'drf_multiple_model',
+    'debug_toolbar',
 )
 
+
+
+
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,6 +72,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'cross.urls'
+
 
 TEMPLATES = [
     {
@@ -126,8 +134,8 @@ if DJANGO_LOCATION == 'local':
     STATIC_ROOT = '/vagrant/static/'
     MEDIA_ROOT = '/vagrant/media/'
 else:
-    STATIC_ROOT = '/Flood/static/'
-    MEDIA_ROOT = '/Flood/media/'
+    STATIC_ROOT = '/Cross/static/'
+    MEDIA_ROOT = '/Cross/media/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'extra_static'),
@@ -135,3 +143,13 @@ STATICFILES_DIRS = (
 
 # django-cors-headers configuration
 CORS_ORIGIN_ALLOW_ALL = True
+
+# django-debug-toolbar settings
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+    'SHOW_TEMPLATE_CONTEXT': True,
+}
+
+if DEBUG:
+    INTERNAL_IPS = ('127.0.0.1','::ffff:10.0.2.2')
