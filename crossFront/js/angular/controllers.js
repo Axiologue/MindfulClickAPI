@@ -37,6 +37,23 @@ crossControllers.controller('SingleArticleCtrl',['$scope', 'Article',function ($
     $scope.edit = !$scope.edit;
   }
 
+  $scope.articleDelete = function () {
+    Article.delete({articleID: $scope.article.id},function () {
+      var index = 0;
+      $scope.articles.some(function(article, i) {
+        if (article.id === $scope.article.id) {
+          index = i;
+          return true;
+        }
+      });
+      $scope.articles.splice(index,1);
+
+      $('myModal' + $scope.article.id).modal('toggle');
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
+    });
+  }
+
 }]);
 
 crossControllers.controller('NewArticleCtrl',['$scope','Article',function ($scope, Article) {
