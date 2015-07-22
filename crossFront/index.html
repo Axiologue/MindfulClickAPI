@@ -1,46 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="cross">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Axiologe -- Data Cross Reference</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Axiologe -- Data Cross Reference</title>
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom Style Sheets -->
-    <link href="css/cross.css" rel="stylesheet">
+  <!-- Custom Style Sheets -->
+  <link href="css/cross.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
   </head>
-  <body>
+  <body ng-controller="BodyCtrl">
 
-    <div class="container" id="cross">
-
+  <div class="container" id="cross">
+    <div class="crossList row">
+      <h1>Analyzed Articles</h1>
     </div>
+  </div>
 
-    <div class="container" id="articles">
+  <div class="container" id="articles" ng-controller="ArticleListCtrl">
+    <div class="articleList row">
+      <h1>Add New article</h1>
+      <!-- new Article  form -->
+      <div class="col-xs-12 listitem" ng-controller="NewArticleCtrl">
+        <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
+        <h3 class='text-success' ng-show="success.succes">{{success.msg}}</h3>
+        <form ng-submit="articleSubmit()">
 
+          <div class='form-group'>
+            <label for="{{'title' + article.id}}">TITLE:</label>
+            <input type='text' id="{{'title' + article.id}}" ng-model="article.title" name='title' class="form-control"  >
+          </div>
+
+          <div class='form-group'>
+            <label for="{{'url' + article.id}}">URL:</label>
+            <input type='text' id="{{'url' + article.id}}" ng-model="article.url" name='url' class="form-control"  >
+          </div>
+
+          <div class="form-group">
+            <label for="{{'notes' + article.id}}">NOTES:</label>
+            <textarea rows=3 ng-model="article.notes" name='notes' id="{{'notes' + article.id}}" class="form-control"></textarea>
+          </div>
+
+          <input type='submit' class='btn btn-primary btn-block' value='Submit'>
+          
+        </form>
+      </div>
+
+      <h1>Unanalyzed Articles</h1>
+      <!-- Unreferenced Articles -->
+      <div class="article listitem col-xs-12" ng-repeat="article in articles" ng-controller="SingleArticleCtrl">
+        <div ng-hide="edit">
+          <div class="col-xs-12 col-sm-10" >
+            <!-- Actual Article Content -->
+            <ul>
+              <li><h3>{{article.title}}</h3></li>
+              <li><a href="{{article.url}}">{{article.url}}</a></li>
+              <li>{{article.notes}}</li>
+            </ul>
+          </div>
+          <!-- Article control buttons -->
+          <div class="col-sm-2 col-xs-12 text-center">
+            <button class="btn btn-block btn-add_analysis" ng-click="analysis=!analysis">Add Analysis</button>
+            <button class="btn btn-block btn-edit" ng-click="readyForm(article)">Edit</button>
+            <button class="btn btn-block btn-delete">Delete</button>
+          </div>
+        </div>
+
+        <!-- Article update form -->
+        <div class="col-xs-12 listitem" ng-show="edit">
+          <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
+          <form ng-submit="articleSubmit()">
+
+            <div class='form-group'>
+              <label for="{{'title' + article.id}}">TITLE:</label>
+              <input type='text' id="{{'title' + article.id}}" ng-model="tempArticle.title" name='title' class="form-control"  >
+            </div>
+
+            <div class='form-group'>
+              <label for="{{'url' + article.id}}">URL:</label>
+              <input type='text' id="{{'url' + article.id}}" ng-model="tempArticle.url" name='url' class="form-control"  >
+            </div>
+
+            <div class="form-group">
+              <label for="{{'notes' + article.id}}">NOTES:</label>
+              <textarea rows=3 ng-model="tempArticle.notes" name='notes' id="{{'notes' + article.id}}" class="form-control"></textarea>
+            </div>
+
+            <input type='submit' class='btn btn-primary btn-block' value='Submit'>
+            
+          </form>
+          <button class='btn btn-delete btn-block' ng-click="edit=!edit">Cancel</button>
+        </div>
+      </div>
+
+      </div>
     </div>
+  </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
 
-    <!-- JQuery Cookie plugin -->
-    <script src="js/jquery.cookie.js"></script>
+  <!-- JQuery Cookie plugin -->
+  <script src="js/jquery.cookie.js"></script>
 
-    <!-- React Components -->
-    <script src="js/react.js"></script>
-
-    <script src="js/cross.js"></script>
+  <!-- Angular and components -->
+  <script src="js/bower_components/angular/angular.js"></script>
+  <script src="js/bower_components/angular-resource/angular-resource.js"></script>
+  <script src="js/angular/app.js"></script>
+  <script src="js/angular/controllers.js"></script>
+  <script src="js/angular/services.js"></script>
   </body>
 </html>

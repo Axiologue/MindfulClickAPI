@@ -21,7 +21,8 @@ var ArticleList = React.createClass ({displayName: "ArticleList",
           key: article.id, 
           deleteItem: this.deleteItem, 
           companies: this.state.data[2]['company'], 
-          categories: this.state.data[1]['ethicscategory']})
+          categories: this.state.data[1]['ethicscategory'], 
+          addCross: this.addCross})
       );
     },this);
 
@@ -76,6 +77,9 @@ var ArticleList = React.createClass ({displayName: "ArticleList",
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
+  }, 
+  addCross: function(data) {
+    return ;
   }
 });
 
@@ -96,12 +100,17 @@ var ArticleWrapper = React.createClass ({displayName: "ArticleWrapper",
       notes: this.props.notes,
     };
   },
-  onFormSuccess: function(data) {
+  onArticleFormSuccess: function(data) {
     this.setState({edit: false,
                    title: data['title'],
                    url: data['url'],
                    notes: data['notes']
                  });
+  },
+  onCrossFormSuccess: function(data) {
+    this.setState({add_analysis: false});
+    this.props.addCross(data);
+
   },
   render: function() {
     var buttons = ['add_analysis','edit'].map(function (key) {
@@ -119,7 +128,8 @@ var ArticleWrapper = React.createClass ({displayName: "ArticleWrapper",
              article_id: this.props.id, 
              companies: this.props.companies, 
              categories: this.props.categories, 
-             id: 0})
+             id: 0, 
+             formSuccess: this.onCrossFormSuccess})
         )
     } 
     
@@ -166,7 +176,7 @@ var ArticleWrapper = React.createClass ({displayName: "ArticleWrapper",
         submitLink: 'http://localhost:8000/cross/articles/update/' + this.props.id + '/', 
         id: this.props.id, 
         header: "PUT", 
-        formSuccess: this.onFormSuccess})
+        formSuccess: this.onArticleFormSuccess})
 
     }
 
@@ -270,21 +280,25 @@ var ArticleForm = React.createClass ({displayName: "ArticleForm",
 var CrossList = React.createClass ({displayName: "CrossList",
   getInitialState: function() {
     return {
-      data: [],
+      data: [ {article: []},
+              {ethicscategory: []},
+              {company: []} ],
     };
   },
   render: function() {
-    
-    var crossNodes = this.state.data.map(function (cross) {
+
+    var crossNodes = this.state.data[0].article.map(function (cross) {
       return (
         React.createElement(CrossWrapper, {url: cross.url, 
           title: cross.title, 
           data: cross.data, 
           id: cross.id, 
           notes: cross.notes, 
-          deleteItem: this.deleteItem})
+          deleteItem: this.deleteItem, 
+          companies: this.state.data[2].company, 
+          categories: this.state.data[1].ethicscategory})
       );
-    });
+    },this);
 
     return ( 
       React.createElement("div", {className: "crossList row"}, 
@@ -332,8 +346,13 @@ var CrossList = React.createClass ({displayName: "CrossList",
 });
 
 var CrossWrapper = React.createClass ({displayName: "CrossWrapper",
+  getInitialState: function() {
+    return {
+      data: this.props.data
+    }
+  },
   render: function() {
-    var crossData = this.props.data.map(function (cross) {
+    var crossData = this.state.data.map(function (cross) {
 
       return (
         React.createElement(CrossItem, {
@@ -354,13 +373,30 @@ var CrossWrapper = React.createClass ({displayName: "CrossWrapper",
           title: this.props.title, 
           notes: this.props.notes, 
           id: this.props.id, 
-          deleteItem: this.deleteItem}), 
+          deleteItem: this.deleteItem, 
+          companies: this.props.companies, 
+          categories: this.props.categories, 
+          addCross: this.addCross}), 
         React.createElement("div", {className: "col-xs-12 col-sm-11"}, 
           React.createElement("ul", null, 
             crossData
           )
         )
       )
+    );
+  },
+  addCross: function(data) {
+    data.company = $.grep(this.props.companies,function(v) {return v.id === data.company})[0];
+    var subFlattened = []
+    for (var i=0; i<this.props.categories.length;i++) {
+      for (var j=0;j<this.props.categories[i].length;j++) {
+        subFlatten.append(this.props.categories[i][j]);
+      }
+    }
+    data.subcategory = $.grep(subFlattened,function(v) {return v.id === data.subcategory})[0];
+    var temp = [data];
+    this.setState(
+      {data: this.state.data.concat(temp)}
     );
   }
 });
@@ -397,8 +433,6 @@ var CrossForm = React.createClass ({displayName: "CrossForm",
       delete data['id'];
     }
 
-    console.log(data);
-
     // Submit the new version to server
     $.ajax({
       url: 'http://localhost:8000/cross/cross/new/',
@@ -415,8 +449,6 @@ var CrossForm = React.createClass ({displayName: "CrossForm",
 
         // Reset Form to blank if new article
         if(!data['id']) {       
-          React.findDOMNode(this.refs['title']).value = '';
-          React.findDOMNode(this.refs['url']).value = '';
           React.findDOMNode(this.refs['notes']).value = '';
         }
 
@@ -482,7 +514,7 @@ var CrossForm = React.createClass ({displayName: "CrossForm",
                       ref: "score"}), 
 
             React.createElement(FormTextAreaElement, {element: "notes", 
-                      id: this.props.id, v: true, 
+                      id: this.props.id, 
                       value: this.props.notes, ref: "notes"}), 
 
             React.createElement("input", {type: "submit", className: "btn btn-primary", value: "Submit"})
