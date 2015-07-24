@@ -46,14 +46,8 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = ('name','id')
 
 class EthicsSubSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
+
     class Meta:
         model = EthicsSubCategory
-        fields = ('name','id')
-
-
-class EthicsSerializer(serializers.ModelSerializer):
-    subcategories = EthicsSubSerializer(read_only=True,many=True)
-
-    class Meta:
-        model = EthicsCategory
-        fields = ('name','subcategories')
+        fields = ('name','id','category')

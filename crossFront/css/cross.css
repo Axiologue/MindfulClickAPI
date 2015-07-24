@@ -15,6 +15,7 @@
 .crossItem {
     border: 1px #ccc solid;
     border-radius: 15px;
+    margin-bottom: 15px;
 }
 
 .crossItem.positive {

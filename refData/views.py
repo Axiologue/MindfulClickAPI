@@ -1,6 +1,6 @@
-from refData.models import Article, Product, EthicsCategory, Company, CrossReference
+from refData.models import Article, Product, EthicsSubCategory, Company, CrossReference
 from refData.serializers import ArticleSerializer, CrossByArticle, ArticleNoIDSerializer, ProductSerializer, \
-        EthicsSerializer, CompanySerializer, CrossSerializer, CrossCreateSerializer
+        EthicsSubSerializer, CompanySerializer, CrossSerializer, CrossCreateSerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
 
@@ -12,14 +12,12 @@ class ArticleNoCrossView(generics.ListAPIView):
     serializer_class = ArticleSerializer
 
 
-class ArticleWithCrossView(MultipleModelAPIView):
-    queryList = [
-        (Article.objects.prefetch_related('data__company','data__subcategory').annotate(c=Count('data')).filter(c__gte=1), 
-            CrossByArticle),
-        (EthicsCategory.objects.prefetch_related('subcategories').all(),EthicsSerializer),
-        (Company.objects.all(),CompanySerializer)
-    ]
-
+class ArticleWithCrossView(generics.ListAPIView):
+    queryset= Article.objects.prefetch_related(
+        'data__company',
+        'data__subcategory'
+        ).annotate(c=Count('data')).filter(c__gte=1)
+    serializer_class = CrossByArticle;
 
 class UpdateArticleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArticleSerializer
@@ -32,3 +30,9 @@ class NewArticleView(generics.CreateAPIView):
 class NewCrossView(generics.CreateAPIView):
     queryset = CrossReference.objects.all()
     serializer_class = CrossCreateSerializer
+
+class FormMetaView(MultipleModelAPIView):
+    queryList = [
+        (Company.objects.all(),CompanySerializer),
+        (EthicsSubCategory.objects.all(),EthicsSubSerializer)
+    ]
