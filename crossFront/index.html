@@ -27,80 +27,8 @@
       <h1>Analyzed Articles</h1>
       <div class-"cross listitem col-xs-12" ng-repeat="article in crossList">
         <div class="article listitem col-xs-12" ng-controller="SingleArticleCtrl">
-          <div ng-hide="edit">
-            <div class="col-xs-12 col-sm-10" >
-              <!-- Actual Article Content -->
-              <ul>
-                <li><h3>{{article.title}}</h3></li>
-                <li><a href="{{article.url}}">{{article.url}}</a></li>
-                <li>{{article.notes}}</li>
-              </ul>
-            </div>
-            <!-- Article control buttons -->
-            <div class="col-sm-2 col-xs-12 text-center">
-              <button class="btn btn-block btn-add_analysis" ng-click="analysis=!analysis">Add Analysis</button>
-              <button class="btn btn-block btn-edit" ng-click="readyForm()">Edit</button>
-              <button class="btn btn-block btn-delete" data-toggle="modal" data-target="{{'#myModal' + article.id}}">Delete</button>
-            </div>
-          </div>
-
-          <!-- Article update form -->
-          <div class="col-xs-12 listitem" ng-show="edit">
-            <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
-            <form ng-submit="articleSubmit()">
-
-              <div class='form-group'>
-                <label for="{{'title' + article.id}}">TITLE:</label>
-                <input type='text' id="{{'title' + article.id}}" ng-model="tempArticle.title" name='title' class="form-control"  >
-              </div>
-
-              <div class='form-group'>
-                <label for="{{'url' + article.id}}">URL:</label>
-                <input type='text' id="{{'url' + article.id}}" ng-model="tempArticle.url" name='url' class="form-control"  >
-              </div>
-
-              <div class="form-group">
-                <label for="{{'notes' + article.id}}">NOTES:</label>
-                <textarea rows=3 ng-model="tempArticle.notes" name='notes' id="{{'notes' + article.id}}" class="form-control"></textarea>
-              </div>
-
-              <input type='submit' class='btn btn-primary btn-block' value='Submit'>
-              
-            </form>
-            <button class='btn btn-delete btn-block' ng-click="edit=!edit">Cancel</button>
-          </div>
-
-          <!-- Add Tag Form -->
-          <div class="col-xs-12 listitem" ng-show="analysis">
-            <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
-            <form ng-submit="newCrossSubmit()">
-              <div class="form-group">
-                <label for="{{'companies' + article.id}}">COMPANY:</label>
-                <select ng-model="newCross.company" class="form-control" ng-options="company.id as company.name for company in companies">
-                  <option value="">---- Select Company ----</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="{{'companies' + article.id}}">CATEGORY:</label>
-                <select ng-model="newCross.subcategory" class="form-control" ng-options="category.id as category.name group by category.category for category in categories">
-                  <option value="">---- Select Ethics Category ----</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="{{'companies' + article.id}}">Score:</label>
-                <select ng-model="newCross.score" class="form-control" ng-options="score for score in [-5,-4,-3,-2,-1,1,2,3,4,5]">
-                  <option value="">---- Select Score ----</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="{{'crossNotes' + article.id}}">NOTES:</label>
-                <textarea rows=3 ng-model="newCross.notes" name='notes' id="{{'crossNotes' + article.id}}" class="form-control"></textarea>
-              </div>
-              <input type='submit' class='btn btn-primary btn-block' value='Submit'>
-            </form>
+          <!-- containter to hold Article Info/Form -->
+          <div class="col-xs-12" ng-include="articleTemplate">
           </div>
 
           <!-- List of Cross References -->
@@ -118,26 +46,6 @@
             </div>
           </div>
 
-
-
-          <div id="{{'myModal' + article.id}}" class="modal fade" tabIndex="-1" role="dialog" aria-labelledby={"{{'myModalLabel' + article.id}}" >
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="{{'myModalLabel' + article.id}}" >Delete Article?</h4>
-                </div>
-                <div class="modal-body">
-                  <p>Are you sure you want to delete the article <em>{{article.title}}</em></p>
-                  <p>This will not only remove the article, but any associated analysis that has done on it.  This cannot be undone.</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" ng-click="articleDelete()" >Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -148,126 +56,14 @@
       <h1>Add New article</h1>
       <!-- new Article  form -->
       <div class="col-xs-12 listitem" ng-controller="NewArticleCtrl">
-        <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
-        <h3 class='text-success' ng-show="success.success">{{success.msg}}</h3>
-        <form ng-submit="articleSubmit()">
-
-          <div class='form-group'>
-            <label for="{{'title' + article.id}}">TITLE:</label>
-            <input type='text' id="{{'title' + article.id}}" ng-model="article.title" name='title' class="form-control"  >
-          </div>
-
-          <div class='form-group'>
-            <label for="{{'url' + article.id}}">URL:</label>
-            <input type='text' id="{{'url' + article.id}}" ng-model="article.url" name='url' class="form-control"  >
-          </div>
-
-          <div class="form-group">
-            <label for="{{'notes' + article.id}}">NOTES:</label>
-            <textarea rows=3 ng-model="article.notes" name='notes' id="{{'notes' + article.id}}" class="form-control"></textarea>
-          </div>
-
-          <input type='submit' class='btn btn-primary btn-block' value='Submit'>
-          
-        </form>
+        <div ng-include="articleForm"></div>
       </div>
 
       <h1>Unanalyzed Articles</h1>
       <!-- Unreferenced Articles -->
       <div class="article listitem col-xs-12" ng-repeat="article in articles" ng-controller="SingleArticleCtrl">
-        <div ng-hide="edit">
-          <div class="col-xs-12 col-sm-10" >
-            <!-- Actual Article Content -->
-            <ul>
-              <li><h3>{{article.title}}</h3></li>
-              <li><a href="{{article.url}}">{{article.url}}</a></li>
-              <li>{{article.notes}}</li>
-            </ul>
-          </div>
-          <!-- Article control buttons -->
-          <div class="col-sm-2 col-xs-12 text-center">
-            <button class="btn btn-block btn-add_analysis" ng-click="analysis=!analysis">Add Analysis</button>
-            <button class="btn btn-block btn-edit" ng-click="readyForm()">Edit</button>
-            <button class="btn btn-block btn-delete" data-toggle="modal" data-target="{{'#myModal' + article.id}}">Delete</button>
-          </div>
-        </div>
-
-        <!-- Article update form -->
-        <div class="col-xs-12 listitem" ng-show="edit">
-          <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
-          <form ng-submit="articleSubmit()">
-
-            <div class='form-group'>
-              <label for="{{'title' + article.id}}">TITLE:</label>
-              <input type='text' id="{{'title' + article.id}}" ng-model="tempArticle.title" name='title' class="form-control"  >
-            </div>
-
-            <div class='form-group'>
-              <label for="{{'url' + article.id}}">URL:</label>
-              <input type='text' id="{{'url' + article.id}}" ng-model="tempArticle.url" name='url' class="form-control"  >
-            </div>
-
-            <div class="form-group">
-              <label for="{{'notes' + article.id}}">NOTES:</label>
-              <textarea rows=3 ng-model="tempArticle.notes" name='notes' id="{{'notes' + article.id}}" class="form-control"></textarea>
-            </div>
-
-            <input type='submit' class='btn btn-primary btn-block' value='Submit'>
-            
-          </form>
-          <button class='btn btn-delete btn-block' ng-click="edit=!edit">Cancel</button>
-        </div>
-
-        <!-- Add Tag Form -->
-        <div class="col-xs-12 listitem" ng-show="analysis">
-          <h3 class='text-danger' ng-show="error.error">{{error.msg}}</h3>
-          <form ng-submit="newCrossSubmit()">
-            <div class="form-group">
-              <label for="{{'companies' + article.id}}">COMPANY:</label>
-              <select ng-model="newCross.company" class="form-control" ng-options="company.id as company.name for company in companies">
-                <option value="">---- Select Company ----</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="{{'companies' + article.id}}">CATEGORY:</label>
-              <select ng-model="newCross.subcategory" class="form-control" ng-options="category.id as category.name group by category.category for category in categories">
-                <option value="">---- Select Ethics Category ----</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="{{'companies' + article.id}}">Score:</label>
-              <select ng-model="newCross.score" class="form-control" ng-options="score for score in [-5,-4,-3,-2,-1,1,2,3,4,5]">
-                <option value="">---- Select Score ----</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="{{'crossNotes' + article.id}}">NOTES:</label>
-              <textarea rows=3 ng-model="newCross.notes" name='notes' id="{{'crossNotes' + article.id}}" class="form-control"></textarea>
-            </div>
-            <input type='submit' class='btn btn-primary btn-block' value='Submit'>
-          </form>
-        </div>
-
-        <div id="{{'myModal' + article.id}}" class="modal fade" tabIndex="-1" role="dialog" aria-labelledby={"{{'myModalLabel' + article.id}}" >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="{{'myModalLabel' + article.id}}" >Delete Article?</h4>
-              </div>
-              <div class="modal-body">
-                <p>Are you sure you want to delete the article <em>{{article.title}}</em></p>
-                <p>This will not only remove the article, but any associated analysis that has done on it.  This cannot be undone.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="articleDelete()" >Delete</button>
-              </div>
-            </div>
-          </div>
+        <!-- containter to hold Article Info/Form -->
+        <div class="col-xs-12" ng-include="articleTemplate">
         </div>
 
       </div>

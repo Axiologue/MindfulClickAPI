@@ -26,6 +26,10 @@
     background: #f2dede;
 }
 
+.crossItem .dl-horizontal {
+    margin-bottom: 0;
+}
+
 .btn-add_analysis {
     background: #337ab7;
 }
