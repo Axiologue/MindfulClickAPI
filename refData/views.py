@@ -1,6 +1,6 @@
 from refData.models import Article, Product, EthicsSubCategory, Company, CrossReference
 from refData.serializers import ArticleSerializer, CrossByArticle, ArticleNoIDSerializer, ProductSerializer, \
-        EthicsSubSerializer, CompanySerializer, CrossSerializer, CrossCreateSerializer
+        EthicsSubSerializer, CompanySerializer, CrossSerializer, CrossCreateSerializer, CrossUpdateSerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
 
@@ -36,3 +36,7 @@ class FormMetaView(MultipleModelAPIView):
         (Company.objects.all(),CompanySerializer),
         (EthicsSubCategory.objects.all(),EthicsSubSerializer)
     ]
+
+class UpdateCrossView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CrossUpdateSerializer
+    queryset= CrossReference.objects.all()

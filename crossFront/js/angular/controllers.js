@@ -11,21 +11,24 @@ crossControllers.controller('BodyCtrl',['$scope','$http','Article','Cross',funct
     $scope.companies = data[0].company;
     $scope.categories = data[1].ethicssubcategory;
   });
+
+  $scope.deleteModal = 'templates/includes/delete_modal.html';
+
+  $scope.removeFromList = function (item, list) {
+    var index = 0;
+      list.some(function(elem, i) {
+        if (elem.id === item.id) {
+          index = i;
+          return true;
+        }
+      });
+      list.splice(index,1);
+  }
 }]);
 
 
 
 crossControllers.controller('SingleArticleCtrl',['$scope', 'Article','Cross',function ($scope, Article, Cross) {
-  function removeArticle (elements) {
-    var index = 0;
-      elements.some(function(article, i) {
-        if (article.id === $scope.article.id) {
-          index = i;
-          return true;
-        }
-      });
-      elements.splice(index,1);
-  }
 
   $scope.crossForm = 'templates/includes/cross_form.html';
   $scope.articleTemplate = 'templates/includes/article_base.html';
@@ -55,28 +58,7 @@ crossControllers.controller('SingleArticleCtrl',['$scope', 'Article','Cross',fun
 
   $scope.flipBack = function () {
     $scope.articleTemplate='templates/includes/article_base.html';
-  }
-
-  $scope.articleDelete = function () {
-    $scope.article.csrfmiddlewaretoken = $scope.csrftoken;
-
-    Article.delete({articleID: $scope.article.id},function () {
-      if ($scope.articles.some(function (element, index, array) { return element.id === $scope.article.id; })) {
-        removeArticle($scope.articles);
-      } else {
-        removeArticle($scope.crossList);
-      }
-      
-
-      $('myModal' + $scope.article.id).modal('toggle');
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
-    });
-  }
-
-  
-
-  
+  }  
 
 }]);
 
@@ -117,8 +99,69 @@ crossControllers.controller('NewArticleCtrl',['$scope','Article',function ($scop
 
 }]);
 
-crossControllers.controller('SingleCrossCtrl',['$scope',function ($scope) {
+crossControllers.controller('ArticleDeleteCtrl',['$scope','Article',function ($scope,Article) {
+  $scope.modalContent = {
+    id: 'modal-article-' + $scope.article.id,
+    label: 'modalLabel-article-' + $scope.article.id,
+    kind: 'Article',
+    title: $scope.article.title,
+    msg: 'This will not only remove the article, but any associated analysis that has been done on it.  This cannot be undone'
+  }
+
+  $scope.itemDelete = function () {
+    $scope.article.csrfmiddlewaretoken = $scope.csrftoken;
+
+    Article.delete({articleID: $scope.article.id},function () {
+      if ($scope.articles.some(function (element, index, array) { return element.id === $scope.article.id; })) {
+        $scope.removeFromList($scope.article,$scope.articles);
+      } else {
+        $scope.removeFromList($scope.article,$scope.crossList);
+      }
+      
+
+      $('myModal' + $scope.article.id).modal('toggle');
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
+    });
+  }
+}]);
+
+crossControllers.controller('SingleCrossCtrl',['$scope','Cross',function ($scope,Cross) {
   $scope.buttons = false;
+  $scope.crossUrl = 'templates/includes/cross_base.html';
+
+  $scope.crossEdit = function () {
+    
+    $scope.crossUrl = 'templates/includes/cross_form.html';
+    $scope.newCross = $.extend({},$scope.cross);
+    $scope.newCross.company = $.grep($scope.companies,function(v) {return v.name === $scope.newCross.company})[0].id;
+    $scope.newCross.subcategory = $.grep($scope.categories,function(v) {return v.name === $scope.newCross.subcategory})[0].id;
+  };
+
+  $scope.crossCancel = function () {
+    
+    $scope.crossUrl = 'templates/includes/cross_base.html';
+
+  };
+
+  $scope.crossSubmit = function () {
+    $scope.newCross.article = $scope.article.id;
+
+    Cross.update({crossID:$scope.cross.id},$scope.newCross,function (value, response) {
+      // Replace element IDs with actual names
+      value.company = $.grep($scope.companies,function(v) {return v.id === value.company})[0].name;
+      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory})[0].name;
+
+      $scope.cross = $.extend({},value);
+      $scope.error.error = false;
+
+      $scope.crossUrl = 'templates/includes/cross_base.html';
+
+    }, function (response) {
+      $scope.error.msg = JSON.stringify(response.data);
+      $scope.error.error = true;
+    });
+  };
 }]);
 
 crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cross) {
@@ -130,18 +173,7 @@ crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cr
     article: $scope.article.id
   }
 
-  function removeArticle (elements) {
-    var index = 0;
-    elements.some(function(article, i) {
-      if (article.id === $scope.article.id) {
-        index = i;
-        return true;
-      }
-    });
-    elements.splice(index,1);
-  }
-
-  $scope.CrossSubmit = function () {
+  $scope.crossSubmit = function () {
     $scope.newCross.csrfmiddlewaretoken = $scope.csrftoken;
 
 
@@ -159,11 +191,37 @@ crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cr
       //if the article is in the Unanalyzed list, move it to the analyzed list
       if($scope.article.data.length === 1) {
         $scope.crossList.push($scope.article);
-        removeArticle($scope.articles);
+        $scope.removeFromList($scope.article,$scope.articles);
       }
     },function (response) {
       $scope.error.msg = JSON.stringify(response.data);
       $scope.error.error = true;
     });   
   }
+
+}]);
+
+crossControllers.controller('CrossDeleteCtrl',['$scope','Cross',function ($scope,Cross) {
+  $scope.modalContent = {
+    id: 'modal-cross-' + $scope.article.id + '-' + $scope.cross.id,
+    label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.cross.id,
+    kind: 'Analysis',
+    title: $scope.cross.subcategory + ': ' + $scope.cross.score,
+    msg: 'This cannot be undone'
+  }
+
+  $scope.itemDelete = function () {
+
+    Cross.delete({crossID:$scope.cross.id}, function (value,response) {
+      $scope.removeFromList($scope.cross,$scope.article.data);
+      if ($scope.article.data.length == 0) {
+        $scope.removeFromList($scope.article,$scope.crossList);
+        $scope.articles.push($scope.article);
+      }
+
+      $('myModal' + $scope.article.id).modal('toggle');
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
+    });
+  };
 }]);

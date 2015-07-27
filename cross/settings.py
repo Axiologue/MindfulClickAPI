@@ -52,9 +52,10 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     'drf_multiple_model',
-    'debug_toolbar',
 )
 
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar',)
 
 
 

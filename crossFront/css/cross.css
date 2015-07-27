@@ -30,6 +30,10 @@
     margin-bottom: 0;
 }
 
+.crossButtons {
+    margin-top: 5px;
+}
+
 .btn-add_analysis {
     background: #337ab7;
 }

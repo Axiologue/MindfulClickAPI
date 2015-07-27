@@ -10,27 +10,10 @@
         <div class="col-sm-2 col-xs-12 text-center">
           <button class="btn btn-block btn-add_analysis" ng-click="analysis.analysis=!analysis.analysis">Add Analysis</button>
           <button class="btn btn-block btn-edit" ng-click="readyForm()">Edit</button>
-          <button class="btn btn-block btn-delete" data-toggle="modal" data-target="{{'#myModal' + article.id}}">Delete</button>
+          <button class="btn btn-block btn-delete" data-toggle="modal" data-target="{{'#modal-article-' + article.id}}">Delete</button>
         </div>
 
-        <div id="{{'myModal' + article.id}}" class="modal fade" tabIndex="-1" role="dialog" aria-labelledby={"{{'myModalLabel' + article.id}}" >
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="{{'myModalLabel' + article.id}}" >Delete Article?</h4>
-              </div>
-              <div class="modal-body">
-                <p>Are you sure you want to delete the article <em>{{article.title}}</em></p>
-                <p>This will not only remove the article, but any associated analysis that has done on it.  This cannot be undone.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="articleDelete()" >Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div ng-include="deleteModal" ng-controller="ArticleDeleteCtrl"></div>
 
         <!-- holder for new Tag form -->
         <div ng-include="crossForm" ng-controller="NewCrossCtrl" ng-show="analysis.analysis"></div>

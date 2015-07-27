@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^articles/(?P<pk>\d+)/$',views.UpdateArticleView.as_view()),
     url(r'^cross/list/$',views.ArticleWithCrossView.as_view()),
     url(r'^cross/new/$',views.NewCrossView.as_view()),
+    url(r'^cross/(?P<pk>\d+)/$',views.UpdateCrossView.as_view()),
 ]

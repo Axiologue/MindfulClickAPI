@@ -19,9 +19,14 @@ class CrossSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CrossReference
-        fields = ('score','subcategory','notes','company','product')
+        fields = ('score','subcategory','notes','company','product','id')
 
 class CrossCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CrossReference
+        fields = ('score','subcategory','notes','company','product','article')
+
+class CrossUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CrossReference
         fields = ('score','subcategory','notes','company','product','article')
