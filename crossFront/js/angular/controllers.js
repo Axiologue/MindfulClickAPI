@@ -2,14 +2,14 @@
 
 var crossControllers = angular.module('crossControllers',[]);
 
-crossControllers.controller('BodyCtrl',['$scope','$http','Article','Cross',function ($scope,$http,Article,Cross) {
+crossControllers.controller('BodyCtrl',['$scope','$http','Article','Cross','Meta',function ($scope,$http,Article,Cross,Meta) {
   $scope.csrftoken = $.cookie('csrftoken');
   $scope.articles = Article.query();
   $scope.crossList = Cross.query();
 
-  $http.get('http://localhost:8000/cross/formMeta/').success(function (data) {
-    $scope.companies = data[0].company;
-    $scope.categories = data[1].ethicssubcategory;
+  Meta.query(function (value, response) {
+    $scope.companies = value[0].company;
+    $scope.categories = value[1].ethicssubcategory;
   });
 
   $scope.deleteModal = 'templates/includes/delete_modal.html';

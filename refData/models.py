@@ -31,7 +31,7 @@ class Product(models.Model):
     category = models.CharField(max_length=40,blank=True,null=True)
     price = models.DecimalField(decimal_places=2,max_digits=7)
 
-    image_link = models.URLField()
+    image_link = models.URLField(max_length=350)
 
     def __str__(self):
         return self.name
