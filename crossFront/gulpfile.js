@@ -8,6 +8,7 @@ var bowerFiles = require('main-bower-files');
 var print = require('gulp-print');
 var Q = require('q'); 
 var streamqueue = require('streamqueue');
+var Server = require('karma').Server;
 path = require('path');
 
 var paths = {
@@ -63,12 +64,22 @@ pipes.builtAppScriptsProd = function() {
 };
 
 pipes.builtVendorScriptsDev = function() {  
-    return gulp.src(bowerFiles({filter: /\.js/}))
+    return gulp.src(bowerFiles({
+            filter: /\.js/,
+            overrides: {
+                'angular-mocks': {ignore: true}
+            }
+        }))
         .pipe(gulp.dest('dist.dev/bower_components'));
 };
 
 pipes.builtVendorScriptsProd = function() {  
-    return gulp.src(bowerFiles({filter: /\.js/}))
+    return gulp.src(bowerFiles({
+            filter: /\.js/,
+            overrides: {
+                'angular-mocks': {ignore: true}
+            }
+        }))
         .pipe(pipes.orderedVendorScripts())
         .pipe(plugins.concat('vendor.min.js'))
         .pipe(plugins.uglify())
@@ -342,4 +353,25 @@ gulp.task('watch-prod', ['clean-build-app-prod', 'validate-devserver-scripts'], 
 
 // default task builds for prod
 gulp.task('default', ['clean-build-app-prod']);
+
+// Testing tasks
+
+/**
+ * Run test once and exit
+ */
+gulp.task('unit', function (done) {
+  new Server({
+    configFile: __dirname + '/test/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
+/**
+ * Watch for file changes and re-run tests on each change
+ */
+gulp.task('tdd', function (done) {
+  new Server({
+    configFile: __dirname + '/test/karma.conf.js'
+  }, done).start();
+});
 
