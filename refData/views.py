@@ -33,7 +33,7 @@ class NewCrossView(generics.CreateAPIView):
 
 class FormMetaView(MultipleModelAPIView):
     queryList = [
-        (Company.objects.all(),CompanySerializer),
+        (Company.objects.all().order_by('name'),CompanySerializer),
         (EthicsSubCategory.objects.all(),EthicsSubSerializer)
     ]
 

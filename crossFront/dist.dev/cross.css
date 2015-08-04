@@ -1,0 +1,67 @@
+/* List items */
+
+body {
+    background: #999;
+}
+
+.listitem {
+    border: 1px #ccc solid;
+    border-radius: 15px;
+    background: #ccc;
+    margin: 10px 0;
+    padding: 5px;
+}
+
+.listitem ul {
+    list-style-type: none;
+}
+
+.crossItem {
+    border: 1px #ccc solid;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.crossItem.positive {
+    background: #dff0d8;
+}
+
+.crossItem.negative {
+    background: #f2dede;
+}
+
+.crossItem .dl-horizontal {
+    margin-bottom: 0;
+}
+
+.crossButtons {
+    margin-top: 5px;
+}
+
+.btn-add_analysis {
+    background: #337ab7;
+}
+
+.btn-add_analysis:focus,
+.btn-add_analysis:hover {
+    background: #286090
+}
+
+.btn-edit {
+    background: #5cb85c;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    background: #449d44;
+}
+
+.btn-delete {
+    background: #d9534f;
+}
+
+.btn-delete:focus,
+.btn-delete:hover {
+    background: #c9302c;
+}
+

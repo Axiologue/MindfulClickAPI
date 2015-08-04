@@ -20,7 +20,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #options are: local, staging, and production
 DJANGO_LOCATION = os.environ['DJANGO_LOCATION']
  
-from cross.secret_keys import DJANGO_KEY
+from cross.secret_keys import DJANGO_KEY, POSTMARK_KEY
+
 SECRET_KEY = DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -48,10 +49,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'refData',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'drf_multiple_model',
+    'allauth',
+    'allauth.account',
+    'rest_auth',
+    'rest_auth.registration',
 )
 
 if DEBUG:
@@ -92,6 +99,38 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cross.wsgi.application'
+
+# DJANGO ALLAUTH SETTINGS
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+if DJANGO_LOCATION != 'local':
+    SITE_ID = 2
+    EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
+    POSTMARK_API_KEY = POSTMARK_KEY
+    POSTMARK_SENDER = 'info@axiologue.org'
+    POSTMARK_TRACK_OPENS = True
+else:
+    SITE_ID = 3
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+ACCOUNT_UNIQUE_EMAIL = True
+
+ACCOUNT_USERNAME_MIN_LENGTH = 6
+
+ACCOUNT_PASSWORD_MIN_LENGTH = 8
+
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 
 # Database

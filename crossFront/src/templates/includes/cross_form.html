@@ -1,0 +1,33 @@
+        <!-- Add Tag Form -->
+        <div class="col-xs-12 listitem" ng-show="analysis">
+          <h3 class="text-danger" ng-show="error.error">{{error.msg}}</h3>
+          <form ng-submit="crossSubmit()">
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">COMPANY:</label>
+              <select ng-model="newCross.company" class="form-control" ng-options="company.id as company.name for company in companies">
+                <option value="">---- Select Company ----</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">CATEGORY:</label>
+              <select ng-model="newCross.subcategory" class="form-control" ng-options="category.id as category.name group by category.category for category in categories">
+                <option value="">---- Select Ethics Category ----</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">Score:</label>
+              <select ng-model="newCross.score" class="form-control" ng-options="score for score in [-5,-4,-3,-2,-1,1,2,3,4,5]">
+                <option value="">---- Select Score ----</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="{{'crossNotes' + article.id}}">NOTES:</label>
+              <textarea rows="3" ng-model="newCross.notes" name="notes" id="{{'crossNotes' + article.id}}" class="form-control"></textarea>
+            </div>
+            <input type="submit" class="btn btn-primary btn-block" value="Submit">
+          </form>
+          <button class="btn btn-delete btn-block" ng-click="crossCancel()">Cancel</button>
+        </div>

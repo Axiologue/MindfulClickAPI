@@ -1,0 +1,27 @@
+{
+  "name": "crossFront",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Axiologue/CrossReference",
+  "authors": [
+    "Matt Broach <go.for.dover@gmail.com>"
+  ],
+  "description": "Data gathering tool for Axiologue",
+  "main": "gulpfile.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-resource": "~1.4.3",
+    "angular": "~1.4.3",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

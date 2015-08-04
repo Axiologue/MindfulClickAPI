@@ -49,4 +49,5 @@ cross.sublime-project
 
 # React cache #
 ###############
-crossFront/js/.module-cache/
+crossFront/node_modules/
+crossFront/bower_components/

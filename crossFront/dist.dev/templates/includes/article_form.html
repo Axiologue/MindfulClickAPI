@@ -1,0 +1,26 @@
+        <!-- Article update form -->
+        <div class="listitem">
+          <h3 class="text-danger" ng-show="error.error">{{error.msg}}</h3>
+          <h3 class="text-success" ng-show="success.success">{{success.msg}}</h3>
+          <form ng-submit="articleSubmit()">
+
+            <div class="form-group">
+              <label for="{{'title' + article.id}}">TITLE:</label>
+              <input type="text" id="{{'title' + article.id}}" ng-model="tempArticle.title" name="title" class="form-control"  >
+            </div>
+
+            <div class="form-group">
+              <label for="{{'url' + article.id}}">URL:</label>
+              <input type="text" id="{{'url' + article.id}}" ng-model="tempArticle.url" name="url" class="form-control"  >
+            </div>
+
+            <div class="form-group">
+              <label for="{{'notes' + article.id}}">NOTES:</label>
+              <textarea rows="3" ng-model="tempArticle.notes" name="notes" id="{{'notes' + article.id}}" class="form-control"></textarea>
+            </div>
+
+            <input type="submit" class="btn btn-primary btn-block" value="Submit">
+            
+          </form>
+          <button class="btn btn-delete btn-block" ng-click="flipBack()" ng-show="cancel">Cancel</button>
+        </div>
