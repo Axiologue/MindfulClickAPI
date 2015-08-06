@@ -7,12 +7,6 @@ module.exports = function(config) {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '../',
 
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
-
-
     // list of files / patterns to load in the browser
     files: [
         'bower_components/jquery/dist/jquery.js',
@@ -22,6 +16,16 @@ module.exports = function(config) {
         'src/**/*.js',
         'test/unit/**/*.js'
     ],
+
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['jasmine'],
+
+    reporters: ['progress','coverage'],
+
+    preprocessors: {
+        'src/**/*.js': ['coverage']
+    },
 
 
     // enable / disable colors in the output (reporters and logs)
@@ -35,7 +39,8 @@ module.exports = function(config) {
     plugins : [
             'karma-chrome-launcher',
             'karma-phantomjs-launcher',
-            'karma-jasmine'
+            'karma-jasmine',
+            'karma-coverage'
             ],
 
     // start these browsers
@@ -46,5 +51,10 @@ module.exports = function(config) {
         // , 'Firefox'
         // , 'Safari'
     ],
+
+    coverageReporter: { 
+        type: 'html',
+        dir: 'coverage/'
+    },
   });
 };

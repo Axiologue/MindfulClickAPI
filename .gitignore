@@ -47,7 +47,11 @@ cross.sublime-project
 ##################
 *.csv
 
-# React cache #
+# Installed 3rd Party Modules #
 ###############
 crossFront/node_modules/
 crossFront/bower_components/
+
+# Testing Files #
+#################
+crossFront/coverage/

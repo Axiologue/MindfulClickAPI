@@ -354,7 +354,34 @@ gulp.task('watch-prod', ['clean-build-app-prod', 'validate-devserver-scripts'], 
 // default task builds for prod
 gulp.task('default', ['clean-build-app-prod']);
 
+// webdriver update
+gulp.task('webdriver-update',plugins.protractor.webdriver_update)
+
 // Testing tasks
+
+pipes.runE2E = function () {
+    // start nodemon to auto-reload the dev server
+    plugins.nodemon({ script: 'server.js', ext: 'js', watch: ['devServer/'], env: {NODE_ENV : 'development'} })
+        .on('change', ['jshint-devserver'])
+        .on('restart', function () {
+            console.log('[nodemon] restarted dev server');
+        });
+
+    return gulp.src(['test/e2e/**/*.js'])
+        .pipe(plugins.protractor.protractor({
+            configFile: 'test/protractor-conf.js',
+            args: ['--baseUrl','http://localhost:9000'],
+            keepAlive: true
+        }))
+        .on('end', function() {
+            console.log('End-to-end testing complete');
+            process.exit();
+        })
+        .on('error', function (e) {throw e})
+}; 
+
+// Run end-to-end tests
+gulp.task('e2e', pipes.runE2E);
 
 /**
  * Run test once and exit
@@ -374,4 +401,6 @@ gulp.task('tdd', function (done) {
     configFile: __dirname + '/test/karma.conf.js'
   }, done).start();
 });
+
+
 

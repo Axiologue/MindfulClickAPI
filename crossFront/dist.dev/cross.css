@@ -1,9 +1,5 @@
 /* List items */
 
-body {
-    background: #999;
-}
-
 .listitem {
     border: 1px #ccc solid;
     border-radius: 15px;
