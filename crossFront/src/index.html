@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The Talent Agency for Streamers">
+    <meta name="keywords" content="twitch, streaming, talent, agency, streamers, Hearthstone, Flood Gaming, gaming, video, services, games, support, sponsor, sponsorship, streaming, team, eSports">
+    <meta name="author" content="Flood Gaming">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>Axiologe -- Data Cross Reference</title>
 
@@ -20,43 +24,47 @@
   <![endif]-->
   </head>
   <body ng-controller="BodyCtrl">
-
-  <div class="container" id="cross">
-    <div class="crossList row">
-      <h1>Analyzed Articles</h1>
-      <div class="cross listitem col-xs-12" ng-repeat="article in crossList">
-        <div class="article listitem col-xs-12" ng-controller="SingleArticleCtrl">
-          <!-- containter to hold Article Info/Form -->
-          <div class="col-xs-12" ng-include="articleTemplate">
-          </div>
-
-          <!-- List of Cross References -->
-          <div class="col-xs-12 crossItem" ng-repeat="cross in article.data" ng-controller="SingleCrossCtrl" ng-mouseenter="buttons=true" ng-mouseleave="buttons=false" ng-class="{'positive':cross.score>0,'negative':cross.score<0}">
-            <div ng-include="crossUrl"></div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container" id="articles">
-    <div class="articleList row">
-      <h1>Add New article</h1>
-      <!-- new Article  form -->
-      <div class="col-xs-12 listitem" ng-controller="NewArticleCtrl">
-        <div ng-include="articleForm"></div>
-      </div>
-
-      <h1>Unanalyzed Articles</h1>
-      <!-- Unreferenced Articles -->
-      <div class="article listitem col-xs-12" ng-repeat="article in articles" ng-controller="SingleArticleCtrl">
-        <!-- containter to hold Article Info/Form -->
-        <div class="col-xs-12" ng-include="articleTemplate">
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#/">Axiologue</a>
         </div>
 
+
+
+     <!-- Top Menu Items -->
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-right">
+            <li ng-hide="authenticated">
+              <a href="#/login"><i class="fa fa-fw fa-user"></i> Log In</a>
+            </li>
+            <li class="dropdown" ng-show="authenticated">
+              <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.username}} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#/userProfile"><i class="fa fa-fw fa-gear"></i> Edit Profile</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#/login" ng-click="logout()"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
       </div>
-    </div>
+      </div>
+    </nav>
+
+
+  <div class="content" ng-view>
   </div>
 
   <!-- bower:js -->

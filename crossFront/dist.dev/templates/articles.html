@@ -1,0 +1,37 @@
+  <div class="container" id="cross">
+    <div class="crossList row">
+      <h1>Analyzed Articles</h1>
+      <div class="cross listitem col-xs-12" ng-repeat="article in crossList">
+        <div class="article listitem col-xs-12" ng-controller="SingleArticleCtrl">
+          <!-- containter to hold Article Info/Form -->
+          <div class="col-xs-12" ng-include="articleTemplate">
+          </div>
+
+          <!-- List of Cross References -->
+          <div class="col-xs-12 crossItem" ng-repeat="cross in article.data" ng-controller="SingleCrossCtrl" ng-mouseenter="buttons=true" ng-mouseleave="buttons=false" ng-class="{'positive':cross.score>0,'negative':cross.score<0}">
+            <div ng-include="crossUrl"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="articles">
+    <div class="articleList row">
+      <h1>Add New article</h1>
+      <!-- new Article  form -->
+      <div class="col-xs-12 listitem" ng-controller="NewArticleCtrl">
+        <div ng-include="articleForm"></div>
+      </div>
+
+      <h1>Unanalyzed Articles</h1>
+      <!-- Unreferenced Articles -->
+      <div class="article listitem col-xs-12" ng-repeat="article in articles" ng-controller="SingleArticleCtrl">
+        <!-- containter to hold Article Info/Form -->
+        <div class="col-xs-12" ng-include="articleTemplate">
+        </div>
+
+      </div>
+    </div>
+  </div>

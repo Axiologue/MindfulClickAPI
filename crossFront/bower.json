@@ -24,6 +24,9 @@
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.5",
     "angular-mocks": "~1.4.3",
-    "jquery-cookie": "~1.4.1"
+    "jquery-cookie": "~1.4.1",
+    "angular-route": "~1.4.3",
+    "angular-sanitize": "~1.4.3",
+    "angular-cookies": "~1.4.3"
   }
 }

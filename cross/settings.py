@@ -85,7 +85,7 @@ ROOT_URLCONF = 'cross.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -182,8 +182,25 @@ STATICFILES_DIRS = (
 )
 
 # django-cors-headers configuration
-CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ORIGIN_WHITELIST = ('localhost:9000','127.0.0.1','cross.axiologue.org')
+# django-cors-headers configuration
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'dashboard.floodgaming.com',
+)
+CORS_ALLOW_HEADERS = (
+        'x-requested-with',
+        'content-type',
+        'accept',
+        'origin',
+        'authorization',
+        'x-csrftoken',
+        'access-control-allow-credentials'
+    )
+
+if DJANGO_LOCATION == 'local':
+    CORS_ORIGIN_WHITELIST += ('localhost:9000',
+                               'localhost:8000' )
 
 # django-debug-toolbar settings
 
@@ -194,3 +211,43 @@ DEBUG_TOOLBAR_CONFIG = {
 
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1','::ffff:10.0.2.2')
+
+# Rest Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
+# Django allauth settings
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_PASSWORD_MIN_LENGTH = 8
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+LOGIN_REDIRECT_URL = 'http://data.axiologue.org'
+
+
+if DJANGO_LOCATION =='local':
+    #EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://localhost:9000/#/login'
+else:
+    EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
+    ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'http://dashboard.floodgaming.com/#/login'
+
+
+# Python-postmark settings
+
+POSTMARK_API_KEY = POSTMARK_KEY
+POSTMARK_SENDER = 'admin@axiologue.org'
+DEFAULT_FROM_EMAIL = 'admin@axiologue.org'
+
+

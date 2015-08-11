@@ -1,8 +1,5 @@
-'use strict';
-
-var crossControllers = angular.module('crossControllers',[]);
-
-crossControllers.controller('BodyCtrl',['$scope','$http','Article','Cross','Meta',function ($scope,$http,Article,Cross,Meta) {
+angular.module('cross')
+.controller('ArticleCtrl',['$scope','$http','Article','Cross','Meta',function ($scope,$http,Article,Cross,Meta) {
   $scope.csrftoken = $.cookie('csrftoken');
   $scope.articles = Article.query();
   $scope.crossList = Cross.query();
@@ -28,7 +25,8 @@ crossControllers.controller('BodyCtrl',['$scope','$http','Article','Cross','Meta
 
 
 
-crossControllers.controller('SingleArticleCtrl',['$scope', 'Article','Cross',function ($scope, Article, Cross) {
+angular.module('cross')
+.controller('SingleArticleCtrl',['$scope', 'Article','Cross',function ($scope, Article, Cross) {
 
   $scope.crossForm = 'templates/includes/cross_form.html';
   $scope.articleTemplate = 'templates/includes/article_base.html';
@@ -62,7 +60,8 @@ crossControllers.controller('SingleArticleCtrl',['$scope', 'Article','Cross',fun
 
 }]);
 
-crossControllers.controller('NewArticleCtrl',['$scope','Article',function ($scope, Article) {
+angular.module('cross')
+.controller('NewArticleCtrl',['$scope','Article',function ($scope, Article) {
   $scope.articleForm = 'templates/includes/article_form.html';
   $scope.error = {error: false,
                   msg: ""};
@@ -99,7 +98,8 @@ crossControllers.controller('NewArticleCtrl',['$scope','Article',function ($scop
 
 }]);
 
-crossControllers.controller('ArticleDeleteCtrl',['$scope','Article',function ($scope,Article) {
+angular.module('cross')
+.controller('ArticleDeleteCtrl',['$scope','Article',function ($scope,Article) {
   $scope.modalContent = {
     id: 'modal-article-' + $scope.article.id,
     label: 'modalLabel-article-' + $scope.article.id,
@@ -126,7 +126,8 @@ crossControllers.controller('ArticleDeleteCtrl',['$scope','Article',function ($s
   };
 }]);
 
-crossControllers.controller('SingleCrossCtrl',['$scope','Cross',function ($scope,Cross) {
+angular.module('cross')
+.controller('SingleCrossCtrl',['$scope','Cross',function ($scope,Cross) {
   $scope.buttons = false;
   $scope.crossUrl = 'templates/includes/cross_base.html';
 
@@ -134,8 +135,8 @@ crossControllers.controller('SingleCrossCtrl',['$scope','Cross',function ($scope
     
     $scope.crossUrl = 'templates/includes/cross_form.html';
     $scope.newCross = $.extend({},$scope.cross);
-    $scope.newCross.company = $.grep($scope.companies,function(v) {return v.name === $scope.newCross.company})[0].id;
-    $scope.newCross.subcategory = $.grep($scope.categories,function(v) {return v.name === $scope.newCross.subcategory})[0].id;
+    $scope.newCross.company = $.grep($scope.companies,function(v) {return v.name === $scope.newCross.company;})[0].id;
+    $scope.newCross.subcategory = $.grep($scope.categories,function(v) {return v.name === $scope.newCross.subcategory;})[0].id;
   };
 
   $scope.crossCancel = function () {
@@ -149,8 +150,8 @@ crossControllers.controller('SingleCrossCtrl',['$scope','Cross',function ($scope
 
     Cross.update({crossID:$scope.cross.id},$scope.newCross,function (value, response) {
       // Replace element IDs with actual names
-      value.company = $.grep($scope.companies,function(v) {return v.id === value.company})[0].name;
-      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory})[0].name;
+      value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
+      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory;})[0].name;
 
       $scope.cross = $.extend({},value);
       $scope.error.error = false;
@@ -164,7 +165,8 @@ crossControllers.controller('SingleCrossCtrl',['$scope','Cross',function ($scope
   };
 }]);
 
-crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cross) {
+angular.module('cross')
+.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cross) {
   $scope.newCross = {
     company: "",
     subcategory: "",
@@ -181,8 +183,8 @@ crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cr
       $scope.article.data = $scope.article.data || [];
 
       // Replace element IDs with actual names
-      value.company = $.grep($scope.companies,function(v) {return v.id === value.company})[0].name;
-      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory})[0].name;
+      value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
+      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory;})[0].name;
 
       $scope.article.data.push(value);
       $scope.analysis.analysis = false;
@@ -201,7 +203,8 @@ crossControllers.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cr
 
 }]);
 
-crossControllers.controller('CrossDeleteCtrl',['$scope','Cross',function ($scope,Cross) {
+angular.module('cross')
+.controller('CrossDeleteCtrl',['$scope','Cross',function ($scope,Cross) {
   $scope.modalContent = {
     id: 'modal-cross-' + $scope.article.id + '-' + $scope.cross.id,
     label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.cross.id,

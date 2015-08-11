@@ -299,7 +299,7 @@ gulp.task('watch-dev', ['clean-build-app-dev'], function() {
     });
 
     // watch html partials
-    gulp.watch(paths.partials, function() {
+    gulp.watch(paths.templates, function() {
         return pipes.builtPartialsDev()
             .pipe(plugins.livereload());
     });
@@ -338,7 +338,7 @@ gulp.task('watch-prod', ['clean-build-app-prod', 'validate-devserver-scripts'], 
     });
 
     // watch hhtml partials
-    gulp.watch(paths.partials, function() {
+    gulp.watch(paths.templates, function() {
         return pipes.builtAppScriptsProd()
             .pipe(plugins.livereload());
     });
