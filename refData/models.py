@@ -60,33 +60,24 @@ class EthicsSubCategory(models.Model):
 class ChooseOneException(Exception):
     pass
 
-# Main link cross-referencing articles, Products, and Companies
-class CrossReference(models.Model):
-    VALUES = ((-5,'-5'),
-              (-4,'-4'),
-              (-3,'-3'),
-              (-2,'-2'),
-              (-1,'-1'),
-              (1,'1'),
-              (2,'2'),
-              (3,'3'),
-              (4,'4'),
-              (5,'5'),)
-
-    score = models.SmallIntegerField(choices=VALUES,blank=False,default=0)
+# Single ethical factoid extracted from artical
+class Factoid(models.Model):
+    fact_type = models.CharField(max_length=300)
+    value = models.CharField(max_length=50,blank=True,null=True)
     notes = models.TextField(blank=True,null=True)
 
-    subcategory = models.ForeignKey(EthicsSubCategory, related_name='data')
-    article = models.ForeignKey(Article, related_name='data')
-    product = models.ForeignKey(Product, related_name='data',blank=True,null=True)
-    company = models.ForeignKey(Company, related_name='data',blank=True,null=True)
+    subcategory = models.ForeignKey(EthicsSubCategory, related_name='factoids')
+    article = models.ForeignKey(Article, related_name='factoids')
+    product = models.ForeignKey(Product, related_name='factoids',blank=True,null=True)
+    company = models.ForeignKey(Company, related_name='factoids',blank=True,null=True)
 
     def __str__(self):
-        return self.article.title + ": " + self.subcategory.name
+        return self.fact_type
 
     def save(self, *args, **kwargs):
         if self.product == None and self.company == None:
             raise ChooseOneException("You have to attach to either a Company or a Product")
 
         return super(CrossReference, self).save(*args, **kwargs)
+
 

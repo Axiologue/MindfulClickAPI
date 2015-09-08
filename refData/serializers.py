@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from refData.models import Article, CrossReference, Product, EthicsCategory, EthicsSubCategory, Company
+from refData.models import Article, Factoid, Product, EthicsCategory, EthicsSubCategory, Company
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,31 +12,31 @@ class ArticleNoIDSerializer(serializers.ModelSerializer):
         model = Article
         fields = ('title','url','notes')
 
-class CrossSerializer(serializers.ModelSerializer):
-    subcategory = serializers.StringRelatedField()
-    company = serializers.StringRelatedField()
-    product = serializers.StringRelatedField()
+#class CrossSerializer(serializers.ModelSerializer):
+#    subcategory = serializers.StringRelatedField()
+#    company = serializers.StringRelatedField()
+#    product = serializers.StringRelatedField()
 
-    class Meta:
-        model = CrossReference
-        fields = ('score','subcategory','notes','company','product','id')
+#    class Meta:
+#        model = CrossReference
+#        fields = ('score','subcategory','notes','company','product','id')
 
-class CrossCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CrossReference
-        fields = ('score','subcategory','notes','company','product','article')
+#class CrossCreateSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = CrossReference
+#        fields = ('score','subcategory','notes','company','product','article')
 
-class CrossUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CrossReference
-        fields = ('score','subcategory','notes','company','product','article')
+#class CrossUpdateSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = CrossReference
+#        fields = ('score','subcategory','notes','company','product','article')
 
-class CrossByArticle(serializers.ModelSerializer):
-    data = CrossSerializer(read_only=True, many=True)
+#class CrossByArticle(serializers.ModelSerializer):
+#    data = CrossSerializer(read_only=True, many=True)
 
-    class Meta:
-        model = Article
-        fields = ('title','url','data','id','notes')
+#    class Meta:
+#        model = Article
+#        fields = ('title','url','data','id','notes')
 
 class ProductSerializer(serializers.ModelSerializer):
     company = serializers.StringRelatedField()
