@@ -1,15 +1,15 @@
-  <div class="container" id="cross">
-    <div class="crossList row">
+  <div class="container" id="taggedArticles">
+    <div class="taggedArticles row">
       <h1>Analyzed Articles</h1>
-      <div class="cross listitem col-xs-12" ng-repeat="article in crossList">
+      <div class="listitem col-xs-12" ng-repeat="article in taggedArticles">
         <div class="article listitem col-xs-12" ng-controller="SingleArticleCtrl">
           <!-- containter to hold Article Info/Form -->
           <div class="col-xs-12" ng-include="articleTemplate">
           </div>
 
           <!-- List of Cross References -->
-          <div class="col-xs-12 crossItem" ng-repeat="cross in article.data" ng-controller="SingleCrossCtrl" ng-mouseenter="buttons=true" ng-mouseleave="buttons=false" ng-class="{'positive':cross.score>0,'negative':cross.score<0}">
-            <div ng-include="crossUrl"></div>
+          <div class="col-xs-12 tag" ng-repeat="tag in article.tags" ng-controller="SingleTagCtrl" ng-mouseenter="buttons=true" ng-mouseleave="buttons=false">
+            <div ng-include="tagUrl"></div>
           </div>
 
         </div>

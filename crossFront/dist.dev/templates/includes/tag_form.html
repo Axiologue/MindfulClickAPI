@@ -1,0 +1,34 @@
+        <!-- Add Tag Form -->
+        <div class="col-xs-12 listitem" >
+          <h3 class="text-danger" ng-show="error.error">{{error.msg}}</h3>
+          <form ng-submit="tagSubmit()">
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">COMPANY:</label>
+              <select ng-model="newTag.company" class="form-control" ng-options="company.id as company.name for company in companies">
+                <option value="">---- Select Company ----</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">CATEGORY:</label>
+              <select ng-model="newTag.subcategory" class="form-control" ng-options="category.id as category.name group by category.category for category in categories" ng-change="loadFacts()">
+                <option value="">---- Select Ethics Category ----</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="{{'companies' + article.id}}">TAG TYPE:</label>
+              <select ng-model="newTag.tag_type" class="form-control" ng-options="tagType.id as tagType.name for tagType in tagTypes">
+                <option value="">---- Select Tag Type ----</option>
+              </select>
+            </div>
+
+
+            <div class="form-group">
+              <label for="{{'crossNotes' + article.id}}">EXCERPT:</label>
+              <textarea rows="3" ng-model="newTag.excerpt" name="notes" id="{{'excerpt' + article.id}}" class="form-control"></textarea>
+            </div>
+            <input type="submit" class="btn btn-primary btn-block" value="Submit">
+          </form>
+          <button class="btn btn-delete btn-block" ng-click="tagCancel()">Cancel</button>
+        </div>

@@ -12,25 +12,19 @@
     list-style-type: none;
 }
 
-.crossItem {
+.tag {
     border: 1px #ccc solid;
     border-radius: 15px;
     margin-bottom: 15px;
-}
-
-.crossItem.positive {
     background: #dff0d8;
 }
 
-.crossItem.negative {
-    background: #f2dede;
-}
 
-.crossItem .dl-horizontal {
+.tag .dl-horizontal {
     margin-bottom: 0;
 }
 
-.crossButtons {
+.tagButtons {
     margin-top: 5px;
 }
 

@@ -19,10 +19,21 @@ var paths = {
   distProd: './dist.prod',
   distScriptsProd: './dist.prod/js',
   templates: 'src/templates/**/*.html',
-  scriptsDevServer: 'devServer/**/*.js'
+  scriptsDevServer: 'devServer/**/*.js',
+  images: 'src/img/*.*',
 }
 
 var pipes = {};
+
+pipes.moveImagesDev = function () {
+    gulp.src(paths.images)
+        .pipe(gulp.dest(paths.distDev + '/img'));
+}
+
+pipes.moveImagesProd = function () {
+    gulp.src(paths.images)
+        .pipe(gulp.dest(paths.distProd + '/img'));
+}
 
 // Use gulp-angular-filesort to load files in the proper order
 pipes.orderedVendorScripts = function() {  
@@ -188,10 +199,12 @@ pipes.builtIndexProd = function() {
 };
 
 pipes.builtAppDev = function() {  
+    pipes.moveImagesDev();
     return es.merge(pipes.builtIndexDev(), pipes.builtPartialsDev());
 };
 
-pipes.builtAppProd = function() {  
+pipes.builtAppProd = function() { 
+    pipes.moveImagesProd(); 
     return pipes.builtIndexProd();
 };
 

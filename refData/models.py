@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.contrib.auth.models import User
+
 
 # Model to hold company Data
 # Can also reference other companies that it owns
@@ -60,24 +62,41 @@ class EthicsSubCategory(models.Model):
 class ChooseOneException(Exception):
     pass
 
-# Single ethical factoid extracted from artical
-class Factoid(models.Model):
-    fact_type = models.CharField(max_length=300)
-    value = models.CharField(max_length=50,blank=True,null=True)
-    notes = models.TextField(blank=True,null=True)
+# Potential types of Ethical Factoids
+class TagType(models.Model):
+    name = models.CharField(max_length=300)
 
-    subcategory = models.ForeignKey(EthicsSubCategory, related_name='factoids')
-    article = models.ForeignKey(Article, related_name='factoids')
-    product = models.ForeignKey(Product, related_name='factoids',blank=True,null=True)
-    company = models.ForeignKey(Company, related_name='factoids',blank=True,null=True)
+    subcategory = models.ForeignKey(EthicsSubCategory, related_name='tag_types')
+
 
     def __str__(self):
-        return self.fact_type
+        return self.name
+
+class Tag(models.Model):
+    tag_type = models.ForeignKey(TagType)
+
+    excerpt = models.TextField()
+
+    value = models.IntegerField(blank=True,null=True)
+
+    article = models.ForeignKey(Article, related_name='tags')
+    product = models.ForeignKey(Product, related_name='tags',blank=True,null=True)
+    company = models.ForeignKey(Company, related_name='tags',blank=True,null=True)
+
+    #submited_by = models.ForeignKey(User)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('tag_type','article','company')
+
+    def __str__(self):
+        return "{0} : {1}".format(tag_type,article)
 
     def save(self, *args, **kwargs):
-        if self.product == None and self.company == None:
-            raise ChooseOneException("You have to attach to either a Company or a Product")
+        if self.company == None:
+            if self.product == None:
+                raise ChooseOneException("You have to attach to either a Company or a Product")
+            else:
+                self.company = self.product.company
 
-        return super(CrossReference, self).save(*args, **kwargs)
-
-
+        return super(Tag, self).save(*args, **kwargs)

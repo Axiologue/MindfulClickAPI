@@ -1,8 +1,8 @@
 angular.module('cross')
-.controller('ArticleCtrl',['$scope','$http','Article','Cross','Meta',function ($scope,$http,Article,Cross,Meta) {
+.controller('ArticleCtrl',['$scope','$http','Article','Meta',function ($scope,$http,Article,Meta) {
   $scope.csrftoken = $.cookie('csrftoken');
   $scope.articles = Article.query();
-  $scope.crossList = Cross.query();
+  $scope.taggedArticles = Article.queryTagged();
 
   Meta.query(function (value, response) {
     $scope.companies = value[0].company;
@@ -26,11 +26,11 @@ angular.module('cross')
 
 
 angular.module('cross')
-.controller('SingleArticleCtrl',['$scope', 'Article','Cross',function ($scope, Article, Cross) {
+.controller('SingleArticleCtrl',['$scope', 'Article',function ($scope, Article) {
 
-  $scope.crossForm = 'templates/includes/cross_form.html';
+  $scope.tagForm = 'templates/includes/tag_form.html';
   $scope.articleTemplate = 'templates/includes/article_base.html';
-  $scope.analysis = {analysis:false};
+  $scope.state = {addTag:false};
   $scope.error = {
     error: false,
     msg: ""
@@ -57,6 +57,10 @@ angular.module('cross')
   $scope.flipBack = function () {
     $scope.articleTemplate='templates/includes/article_base.html';
   }; 
+
+  $scope.tagCancel = function () {
+    $scope.state.addTag = false;
+  };
 
 }]);
 
@@ -127,72 +131,91 @@ angular.module('cross')
 }]);
 
 angular.module('cross')
-.controller('SingleCrossCtrl',['$scope','Cross',function ($scope,Cross) {
+.controller('SingleTagCtrl',['$scope','Tag',function ($scope,Tag) {
   $scope.buttons = false;
-  $scope.crossUrl = 'templates/includes/cross_base.html';
+  $scope.tagUrl = 'templates/includes/tag_base.html';
 
-  $scope.crossEdit = function () {
+  $scope.tagEdit = function () {
     
-    $scope.crossUrl = 'templates/includes/cross_form.html';
-    $scope.newCross = $.extend({},$scope.cross);
-    $scope.newCross.company = $.grep($scope.companies,function(v) {return v.name === $scope.newCross.company;})[0].id;
-    $scope.newCross.subcategory = $.grep($scope.categories,function(v) {return v.name === $scope.newCross.subcategory;})[0].id;
+    $scope.tagUrl = 'templates/includes/tag_form.html';
+    $scope.newTag = $.extend({},$scope.tag);
+    $scope.newTag.company = $.grep($scope.companies,function(v) {return v.name === $scope.newTag.company;})[0].id;
+    var category = $.grep($scope.categories,function(v) {return v.name === $scope.newTag.tag_type.subcategory;})[0];
+    $scope.newTag.subcategory = category.id;
+    $scope.tagTypes = category.tag_types;
+    $scope.newTag.tag_type = $scope.tag.tag_type.id;
   };
 
-  $scope.crossCancel = function () {
+  $scope.tagCancel = function () {
     
-    $scope.crossUrl = 'templates/includes/cross_base.html';
+    $scope.tagUrl = 'templates/includes/tag_base.html';
 
   };
 
-  $scope.crossSubmit = function () {
-    $scope.newCross.article = $scope.article.id;
+  $scope.tagSubmit = function () {
+    $scope.newTag.article = $scope.article.id;
 
-    Cross.update({crossID:$scope.cross.id},$scope.newCross,function (value, response) {
+    Tag.update({tagID:$scope.tag.id},$scope.newTag,function (value, response) {
+
       // Replace element IDs with actual names
       value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
-      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory;})[0].name;
+      var category = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory;})[0];
 
-      $scope.cross = $.extend({},value);
+      value.tag_type = {
+        name: $.grep(category.tag_types, function(v) {return v.id === value.tag_type;})[0].name,
+        subcategory: category.name,
+        id: value.tag_type
+      }
+
+      $scope.tag = $.extend({},value);
       $scope.error.error = false;
 
-      $scope.crossUrl = 'templates/includes/cross_base.html';
+      $scope.tagUrl = 'templates/includes/tag_base.html';
 
     }, function (response) {
       $scope.error.msg = JSON.stringify(response.data);
       $scope.error.error = true;
     });
   };
+
+  $scope.loadFacts = function () {
+    $scope.tagTypes = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory})[0].tag_types;
+  };
 }]);
 
 angular.module('cross')
-.controller('NewCrossCtrl',['$scope','Cross',function ($scope,Cross) {
-  $scope.newCross = {
+.controller('NewTagCtrl',['$scope','Tag',function ($scope,Tag) {
+  $scope.newTag = {
     company: "",
     subcategory: "",
-    notes: "",
-    score: "",
+    tag_type: "",
+    excerpt: "",
     article: $scope.article.id
   };
 
-  $scope.crossSubmit = function () {
-    $scope.newCross.csrfmiddlewaretoken = $scope.csrftoken;
+  $scope.tagSubmit = function () {
+    $scope.newTag.csrfmiddlewaretoken = $scope.csrftoken;
 
-
-    Cross.save({crossID: 'new'},$scope.newCross,function (value,response) {
-      $scope.article.data = $scope.article.data || [];
+    Tag.save({tagID: 'new'},$scope.newTag,function (value,response) {
+      $scope.article.tags = $scope.article.tags || [];
 
       // Replace element IDs with actual names
       value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
-      value.subcategory = $.grep($scope.categories,function(v) {return v.id === value.subcategory;})[0].name;
+      var category = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory;})[0];
 
-      $scope.article.data.push(value);
-      $scope.analysis.analysis = false;
+      value.tag_type = {
+        name: $.grep(category.tag_types, function(v) {return v.id === value.tag_type;})[0].name,
+        subcategory: category.name,
+        id: value.tag_type
+      }
+
+      $scope.article.tags.push(value);
+      $scope.state.addTag = false;
       $scope.error.error = false;
 
       //if the article is in the Unanalyzed list, move it to the analyzed list
-      if($scope.article.data.length === 1) {
-        $scope.crossList.push($scope.article);
+      if($scope.article.tags.length === 1) {
+        $scope.taggedArticles.push($scope.article);
         $scope.removeFromList($scope.article,$scope.articles);
       }
     },function (response) {
@@ -201,24 +224,28 @@ angular.module('cross')
     });   
   };
 
+  $scope.loadFacts = function () {
+    $scope.tagTypes = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory})[0].tag_types;
+  };
+
 }]);
 
 angular.module('cross')
-.controller('CrossDeleteCtrl',['$scope','Cross',function ($scope,Cross) {
+.controller('DeleteTagCtrl',['$scope','Tag',function ($scope,Tag) {
   $scope.modalContent = {
-    id: 'modal-cross-' + $scope.article.id + '-' + $scope.cross.id,
-    label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.cross.id,
-    kind: 'Analysis',
-    title: $scope.cross.subcategory + ': ' + $scope.cross.score,
+    id: 'modal-cross-' + $scope.article.id + '-' + $scope.tag.id,
+    label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.tag.id,
+    kind: 'Tag',
+    title: $scope.tag.tag_type.name + " on " + $scope.article.title,
     msg: 'This cannot be undone'
   };
 
   $scope.itemDelete = function () {
 
-    Cross.delete({crossID:$scope.cross.id}, function (value,response) {
-      $scope.removeFromList($scope.cross,$scope.article.data);
-      if ($scope.article.data.length === 0) {
-        $scope.removeFromList($scope.article,$scope.crossList);
+    Tag.delete({tagID:$scope.tag.id}, function (value,response) {
+      $scope.removeFromList($scope.tag,$scope.article.tags);
+      if ($scope.article.tags.length === 0) {
+        $scope.removeFromList($scope.article,$scope.taggedArticles);
         $scope.articles.push($scope.article);
       }
 

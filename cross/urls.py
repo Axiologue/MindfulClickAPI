@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^cross/', include('refData.urls',namespace='cross')),
+    url(r'^tags/', include('refData.urls',namespace='tags')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
