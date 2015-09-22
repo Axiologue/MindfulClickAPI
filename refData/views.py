@@ -1,6 +1,7 @@
-from refData.models import Article, Product, EthicsSubCategory, Company, Tag
+from refData.models import Article, Product, EthicsSubCategory, Company, Tag, TagType
 from refData.serializers import ArticleSerializer, ProductSerializer, \
-        EthicsSubSerializer, CompanySerializer, TagsByArticle, TagChangeSerializer, TagSerializer
+        EthicsSubSerializer, CompanySerializer, TagsByArticle, TagChangeSerializer, TagSerializer, \
+        TagTypeSerializer, TagTypeUpdateSerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
 
@@ -39,4 +40,8 @@ class FormMetaView(MultipleModelAPIView):
 
 class UpdateTagView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TagChangeSerializer
-    queryset= Tag.objects.all()
+    queryset = Tag.objects.all()
+
+class NewTagTypeView(generics.CreateAPIView):
+    queryset = TagType.objects.all()
+    serializer_class = TagTypeUpdateSerializer

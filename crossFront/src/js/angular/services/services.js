@@ -2,7 +2,7 @@ var crossServices = angular.module('crossServices',['ngResource']);
 
 // use for setting the API endpoint location
 crossServices.factory('BaseUrl', [function () {
-  var baseUrl = 'http://localhost:8000/';
+  var baseUrl = 'http://api.axiologue.org/';
 
   return baseUrl;
 }]);
@@ -31,5 +31,13 @@ crossServices.factory('Meta',['$resource', 'BaseUrl',
   function ($resource, BaseUrl) {
     return $resource(BaseUrl + 'tags/formMeta/',{},{
       query: {method:'GET',params:{},isArray:true},
+    });
+}]);
+
+// For managing Tag Types
+crossServices.factory('TagType',['$resource', 'BaseUrl',
+  function ($resource, BaseUrl) {
+    return $resource(BaseUrl + 'tags/tag-types/:tagTypeID/',{},{
+      save: {method:'POST',params:{tagTypeID:'new'}},
     });
 }]);

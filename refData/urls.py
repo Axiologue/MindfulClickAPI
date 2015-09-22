@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^articles/(?P<pk>\d+)/$',views.UpdateArticleView.as_view()),
     url(r'^tags/new/$',views.NewTagView.as_view()),
     url(r'^tags/(?P<pk>\d+)/$',views.UpdateTagView.as_view()),
+    url(r'^tag-types/new/$',views.NewTagTypeView.as_view()),
 ]

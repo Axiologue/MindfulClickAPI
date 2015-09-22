@@ -186,7 +186,8 @@ STATICFILES_DIRS = (
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'dashboard.floodgaming.com',
+    'api.axiologue.org',
+    'data.axiologue.org'
 )
 CORS_ALLOW_HEADERS = (
         'x-requested-with',

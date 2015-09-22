@@ -109,7 +109,7 @@ angular.module('cross')
     label: 'modalLabel-article-' + $scope.article.id,
     kind: 'Article',
     title: $scope.article.title,
-    msg: 'This will not only remove the article, but any associated analysis that has been done on it.  This cannot be undone'
+    msg: 'This will not only remove the article, but any associated tags as well.  This cannot be undone'
   };
 
   $scope.itemDelete = function () {
@@ -178,9 +178,6 @@ angular.module('cross')
     });
   };
 
-  $scope.loadFacts = function () {
-    $scope.tagTypes = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory})[0].tag_types;
-  };
 }]);
 
 angular.module('cross')
@@ -224,6 +221,67 @@ angular.module('cross')
     });   
   };
 
+  
+
+}]);
+
+angular.module('cross')
+.controller('TagFormCtrl',['$scope','TagType',function ($scope,TagType) {
+  $scope.tagFormState = {
+    addTagType: false
+  };
+
+  $scope.newTagType = {
+    name: ''
+  };
+
+  // Shows the form to add new Tag Type
+  $scope.showNewTagType = function ($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.tagFormState.addTagType = !$scope.tagFormState.addTagType;
+  };
+
+  // Submit a New Tag Type
+  $scope.submitTagType = function ($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    // Get the currently selected subcategory
+    $scope.newTagType.subcategory = $scope.newTag.subcategory;
+
+    console.log($scope.newTagType);
+
+    // Send the new TagType to server
+    TagType.save($scope.newTagType,function (value, respone) {
+      console.log(value);
+
+      // Get index of current subcategory
+      var index = 0;
+      $scope.categories.some(function(elem, i) {
+        if (elem.id === $scope.newTag.subcategory) {
+          index = i;
+          return true;
+        }
+      });
+
+      // Add the new Tag Type to the current category list
+      $scope.categories[index].tag_types.push(value);
+
+      // Set the form to the new TagTpe
+      $scope.newTag.tag_type = value.id;
+
+      // Reset the add Tag Type form to invisible
+      $scope.tagFormState.addTagType = false;
+    },function (response) {
+      console.log(response.data);
+      $scope.error.msg = JSON.stringify(response.data);
+      $scope.error.error = true;
+    });
+  }
+
+  // Switches to the appropriate set of TagTypes when an ethical category is selected
   $scope.loadFacts = function () {
     $scope.tagTypes = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory})[0].tag_types;
   };

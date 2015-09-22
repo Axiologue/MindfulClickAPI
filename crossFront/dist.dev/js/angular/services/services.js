@@ -33,3 +33,11 @@ crossServices.factory('Meta',['$resource', 'BaseUrl',
       query: {method:'GET',params:{},isArray:true},
     });
 }]);
+
+// For managing Tag Types
+crossServices.factory('TagType',['$resource', 'BaseUrl',
+  function ($resource, BaseUrl) {
+    return $resource(BaseUrl + 'tags/tag-types/:tagTypeID/',{},{
+      save: {method:'POST',params:{tagTypeID:'new'}},
+    });
+}]);

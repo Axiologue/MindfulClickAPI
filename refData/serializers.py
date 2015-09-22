@@ -14,6 +14,11 @@ class TagTypeSerializer(serializers.ModelSerializer):
         model = TagType
         fields = ('name','subcategory','id')
 
+class TagTypeUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TagType
+        fields = ('name','subcategory','id')
+
 class TagSerializer(serializers.ModelSerializer):
     company = serializers.StringRelatedField()
     product = serializers.StringRelatedField()

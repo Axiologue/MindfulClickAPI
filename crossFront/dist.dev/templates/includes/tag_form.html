@@ -1,5 +1,5 @@
         <!-- Add Tag Form -->
-        <div class="col-xs-12 listitem" >
+        <div class="col-xs-12 listitem" ng-controller="TagFormCtrl">
           <h3 class="text-danger" ng-show="error.error">{{error.msg}}</h3>
           <form ng-submit="tagSubmit()">
             <div class="form-group">
@@ -21,6 +21,13 @@
               <select ng-model="newTag.tag_type" class="form-control" ng-options="tagType.id as tagType.name for tagType in tagTypes">
                 <option value="">---- Select Tag Type ----</option>
               </select>
+              <p class="help-block">Don't see the tag you want? <a ng-click="showNewTagType($event)">Add it!</a></p>
+            </div>
+
+            <div class="form-group" ng-show="tagFormState.addTagType">
+              <label for="{{'newTagType' + article.id}}">NEW TAG TYPE:</label>
+              <input ng-model="newTagType.name" class="form-control" placeholder="Enter Your New Tag Here">
+              <button class="btn btn-edit btn-block" ng-click="submitTagType($event)">Add Tag Type</button>
             </div>
 
 
