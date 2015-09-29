@@ -13,6 +13,9 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('name',)
+
 # Article is the base link to outside information
 # an 'article' can actually be a report, journalism, or anything else relevant to our research
 class Article(models.Model):
@@ -21,8 +24,14 @@ class Article(models.Model):
 
     notes = models.TextField(blank=True,null=True)
 
+    pub_date = models.DateTimeField(blank=True,null=True)
+    add_date = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ('add_date',)
 
 # Model to hold product info
 class Product(models.Model):
@@ -40,6 +49,7 @@ class Product(models.Model):
 
     class Meta:
         unique_together = ('name','division')
+        ordering = ('company','name')
 
 
 # Model for our general categories
@@ -49,6 +59,9 @@ class EthicsCategory(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('name',)
+
 # Model for the subcategories within those
 class EthicsSubCategory(models.Model):
     category = models.ForeignKey(EthicsCategory,related_name='subcategories')
@@ -57,6 +70,9 @@ class EthicsSubCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ('category','name')
 
 # Custom Exception for CrossReference
 class ChooseOneException(Exception):
@@ -68,9 +84,11 @@ class TagType(models.Model):
 
     subcategory = models.ForeignKey(EthicsSubCategory, related_name='tag_types')
 
-
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ('name',)
 
 class Tag(models.Model):
     tag_type = models.ForeignKey(TagType)
@@ -81,22 +99,14 @@ class Tag(models.Model):
 
     article = models.ForeignKey(Article, related_name='tags')
     product = models.ForeignKey(Product, related_name='tags',blank=True,null=True)
-    company = models.ForeignKey(Company, related_name='tags',blank=True,null=True)
+    company = models.ForeignKey(Company, related_name='tags')
 
     #submited_by = models.ForeignKey(User)
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('tag_type','article','company')
+        ordering = ('article','tag_type')
 
     def __str__(self):
         return "{0} : {1}".format(tag_type,article)
-
-    def save(self, *args, **kwargs):
-        if self.company == None:
-            if self.product == None:
-                raise ChooseOneException("You have to attach to either a Company or a Product")
-            else:
-                self.company = self.product.company
-
-        return super(Tag, self).save(*args, **kwargs)

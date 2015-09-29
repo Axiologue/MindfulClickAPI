@@ -1,0 +1,160 @@
+[
+    { "comment_0": "Output for FormMetaView test.  Access in Django test as self.output[1]"},
+    [
+        {
+            "company": [
+                {"name": "Adidas",
+                 "id": 2},
+                {"name": "New Balance",
+                 "id": 3},
+                {"name": "Nike",
+                 "id": 1}
+            ]
+        },
+        {
+            "ethicssubcategory": [
+                {
+                    "name": "Carbon",
+                    "id": 5,
+                    "category": "Environment",
+                    "tag_types": [
+                        {
+
+                            "name": "Factory produces extra 10 tons carbon",
+                            "subcategory": "Carbon",
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "name": "Pollution",
+                    "id": 3,
+                    "category": "Environment",
+                    "tag_types": []
+                },
+                {
+                    "name": "Recycling",
+                    "id": 4,
+                    "category": "Environment",
+                    "tag_types": [
+                        {
+                            "name": "Factory produces excessive waste",
+                            "subcategory": "Recycling",
+                            "id": 3
+                        }
+                    ]
+                },
+                {
+                    "name": "Slave Labor",
+                    "id": 1,
+                    "category": "Labor",
+                    "tag_types": [
+                        {
+                            "name": "No slave labor found for this company",
+                            "subcategory": "Slave Labor",
+                            "id": 2
+                        },
+                        {
+                            "name": "Slave Labor found in factory producing company products",
+                            "subcategory": "Slave Labor",
+                            "id": 1
+                        }
+                    ]
+                },
+                {
+                    "name": "Worker Safety",
+                    "id": 2,
+                    "category": "Labor",
+                    "tag_types": [
+                        {
+                            "subcategory": "Worker Safety",
+                            "name": "10% more worker accidents than global average",
+                            "id": 5
+                        }
+                    ]
+                }  
+            ]
+        }
+    ],
+    { "comment_1": "Output for ArticleNoTagView.  Access in Django test as self.output[3]"},
+    [
+        {
+            "id": 2,
+            "title": "Adidas Workers Rights",
+            "url": "http://www.adidas-group.com/en/workersaftey",
+            "notes": "Fictional Article Regarding Worker Safety"
+        },
+        {
+            "id": 3,
+            "title": "Lots of Companies pollute",
+            "url": "http://www.polluting.com/shoes",
+            "notes": "Fictional Article with Lots of Information about Polluting"
+        }
+    ],
+    {"comment_2": "Output for ArticleWithTagView.  Access in Django test as self.output[5]"},
+    [
+        {
+            "title": "Nike Releases Carbon",
+            "url": "http://www.article-about-carbon/article/1/",
+            "tags": [
+                {
+                    "tag_type": {
+                        "name": "Factory produces extra 10 tons carbon",
+                        "subcategory": "Carbon",
+                        "id": 4
+                    },
+                    "value": null,
+                    "excerpt": "Quote about Nike using carbon",
+                    "company": "Nike",
+                    "product": null,
+                    "id": 2
+                }
+            ],
+            "id": 1,
+            "notes":  "Fictional placeholder article about wasteful manufacturing practices"
+        }
+    ],
+    {"comment_3": "Output for new article from NewArticleView.  Access in Django test as self.output[7"},
+    {
+        "id": 4,
+        "url": "http://www.newarticle.com",
+        "title": "New Article!",
+        "notes": "Article to test that article creation view works"
+    },
+    {"comment_4": "Output for UpdateArticleView after changing object.  Access in Django test as self.output[9]"},
+    {
+        "url": "http://www.adidas-group.com/en/workersaftey",
+        "id": 2,
+        "title": "New Balance Workers Rights",
+        "notes": "Fictional Article Regarding Worker Safety.  Updated from Adidas to New Balance"
+    },
+    {"comment_5": "Output for new Tag from NewTagView.  Access in Django test as self.output[11]"},
+    {
+        "id": 3,
+        "company": 2,
+        "tag_type": 5,
+        "article": 2,
+        "excerpt": "Article excerpt that confirms tag type",
+        "product": null,
+        "value": null
+    },
+    {"comment_6": "Output for updated Tag from UpdateTagView.  Access in Django tests as self.output[13]"},
+    {
+        "id": 2,
+        "company": 1,
+        "excerpt": "Different quote about Nike using carbon",
+        "tag_type": 4,
+        "article": 1,
+        "product": null,
+        "value": null
+    },
+    {"comment_7": "Output of new TagType from NewTagTypeView.  Access in Django tests as self.output[15]"},
+    {
+        "subcategory": 2,
+        "name": "20% more worker accidents than the global average",
+        "id": 6
+    }
+
+]
+
+

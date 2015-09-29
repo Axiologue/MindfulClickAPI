@@ -6,7 +6,7 @@ from refData.serializers import ArticleSerializer, ProductSerializer, \
 from drf_multiple_model.views import MultipleModelAPIView
 
 from rest_framework import generics, mixins
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 
 class ArticleNoTagView(generics.ListAPIView):
     queryset = Article.objects.annotate(c=Count('tags')).filter(c=0)
@@ -16,7 +16,7 @@ class ArticleNoTagView(generics.ListAPIView):
 class ArticleWithCrossView(generics.ListAPIView):
     queryset= Article.objects.prefetch_related(
         'tags__company',
-        'tags__tag_type'
+        Prefetch('tags__tag_type', queryset=TagType.objects.select_related('subcategory'))
         ).annotate(c=Count('tags')).filter(c__gte=1)
     serializer_class = TagsByArticle;
 

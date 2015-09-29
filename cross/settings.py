@@ -25,7 +25,6 @@ from cross.secret_keys import DJANGO_KEY, POSTMARK_KEY
 SECRET_KEY = DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# SECURITY WARNING: don't run with debug turned on in production!
 if DJANGO_LOCATION == 'local':
     ALLOWED_HOSTS = []
 
@@ -70,6 +69,7 @@ MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -204,6 +204,7 @@ if DJANGO_LOCATION == 'local':
                                'localhost:8000' )
 
 # django-debug-toolbar settings
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,

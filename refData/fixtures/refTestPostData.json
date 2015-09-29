@@ -1,0 +1,36 @@
+[
+    {"comment_0": "Post Data for New Article.  Access in Django tests as self.postData[1]"},
+    {
+        "id": 0,
+        "url": "http://www.newarticle.com",
+        "title": "New Article!",
+        "notes": "Article to test that article creation view works"
+    },
+    {"comment_1": "Put data for updating article.  Access in Django tests as self.postData[3]"},
+    {
+        "title": "New Balance Workers Rights",
+        "url": "http://www.adidas-group.com/en/workersaftey",
+        "id": 2,
+        "notes": "Fictional Article Regarding Worker Safety.  Updated from Adidas to New Balance"
+    },
+    {"comment_2": "Post Data for new Tag.  Access in Django tests as self.postData[5]"},
+    {
+        "company": 2,
+        "tag_type": 5,
+        "article": 2,
+        "excerpt": "Article excerpt that confirms tag type"
+    },
+    {"comment_3": "Put data for updating Tag.  Access in Django tests as self.postData[7]"},
+    {
+        "id": 2,
+        "company": 1,
+        "excerpt": "Different quote about Nike using carbon",
+        "tag_type": 4,
+        "article": 1
+    },
+    {"comment_4": "Post data for new TagType.  Access in Django tests as self.postData[9"},
+    {
+        "subcategory": 2,
+        "name": "20% more worker accidents than the global average"
+    }
+]
