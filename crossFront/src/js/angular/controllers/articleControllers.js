@@ -4,9 +4,9 @@ angular.module('cross')
   $scope.articles = Article.query();
   $scope.taggedArticles = Article.queryTagged();
 
-  Meta.query(function (value, response) {
-    $scope.companies = value[0].company;
-    $scope.categories = value[1].ethicssubcategory;
+  Meta.query(function (data, response) {
+    $scope.companies = data[0].company;
+    $scope.categories = data[1].ethicssubcategory;
   });
 
   $scope.deleteModal = 'templates/includes/delete_modal.html';
@@ -82,8 +82,8 @@ angular.module('cross')
   $scope.articleSubmit = function () {
     $scope.tempArticle.csrfmiddlewaretoken = $scope.csrftoken;
 
-    Article.save({articleID:'new'},$scope.tempArticle,function (value, response) {
-      $scope.articles.push(value);
+    Article.save({articleID:'new'},$scope.tempArticle,function (data, response) {
+      $scope.articles.push(data);
       $scope.tempArticle = {
         id: 0,
         url: "",
@@ -138,10 +138,14 @@ angular.module('cross')
   $scope.tagEdit = function () {
     
     $scope.tagUrl = 'templates/includes/tag_form.html';
+
+    // Get company and category ids
     $scope.newTag = $.extend({},$scope.tag);
     $scope.newTag.company = $.grep($scope.companies,function(v) {return v.name === $scope.newTag.company;})[0].id;
     var category = $.grep($scope.categories,function(v) {return v.name === $scope.newTag.tag_type.subcategory;})[0];
     $scope.newTag.subcategory = category.id;
+
+    // Add the appropriate tagTypes for that category
     $scope.tagTypes = category.tag_types;
     $scope.newTag.tag_type = $scope.tag.tag_type.id;
   };
@@ -155,19 +159,19 @@ angular.module('cross')
   $scope.tagSubmit = function () {
     $scope.newTag.article = $scope.article.id;
 
-    Tag.update({tagID:$scope.tag.id},$scope.newTag,function (value, response) {
+    Tag.update({tagID:$scope.tag.id},$scope.newTag,function (data, response) {
 
       // Replace element IDs with actual names
-      value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
+      data.company = $.grep($scope.companies,function(v) {return v.id === data.company;})[0].name;
       var category = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory;})[0];
 
-      value.tag_type = {
-        name: $.grep(category.tag_types, function(v) {return v.id === value.tag_type;})[0].name,
+      data.tag_type = {
+        name: $.grep(category.tag_types, function(v) {return v.id === data.tag_type;})[0].name,
         subcategory: category.name,
-        id: value.tag_type
+        id: data.tag_type
       };
 
-      $scope.tag = $.extend({},value);
+      $scope.tag = $.extend({},data);
       $scope.error.error = false;
 
       $scope.tagUrl = 'templates/includes/tag_base.html';
@@ -187,26 +191,27 @@ angular.module('cross')
     subcategory: "",
     tag_type: "",
     excerpt: "",
+    value: undefined,
     article: $scope.article.id
   };
 
   $scope.tagSubmit = function () {
     $scope.newTag.csrfmiddlewaretoken = $scope.csrftoken;
 
-    Tag.save({tagID: 'new'},$scope.newTag,function (value,response) {
+    Tag.save({tagID: 'new'},$scope.newTag,function (data,response) {
       $scope.article.tags = $scope.article.tags || [];
 
       // Replace element IDs with actual names
-      value.company = $.grep($scope.companies,function(v) {return v.id === value.company;})[0].name;
+      data.company = $.grep($scope.companies,function(v) {return v.id === data.company;})[0].name;
       var category = $.grep($scope.categories,function(v) {return v.id === $scope.newTag.subcategory;})[0];
 
-      value.tag_type = {
-        name: $.grep(category.tag_types, function(v) {return v.id === value.tag_type;})[0].name,
+      data.tag_type = {
+        name: $.grep(category.tag_types, function(v) {return v.id === data.tag_type;})[0].name,
         subcategory: category.name,
-        id: value.tag_type
+        id: data.tag_type
       };
 
-      $scope.article.tags.push(value);
+      $scope.article.tags.push(data);
       $scope.state.addTag = false;
       $scope.error.error = false;
 
@@ -215,6 +220,16 @@ angular.module('cross')
         $scope.taggedArticles.push($scope.article);
         $scope.removeFromList($scope.article,$scope.articles);
       }
+
+      // Reset the newTag to blank, in case you want to add more tags
+      $scope.newTag = {
+        company: "",
+        subcategory: "",
+        tag_type: "",
+        excerpt: "",
+        value: undefined,
+        article: $scope.article.id
+      };
     },function (response) {
       $scope.error.msg = JSON.stringify(response.data);
       $scope.error.error = true;
@@ -251,11 +266,8 @@ angular.module('cross')
     // Get the currently selected subcategory
     $scope.newTagType.subcategory = $scope.newTag.subcategory;
 
-    console.log($scope.newTagType);
-
     // Send the new TagType to server
-    TagType.save($scope.newTagType,function (value, respone) {
-      console.log(value);
+    TagType.save($scope.newTagType,function (data, respone) {
 
       // Get index of current subcategory
       var index = 0;
@@ -267,10 +279,10 @@ angular.module('cross')
       });
 
       // Add the new Tag Type to the current category list
-      $scope.categories[index].tag_types.push(value);
+      $scope.categories[index].tag_types.push(data);
 
       // Set the form to the new TagTpe
-      $scope.newTag.tag_type = value.id;
+      $scope.newTag.tag_type = data.id;
 
       // Reset the add Tag Type form to invisible
       $scope.tagFormState.addTagType = false;
@@ -300,7 +312,7 @@ angular.module('cross')
 
   $scope.itemDelete = function () {
 
-    Tag.delete({tagID:$scope.tag.id}, function (value,response) {
+    Tag.delete({tagID:$scope.tag.id}, function (data,response) {
       $scope.removeFromList($scope.tag,$scope.article.tags);
       if ($scope.article.tags.length === 0) {
         $scope.removeFromList($scope.article,$scope.taggedArticles);

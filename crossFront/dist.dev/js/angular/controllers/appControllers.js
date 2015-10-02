@@ -48,7 +48,7 @@ angular.module('cross')
     });
 
     $scope.logout = function(){
-      djangoAuth.logout()
+      djangoAuth.logout();
     };
 
 }]);

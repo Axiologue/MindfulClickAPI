@@ -30,6 +30,10 @@
               <button class="btn btn-edit btn-block" ng-click="submitTagType($event)">Add Tag Type</button>
             </div>
 
+            <div class="form-group" ng-show="newTag.tag_type">
+                <label for="{{'NewTagValue' + article.id}}">VALUE (Only for relevant tags):</label>
+                <input ng-model="newTag.value" class="form-control" placeholder="Enter amount for tag modifier">
+            </div>
 
             <div class="form-group">
               <label for="{{'crossNotes' + article.id}}">EXCERPT:</label>

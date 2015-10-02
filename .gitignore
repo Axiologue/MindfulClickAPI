@@ -27,6 +27,7 @@ db_inits.py
 # Compiled Code #
 #################
 *.pyc
+*.swp
 
 # testing tools #
 #################
