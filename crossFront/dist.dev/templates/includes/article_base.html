@@ -8,9 +8,9 @@
         </div>
         <!-- Article control buttons -->
         <div class="col-sm-2 col-xs-12 text-center">
-          <button class="btn btn-block btn-add_analysis" ng-click="state.addTag=!state.addTag">Add Tag</button>
+          <button class="btn btn-block btn-add_analysis" ng-click="toggleAddTag()">Add Tag</button>
           <button class="btn btn-block btn-edit" ng-click="readyForm()">Edit</button>
-          <button class="btn btn-block btn-delete" data-toggle="modal" data-target="{{'#modal-article-' + article.id}}">Delete</button>
+          <button class="btn btn-block btn-delete" ng-click="articleDelete()" >Delete</button>
         </div>
 
         <div ng-include="deleteModal" ng-controller="ArticleDeleteCtrl"></div>

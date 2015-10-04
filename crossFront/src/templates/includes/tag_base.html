@@ -7,7 +7,7 @@
             </div>
             <div class="col-xs-12 col-sm-2 tagButtons" ng-show="buttons">
               <button class="btn btn-sm btn-edit" ng-click="tagEdit()">Edit</button>
-              <button class="btn btn-sm btn-delete" data-toggle="modal" data-target="{{'#modal-cross-' + article.id + '-' + tag.id}}">Delete</button>
+              <button class="btn btn-sm btn-delete" ng-click="tagDelete()">Delete</button>
             </div>
 
             <div ng-include="deleteModal" ng-controller="DeleteTagCtrl"></div>

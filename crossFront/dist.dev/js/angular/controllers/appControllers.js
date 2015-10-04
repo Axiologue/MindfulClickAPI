@@ -16,7 +16,7 @@ angular.module('cross')
         $scope.authenticated = true;
         djangoAuth.profile().then(function(data){
           expires = new Date();
-          expires.setDate(expires.getDate() + 1);
+          expires.setDate(expires.getDate() + 14);
 
           $scope.user = data;
           $cookies.putObject('user',data,{'expires':expires});
@@ -34,7 +34,7 @@ angular.module('cross')
 
       djangoAuth.profile().then(function(data) {
         expires = new Date();
-        expires.setDate(expires.getDate() + 1);
+        expires.setDate(expires.getDate() + 14);
 
         $scope.user = data;
         $cookies.putObject('user',data,{'expires':expires});

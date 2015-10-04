@@ -21,6 +21,21 @@ angular.module('cross')
       });
       list.splice(index,1);
   };
+
+  $scope.loginModal = 'templates/includes/login_modal.html';
+
+  // Function for button actions that can only occur when logged in
+  // if Logged in, performs the action (passed in as a function)
+  // if not logged in, it triggers the login modal
+  $scope.ifAuthenticated = function (loggedInAction) {
+    return function () {
+      if($scope.authenticated) {
+        loggedInAction();
+      } else {
+        $('#login_modal').modal('toggle');
+      }
+    };
+  };
 }]);
 
 
@@ -49,10 +64,21 @@ angular.module('cross')
     });
   };
 
-  $scope.readyForm = function() {
-    $scope.tempArticle = $.extend({},$scope.article);
-    $scope.articleTemplate = 'templates/includes/article_form.html';
-  };
+  // if Logged in, opens the article edit form and populates it with the current article info
+  $scope.readyForm = $scope.ifAuthenticated(function () {
+        $scope.tempArticle = $.extend({},$scope.article);
+        $scope.articleTemplate = 'templates/includes/article_form.html';
+  });
+
+  // if logged in, opens the add tag form
+  $scope.toggleAddTag = $scope.ifAuthenticated(function () {
+    $scope.state.addTag = !$scope.state.addTag;
+  });
+
+  // if logged in, opens the delete article modal
+  $scope.articleDelete = $scope.ifAuthenticated(function () {
+    $('#modal-article-' + $scope.article.id).modal('toggle');
+  });
 
   $scope.flipBack = function () {
     $scope.articleTemplate='templates/includes/article_base.html';
@@ -79,7 +105,7 @@ angular.module('cross')
     notes: ""
   };
 
-  $scope.articleSubmit = function () {
+  $scope.articleSubmit = $scope.ifAuthenticated(function () {
     $scope.tempArticle.csrfmiddlewaretoken = $scope.csrftoken;
 
     Article.save({articleID:'new'},$scope.tempArticle,function (data, response) {
@@ -97,7 +123,7 @@ angular.module('cross')
       $scope.error.error = true;
       $scope.success.success = false;
     });
-  };
+  });
 
 
 }]);
@@ -135,7 +161,7 @@ angular.module('cross')
   $scope.buttons = false;
   $scope.tagUrl = 'templates/includes/tag_base.html';
 
-  $scope.tagEdit = function () {
+  $scope.tagEdit = $scope.ifAuthenticated(function () {
     
     $scope.tagUrl = 'templates/includes/tag_form.html';
 
@@ -148,7 +174,11 @@ angular.module('cross')
     // Add the appropriate tagTypes for that category
     $scope.tagTypes = category.tag_types;
     $scope.newTag.tag_type = $scope.tag.tag_type.id;
-  };
+  });
+
+  $scope.tagDelete = $scope.ifAuthenticated(function () {
+    $('#modal-tag-' + $scope.article.id + '-' + $scope.tag.id).modal('toggle');
+  });
 
   $scope.tagCancel = function () {
     
@@ -303,7 +333,7 @@ angular.module('cross')
 angular.module('cross')
 .controller('DeleteTagCtrl',['$scope','Tag',function ($scope,Tag) {
   $scope.modalContent = {
-    id: 'modal-cross-' + $scope.article.id + '-' + $scope.tag.id,
+    id: 'modal-tag-' + $scope.article.id + '-' + $scope.tag.id,
     label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.tag.id,
     kind: 'Tag',
     title: $scope.tag.tag_type.name + " on " + $scope.article.title,

@@ -5,7 +5,7 @@ from refData.models import Article, Tag, Product, EthicsCategory, EthicsSubCateg
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ('id','title','url','notes')
+        fields = ('id','title','url','notes','added_by')
 
 class TagTypeSerializer(serializers.ModelSerializer):
     subcategory = serializers.StringRelatedField()
@@ -26,19 +26,19 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('tag_type','value','excerpt','company','product','id')
+        fields = ('tag_type','value','excerpt','company','product','id','added_by')
 
 class TagChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('tag_type','value','excerpt','company','product','article','id')
+        fields = ('tag_type','value','excerpt','company','product','article','id','added_by')
 
 class TagsByArticle(serializers.ModelSerializer):
     tags = TagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Article
-        fields = ('title','url','tags','id','notes')
+        fields = ('title','url','tags','id','notes','added_by')
 
 class ProductSerializer(serializers.ModelSerializer):
     company = serializers.StringRelatedField()

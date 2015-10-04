@@ -26,6 +26,7 @@ class Article(models.Model):
 
     pub_date = models.DateTimeField(blank=True,null=True)
     add_date = models.DateTimeField(auto_now_add=True)
+    added_by = models.ForeignKey(User)
 
     def __str__(self):
         return self.title
@@ -101,12 +102,15 @@ class Tag(models.Model):
     product = models.ForeignKey(Product, related_name='tags',blank=True,null=True)
     company = models.ForeignKey(Company, related_name='tags')
 
-    #submited_by = models.ForeignKey(User)
     submitted_at = models.DateTimeField(auto_now_add=True)
+    added_by = models.ForeignKey(User)
 
     class Meta:
         unique_together = ('tag_type','article','company')
         ordering = ('article','tag_type')
 
     def __str__(self):
-        return "{0} : {1}".format(tag_type,article)
+        return "{1} : {1}".format(tag_type,article)
+
+
+
