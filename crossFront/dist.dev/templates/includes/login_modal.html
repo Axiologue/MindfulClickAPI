@@ -1,5 +1,5 @@
 
-      <div id="login_modal" class="modal fade" tab-index="-1" role="dialog" aria-labelledby="login_modal_content" >
+      <div id="login_modal" class="modal fade" tab-index="-1" role="dialog" aria-labelledby="login_modal_content" ng-controller="LoginModalCtrl">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -7,9 +7,9 @@
                 <h4 class="modal-title" id="login_modal_content" >You must log in to to do that!</h4>
               </div>
               <div class="modal-body text-center">
-                <a href="#/login" class="btn btn-block btn-primary">Login</a> 
+                <button ng-click="goToLogin()" class="btn btn-block btn-primary">Login</button>
                 <p>or</p>
-                <a href="#/signUp" class="btn btn-block btn-success">Sign Up</a>
+                <button ng-click="goToSignUp()" class="btn btn-block btn-success">Sign Up</button>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

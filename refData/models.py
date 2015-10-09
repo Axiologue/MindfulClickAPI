@@ -96,7 +96,7 @@ class Tag(models.Model):
 
     excerpt = models.TextField()
 
-    value = models.IntegerField(blank=True,null=True)
+    value = models.DecimalField(max_digits=15,decimal_places=2,blank=True,null=True)
 
     article = models.ForeignKey(Article, related_name='tags')
     product = models.ForeignKey(Product, related_name='tags',blank=True,null=True)

@@ -355,3 +355,18 @@ angular.module('cross')
     });
   };
 }]);
+
+angular.module('cross')
+.controller('LoginModalCtrl',['$scope','$location',function ($scope,$location) {
+  $scope.goToLogin = function () {
+    $location.path('/login'); 
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+  };
+
+  $scope.goToSignUp = function() {
+    $location.path('/signUp');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+  };
+}]);
