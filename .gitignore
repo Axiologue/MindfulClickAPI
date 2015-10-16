@@ -56,3 +56,10 @@ crossFront/bower_components/
 # Testing Files #
 #################
 crossFront/coverage/
+
+# Server Files #
+################
+ax_nginx.conf
+ax_uwsgi.ini
+uwsgi_params
+static/
