@@ -16,7 +16,7 @@ class NewEthicsTagView(generics.CreateAPIView):
     
     def create(self, request, *args, **kwargs):
         request.data['added_by'] = request.user.id
-        return super(NewArticleView,self).create(request,*args,**kwargs)
+        return super(NewEthicsTagView,self).create(request,*args,**kwargs)
 
 class FormMetaView(MultipleModelAPIView):
     queryList = [

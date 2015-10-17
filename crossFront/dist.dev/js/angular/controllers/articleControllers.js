@@ -157,7 +157,7 @@ angular.module('cross')
 }]);
 
 angular.module('cross')
-.controller('SingleTagCtrl',['$scope','Tag',function ($scope,Tag) {
+.controller('SingleTagCtrl',['$scope','eTag',function ($scope,eTag) {
   $scope.buttons = false;
   $scope.tagUrl = 'templates/includes/tag_base.html';
 
@@ -189,7 +189,7 @@ angular.module('cross')
   $scope.tagSubmit = function () {
     $scope.newTag.article = $scope.article.id;
 
-    Tag.update({tagID:$scope.tag.id},$scope.newTag,function (data, response) {
+    eTag.update({tagID:$scope.tag.id},$scope.newTag,function (data, response) {
 
       // Replace element IDs with actual names
       data.company = $.grep($scope.companies,function(v) {return v.id === data.company;})[0].name;
@@ -215,7 +215,7 @@ angular.module('cross')
 }]);
 
 angular.module('cross')
-.controller('NewTagCtrl',['$scope','Tag',function ($scope,Tag) {
+.controller('NewTagCtrl',['$scope','eTag',function ($scope,eTag) {
   $scope.newTag = {
     company: "",
     subcategory: "",
@@ -228,8 +228,8 @@ angular.module('cross')
   $scope.tagSubmit = function () {
     $scope.newTag.csrfmiddlewaretoken = $scope.csrftoken;
 
-    Tag.save({tagID: 'new'},$scope.newTag,function (data,response) {
-      $scope.article.tags = $scope.article.tags || [];
+    eTag.save({tagID: 'new'},$scope.newTag,function (data,response) {
+      $scope.article.ethicstags = $scope.article.ethicstags || [];
 
       // Replace element IDs with actual names
       data.company = $.grep($scope.companies,function(v) {return v.id === data.company;})[0].name;
@@ -241,12 +241,12 @@ angular.module('cross')
         id: data.tag_type
       };
 
-      $scope.article.tags.push(data);
+      $scope.article.ethicstags.push(data);
       $scope.state.addTag = false;
       $scope.error.error = false;
 
       //if the article is in the Unanalyzed list, move it to the analyzed list
-      if($scope.article.tags.length === 1) {
+      if($scope.article.ethicstags.length === 1) {
         $scope.taggedArticles.push($scope.article);
         $scope.removeFromList($scope.article,$scope.articles);
       }
@@ -271,7 +271,7 @@ angular.module('cross')
 }]);
 
 angular.module('cross')
-.controller('TagFormCtrl',['$scope','TagType',function ($scope,TagType) {
+.controller('TagFormCtrl',['$scope','eType',function ($scope,eType) {
   $scope.tagFormState = {
     addTagType: false
   };
@@ -297,7 +297,7 @@ angular.module('cross')
     $scope.newTagType.subcategory = $scope.newTag.subcategory;
 
     // Send the new TagType to server
-    TagType.save($scope.newTagType,function (data, respone) {
+    eType.save($scope.newTagType,function (data, respone) {
 
       // Get index of current subcategory
       var index = 0;
@@ -331,7 +331,7 @@ angular.module('cross')
 }]);
 
 angular.module('cross')
-.controller('DeleteTagCtrl',['$scope','Tag',function ($scope,Tag) {
+.controller('DeleteTagCtrl',['$scope','eTag',function ($scope,eTag) {
   $scope.modalContent = {
     id: 'modal-tag-' + $scope.article.id + '-' + $scope.tag.id,
     label: 'modalLabel-cross-' + $scope.article.id + '-' + $scope.tag.id,
@@ -342,9 +342,9 @@ angular.module('cross')
 
   $scope.itemDelete = function () {
 
-    Tag.delete({tagID:$scope.tag.id}, function (data,response) {
-      $scope.removeFromList($scope.tag,$scope.article.tags);
-      if ($scope.article.tags.length === 0) {
+    eTag.delete({tagID:$scope.tag.id}, function (data,response) {
+      $scope.removeFromList($scope.tag,$scope.article.ethicstags);
+      if ($scope.article.ethicstags.length === 0) {
         $scope.removeFromList($scope.article,$scope.taggedArticles);
         $scope.articles.push($scope.article);
       }

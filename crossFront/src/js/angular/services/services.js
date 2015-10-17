@@ -10,7 +10,7 @@ crossServices.factory('BaseUrl', [function () {
 // For making Article-related API calls
 crossServices.factory('Article',['$resource', 'BaseUrl',
   function ($resource, BaseUrl){
-    return $resource(BaseUrl + 'tags/articles/:articleID/', {}, {
+    return $resource(BaseUrl + 'articles/articles/:articleID/', {}, {
       query: {method:'GET', params:{articleID:'untagged'}, isArray:true},
       queryTagged: {method:'GET', params:{articleID:'tagged'}, isArray:true},
       update: {method: 'PUT'}
@@ -18,9 +18,9 @@ crossServices.factory('Article',['$resource', 'BaseUrl',
 }]);
 
 // For making tag-related API calls
-crossServices.factory('Tag',['$resource', 'BaseUrl',
+crossServices.factory('eTag',['$resource', 'BaseUrl',
   function ($resource, BaseUrl) {
-    return $resource(BaseUrl + 'tags/tags/:tagID/',{},{
+    return $resource(BaseUrl + 'tags/etags/:tagID/',{},{
       query: {method:'GET',params:{tagID:'list'},isArray:true},
       update: {method: 'PUT'}
     });
@@ -35,9 +35,9 @@ crossServices.factory('Meta',['$resource', 'BaseUrl',
 }]);
 
 // For managing Tag Types
-crossServices.factory('TagType',['$resource', 'BaseUrl',
+crossServices.factory('eType',['$resource', 'BaseUrl',
   function ($resource, BaseUrl) {
-    return $resource(BaseUrl + 'tags/tag-types/:tagTypeID/',{},{
+    return $resource(BaseUrl + 'tags/etypes/:tagTypeID/',{},{
       save: {method:'POST',params:{tagTypeID:'new'}},
     });
 }]);
