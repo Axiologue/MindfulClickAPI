@@ -1,7 +1,7 @@
 from tags.models import Company 
 from tags.models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory
 from refData.serializers import CompanySerializer
-from tags.serializers import  EthicsTagChangeSerializer, \
+from tags.serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
         EthicsTypeSerializer, EthicsSubSerializer, EthicsTypeUpdateSerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
@@ -33,3 +33,16 @@ class NewEthicsTypeView(generics.CreateAPIView):
     queryset = EthicsType.objects.all()
     serializer_class = EthicsTypeUpdateSerializer
     permission_classes = (IsAuthenticated,)    
+
+class NoRelDataView(generics.CreateAPIView):
+    queryset = MetaTag.objects.all()
+    serializer_class = MetaTagSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        request.data['added_by'] = request.user.id
+        return super(NoRelDataView,self).create(request,*args,**kwargs)
+
+class UpdateMetaTagView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MetaTag.objects.all()
+    serializer_class = MetaTagSerializer

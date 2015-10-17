@@ -9,12 +9,17 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ('id','title','url','notes','added_by')
 
 
-class TagsByArticle(serializers.ModelSerializer):
+class ArticleEthicsTagsSerializer(serializers.ModelSerializer):
     ethicstags = EthicsTagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Article
         fields = ('title','url','ethicstags','id','notes','added_by')
+
+class ArticleMetaTagsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('title','url','metatags','id','notes','added_by')
 
 class ProductSerializer(serializers.ModelSerializer):
     company = serializers.StringRelatedField()

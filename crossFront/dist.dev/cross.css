@@ -55,5 +55,19 @@
     background: #c9302c;
 }
 
+.noDataWrapper {
+  padding: 5px 30px 0 5px;
+}
+
+.btn-noData {
+  border-color: #d9534f;
+  white-space: normal;
+}
+
+.btn-noData:hover,
+.btn-noData:focus {
+  background: #c9302c;
+}
+
 /* NAVBAR STYLES */
 

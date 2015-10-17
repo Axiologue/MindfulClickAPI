@@ -3,6 +3,7 @@ angular.module('cross')
   $scope.csrftoken = $.cookie('csrftoken');
   $scope.articles = Article.query();
   $scope.taggedArticles = Article.queryTagged();
+  $scope.noDataArticles = Article.queryNoData();
 
   Meta.query(function (data, response) {
     $scope.companies = data[0].company;
@@ -148,13 +149,51 @@ angular.module('cross')
         $scope.removeFromList($scope.article,$scope.crossList);
       }
       
-
+      // Code to programmatically dismiss Bootstrap modal overlay
       $('myModal' + $scope.article.id).modal('toggle');
       $('body').removeClass('modal-open');
       $('.modal-backdrop').remove();
     });
   };
 }]);
+
+// Controller for tagging articles as having no relevant data
+angular.module('cross')
+.controller('ArticleNoDataCtrl',['$scope','mTag',function ($scope, mTag) {
+  
+  $scope.noData = function () {
+    var data = {'article': $scope.article.id, 'tag_type': 1};
+
+    mTag.save({tagID:'new'},data,function (d, response) {
+      $scope.noDataArticles.push($scope.article);
+
+      $scope.removeFromList($scope.article,$scope.articles);
+    }, function (response) {
+      console.log('error.  Check network tab');
+    });
+  };
+    
+}]);
+
+angular.module('cross')
+.controller('ArticleRestoreCtrl',['$scope','mTag',function ($scope, mTag) {
+
+  $scope.noDataRestore = function () {
+    mTag.delete({tagID: $scope.article.metatags[0]},function () {
+      // remove metatags from article
+      delete $scope.article.metatags;
+
+      // add the article to the untagged article list
+      $scope.articles.push($scope.article);
+
+      // remove the article from the No Relevant Data list
+      $scope.removeFromList($scope.article,$scope.noDataArticles);
+    }, function (response) {
+      console.log('error.  Check network tab');
+    });
+  };
+}]);
+    
 
 angular.module('cross')
 .controller('SingleTagCtrl',['$scope','eTag',function ($scope,eTag) {

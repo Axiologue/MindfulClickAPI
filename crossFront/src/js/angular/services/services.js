@@ -13,6 +13,7 @@ crossServices.factory('Article',['$resource', 'BaseUrl',
     return $resource(BaseUrl + 'articles/articles/:articleID/', {}, {
       query: {method:'GET', params:{articleID:'untagged'}, isArray:true},
       queryTagged: {method:'GET', params:{articleID:'tagged'}, isArray:true},
+      queryNoData: {method:'GET', params:{articleID:'noData'}, isArray:true},
       update: {method: 'PUT'}
   });
 }]);
@@ -24,6 +25,13 @@ crossServices.factory('eTag',['$resource', 'BaseUrl',
       query: {method:'GET',params:{tagID:'list'},isArray:true},
       update: {method: 'PUT'}
     });
+}]);
+
+// For making meta-tag API calls
+// Currently only 'No Relevant Data' tags
+crossServices.factory('mTag',['$resource', 'BaseUrl',
+    function ($resource, BaseUrl) {
+      return $resource(BaseUrl + 'tags/mtags/:tagID/');
 }]);
 
 // For getting company and ethics lists, used in form-making

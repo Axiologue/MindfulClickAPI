@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from tags.models import EthicsType, EthicsTag, EthicsSubCategory
+from tags.models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag
 
 class EthicsTypeSerializer(serializers.ModelSerializer):
     subcategory = serializers.StringRelatedField()
@@ -35,3 +35,8 @@ class EthicsSubSerializer(serializers.ModelSerializer):
     class Meta:
         model = EthicsSubCategory
         fields = ('name','id','category','tag_types')
+
+class MetaTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MetaTag
+        fields = ('article','tag_type','added_by')

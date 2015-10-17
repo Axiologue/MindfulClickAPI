@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^articles/tagged/$',views.ArticleWithCrossView.as_view()),
     url(r'^articles/new/$',views.NewArticleView.as_view()),
     url(r'^articles/(?P<pk>\d+)/$',views.UpdateArticleView.as_view()),
+    url(r'^articles/noData/$',views.ArticleNoDataView.as_view())
 ]

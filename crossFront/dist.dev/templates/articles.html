@@ -31,7 +31,31 @@
         <!-- containter to hold Article Info/Form -->
         <div class="col-xs-12" ng-include="articleTemplate">
         </div>
+        
+        <div class="col-xs-12 col-sm-2 col-sm-offset-10 noDataWrapper">
+          <button class="btn btn-block btn-noData" ng-controller="ArticleNoDataCtrl" ng-click="noData()">No Relevant Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="container">
+    <div class="row">
+      <h1>Articles Marked As Having No Relevant Data</h2>
+
+      <div class="article listitem col-xs-12" ng-repeat="article in noDataArticles" ng-controller="ArticleRestoreCtrl">
+        <div class="col-xs-12 col-sm-10" >
+          <!-- Actual Article Content -->
+          <ul>
+            <li><h3>{{article.title}}</h3></li>
+            <li><a href="{{article.url}}" target="_newtab">{{article.url}}</a></li>
+            <li>{{article.notes}}</li>
+          </ul>
+        </div>
+        <!-- Article control buttons -->
+        <div class="col-sm-2 col-xs-12 text-center">
+          <button class="btn btn-block btn-add_analysis" ng-click="noDataRestore()">Restore</button>
+        </div>
       </div>
     </div>
   </div>

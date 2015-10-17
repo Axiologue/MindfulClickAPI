@@ -26,7 +26,7 @@ SECRET_KEY = DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if DJANGO_LOCATION == 'local':
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
 else:
     ALLOWED_HOSTS = ['*']
@@ -36,8 +36,6 @@ if DJANGO_LOCATION != 'production':
     DEBUG = True
 else:
     DEBUG = False
-
-TEMPLATE_DEBUG = DEBUG
 
 # Application definition
 
@@ -95,8 +93,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'debug': DEBUG,
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'cross.wsgi.application'
@@ -183,9 +182,8 @@ STATICFILES_DIRS = (
 )
 
 # django-cors-headers configuration
-# django-cors-headers configuration
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True 
 #CORS_ORIGIN_WHITELIST = (
 #    'api.axiologue.org',
 #    'data.axiologue.org'
@@ -199,7 +197,6 @@ CORS_ALLOW_HEADERS = (
         'x-csrftoken',
         'access-control-allow-credentials'
     )
-
 
 # django-debug-toolbar settings
 DEBUG_TOOLBAR_PATCH_SETTINGS = False

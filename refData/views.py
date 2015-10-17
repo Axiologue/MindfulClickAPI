@@ -1,7 +1,7 @@
 from refData.models import Article, Product
 from tags.models import EthicsType
 from refData.serializers import ArticleSerializer, ProductSerializer, \
-        TagsByArticle
+       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer 
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +17,7 @@ class ArticleWithCrossView(generics.ListAPIView):
         'ethicstags__company',
         Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory'))
         ).annotate(c=Count('ethicstags')).filter(c__gte=1)
-    serializer_class = TagsByArticle;
+    serializer_class = ArticleEthicsTagsSerializer;
 
 class UpdateArticleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArticleSerializer
@@ -32,3 +32,8 @@ class NewArticleView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         request.data['added_by'] = request.user.id
         return super(NewArticleView,self).create(request,*args,**kwargs)
+
+class ArticleNoDataView(generics.ListAPIView):
+    serializer_class = ArticleMetaTagsSerializer
+    queryset = Article.objects.filter(metatags__tag_type=1)
+        
