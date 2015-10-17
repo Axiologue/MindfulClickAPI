@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'allauth.account',
     'rest_auth',
     'rest_auth.registration',
+    'tags'
 )
 
 if DEBUG:
@@ -183,12 +184,12 @@ STATICFILES_DIRS = (
 
 # django-cors-headers configuration
 # django-cors-headers configuration
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'api.axiologue.org',
-    'data.axiologue.org'
-)
+#CORS_ORIGIN_WHITELIST = (
+#    'api.axiologue.org',
+#    'data.axiologue.org'
+#)
 CORS_ALLOW_HEADERS = (
         'x-requested-with',
         'content-type',
@@ -199,9 +200,6 @@ CORS_ALLOW_HEADERS = (
         'access-control-allow-credentials'
     )
 
-if DJANGO_LOCATION == 'local':
-    CORS_ORIGIN_WHITELIST += ('localhost:9000',
-                               'localhost:8000' )
 
 # django-debug-toolbar settings
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
