@@ -27,6 +27,8 @@
     "jquery-cookie": "~1.4.1",
     "angular-route": "~1.4.3",
     "angular-sanitize": "~1.4.3",
-    "angular-cookies": "~1.4.3"
+    "angular-cookies": "~1.4.3",
+    "font-awesome": "fontawesome#~4.4.0",
+    "angularjs-slider": "~1.0.0"
   }
 }

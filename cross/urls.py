@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^articles/', include('refData.urls',namespace='articles')),
     url(r'^tags/',include('tags.urls',namespace='tags')),
+    url(r'^profile/',include('profile.urls',namespace='profile')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),

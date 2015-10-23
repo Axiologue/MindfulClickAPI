@@ -21,9 +21,20 @@ var paths = {
   templates: 'src/templates/**/*.html',
   scriptsDevServer: 'devServer/**/*.js',
   images: 'src/img/*.*',
+  fa_fonts: 'bower_components/font-awesome/fonts/*.*',
 }
 
 var pipes = {};
+
+pipes.moveFontsDev = function () {
+    gulp.src([paths.fa_fonts])
+        .pipe(gulp.dest(paths.distDev + '/fonts'));
+}
+
+pipes.moveFontsProd = function () {
+    gulp.src([paths.fa_fonts])
+        .pipe(gulp.dest(paths.distProd + '/fonts'));
+}
 
 pipes.moveImagesDev = function () {
     gulp.src(paths.images)
@@ -125,24 +136,24 @@ pipes.scriptedPartials = function() {
 };
 
 pipes.builtVendorStylesDev = function() {
-  return gulp.src(bowerFiles({filter: /\.less/}))
+  return gulp.src(bowerFiles({filter: /\.less|\.css/}))
     .pipe(plugins.less())
-    .pipe(gulp.dest(paths.distDev));
+    .pipe(gulp.dest(paths.distDev + '/css'));
 }
 
 pipes.builtVendorStylesProd = function() {
-  return gulp.src(bowerFiles({filter: /\.less/}))
+  return gulp.src(bowerFiles({filter: /\.less|\.css/}))
     .pipe(plugins.sourcemaps.init())
       .pipe(plugins.less())
       .pipe(plugins.minifyCss())
       .pipe(pipes.minifiedFileName())
     .pipe(plugins.sourcemaps.write('/maps'))
-    .pipe(gulp.dest(paths.distProd));
+    .pipe(gulp.dest(paths.distProd + '/css'));
 }
 
 pipes.builtStylesDev = function() {  
     return gulp.src(paths.styles)
-        .pipe(gulp.dest(paths.distDev));
+        .pipe(gulp.dest(paths.distDev + '/css'));
 };
 
 pipes.builtStylesProd = function() {  
@@ -151,7 +162,7 @@ pipes.builtStylesProd = function() {
             .pipe(plugins.minifyCss())
             .pipe(pipes.minifiedFileName())
         .pipe(plugins.sourcemaps.write('/maps'))
-        .pipe(gulp.dest(paths.distProd));
+        .pipe(gulp.dest(paths.distProd + '/css'));
 };
 
 pipes.validatedIndex = function() {  
@@ -200,11 +211,13 @@ pipes.builtIndexProd = function() {
 
 pipes.builtAppDev = function() {  
     pipes.moveImagesDev();
+    pipes.moveFontsDev();
     return es.merge(pipes.builtIndexDev(), pipes.builtPartialsDev());
 };
 
 pipes.builtAppProd = function() { 
     pipes.moveImagesProd(); 
+    pipes.moveFontsProd();
     return pipes.builtIndexProd();
 };
 

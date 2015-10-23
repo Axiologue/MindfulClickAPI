@@ -38,7 +38,7 @@ crossServices.factory('mTag',['$resource', 'BaseUrl',
 crossServices.factory('Meta',['$resource', 'BaseUrl',
   function ($resource, BaseUrl) {
     return $resource(BaseUrl + 'tags/formMeta/',{},{
-      query: {method:'GET',params:{},isArray:true},
+      query: {method:'GET',params:{},isArray:true}
     });
 }]);
 
@@ -46,6 +46,14 @@ crossServices.factory('Meta',['$resource', 'BaseUrl',
 crossServices.factory('eType',['$resource', 'BaseUrl',
   function ($resource, BaseUrl) {
     return $resource(BaseUrl + 'tags/etypes/:tagTypeID/',{},{
-      save: {method:'POST',params:{tagTypeID:'new'}},
+      save: {method:'POST',params:{tagTypeID:'new'}}
     });
+}]);
+
+crossServices.factory('Pref',['$resource', 'BaseUrl',
+    function ($resource, BaseUrl) {
+      return $resource(BaseUrl + 'profile/prefs/:prefID/', {},{
+        query: {method:'GET',params:{prefID:'all'},isArray:true},
+        update: {method: 'PUT'}
+      });
 }]);

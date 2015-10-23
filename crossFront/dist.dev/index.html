@@ -14,10 +14,12 @@
   <link rel="icon" type="image/png" href="img/favicon.ico" sizes="16x16">
 
   <!-- bower:css -->
-    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/rzslider.css">
     <!-- endinject -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="cross.css">
+    <link rel="stylesheet" href="css/cross.css">
     <!-- endinject -->
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -54,7 +56,10 @@
               <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="#/userProfile"><i class="fa fa-fw fa-gear"></i> Edit Profile</a>
+                  <a href="#/userProfile"><i class="fa fa-fw fa-gear"></i>Settings</a>
+                </li>
+                <li>
+                  <a href="#/ethicsProfile"><i class="fa fa-fw fa-balance-scale"></i>Ethics Profile</a>
                 </li>
                 <li class="divider"></li>
                 <li>
@@ -80,12 +85,14 @@
   <script src="bower_components/angular-sanitize.js"></script>
   <script src="bower_components/bootstrap.js"></script>
   <script src="bower_components/jquery.cookie.js"></script>
+  <script src="bower_components/rzslider.js"></script>
   <!-- endinject -->
   <!-- inject:js -->
   <script src="js/angular/app.js"></script>
   <script src="js/angular/services/validate.js"></script>
   <script src="js/angular/services/services.js"></script>
   <script src="js/angular/services/djangoAuth.js"></script>
+  <script src="js/angular/controllers/profileControllers.js"></script>
   <script src="js/angular/controllers/authControllers.js"></script>
   <script src="js/angular/controllers/articleControllers.js"></script>
   <script src="js/angular/controllers/appControllers.js"></script>

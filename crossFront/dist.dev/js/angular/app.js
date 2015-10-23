@@ -5,7 +5,8 @@ var cross = angular.module('cross', [
   'ngRoute',
   'ngCookies',
   'ngSanitize',
-  'ngResource'
+  'ngResource',
+  'rzModule'
 ]);
 
 cross.config(['$resourceProvider',function($resourceProvider) {
@@ -73,6 +74,14 @@ cross.config(['$routeProvider',
         resolve: {
           authenticated: ['djangoAuth', function(djangoAuth){
             return djangoAuth.authenticationStatus();
+          }],
+        }
+      })
+      .when('/ethicsProfile', {
+        templateUrl: 'templates/includes/ethicsprofile.html',
+        resolve: {
+          authenticated: ['djangoAuth', function(djangoAuth) {
+            return djangoAuth.authenticationStatus(true);
           }],
         }
       })

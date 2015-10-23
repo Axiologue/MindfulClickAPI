@@ -47,6 +47,7 @@
 }
 
 .btn-delete {
+    color: #000;
     background: #d9534f;
 }
 
@@ -69,5 +70,14 @@
   background: #c9302c;
 }
 
-/* NAVBAR STYLES */
+.score-positive {
+  color: #337ab7;
+}
 
+.score-neutral {
+  color: #000;
+}
+
+.score-negative {
+  color: #d9534f;
+}
