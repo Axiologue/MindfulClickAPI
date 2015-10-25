@@ -1,0 +1,50 @@
+[
+{
+  "model": "refData.article",
+  "fields": {
+    "url": "http://www.article-about-carbon/article/1/",
+    "add_date": "2015-09-27T21:03:11.539Z",
+    "title": "Nike Releases Carbon",
+    "notes": "Fictional placeholder article about wasteful manufacturing practices",
+    "pub_date": null,
+    "added_by": 1
+  },
+  "pk": 1
+},
+{
+  "model": "refData.article",
+  "fields": {
+    "url": "http://www.adidas-group.com/en/workersaftey",
+    "add_date": "2015-09-27T21:03:11.539Z",
+    "title": "Adidas Workers Rights",
+    "notes": "Fictional Article Regarding Worker Safety",
+    "pub_date": null,
+    "added_by": 1
+  },
+  "pk": 2
+},
+{
+  "model": "refData.article",
+  "fields": {
+    "url": "http://www.polluting.com/shoes",
+    "add_date": "2015-09-27T21:03:11.540Z",
+    "title": "Lots of Companies pollute",
+    "notes": "Fictional Article with Lots of Information about Polluting",
+    "pub_date": null,
+    "added_by": 1
+  },
+  "pk": 3
+},
+{
+  "model": "refData.article",
+  "fields": {
+    "url": "http://www.irrelevant.com/shoes",
+    "add_date": "2015-09-27T21:03:11.540Z",
+    "title": "This Has Nothing to do with the Ethics of Shoes",
+    "notes": "Article that Exists to be Tagged as Irrelevant",
+    "pub_date": null,
+    "added_by": 1
+  },
+  "pk": 4
+}
+]

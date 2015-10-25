@@ -1,0 +1,26 @@
+[
+{
+  "model": "refData.company",
+  "fields": {
+    "name": "Nike",
+    "owns": null
+  },
+  "pk": 1
+},
+{
+  "model": "refData.company",
+  "fields": {
+    "name": "Adidas",
+    "owns": null
+  },
+  "pk": 2
+},
+{
+  "model": "refData.company",
+  "fields": {
+    "name": "New Balance",
+    "owns": null
+  },
+  "pk": 3
+}
+]

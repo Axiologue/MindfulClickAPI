@@ -248,4 +248,5 @@ POSTMARK_API_KEY = POSTMARK_KEY
 POSTMARK_SENDER = 'admin@axiologue.org'
 DEFAULT_FROM_EMAIL = 'admin@axiologue.org'
 
-
+# Extra Fixtures directory for tests
+FIXTURE_DIRS = [os.path.join(BASE_DIR,'fixtures')]

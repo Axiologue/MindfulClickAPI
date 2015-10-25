@@ -82,27 +82,31 @@
             "id": 2,
             "title": "Adidas Workers Rights",
             "url": "http://www.adidas-group.com/en/workersaftey",
-            "notes": "Fictional Article Regarding Worker Safety"
+            "notes": "Fictional Article Regarding Worker Safety",
+            "added_by": 1
         },
         {
             "id": 3,
             "title": "Lots of Companies pollute",
             "url": "http://www.polluting.com/shoes",
-            "notes": "Fictional Article with Lots of Information about Polluting"
+            "notes": "Fictional Article with Lots of Information about Polluting",
+            "added_by": 1
         }
     ],
     {"comment_2": "Output for ArticleWithTagView.  Access in Django test as self.output[5]"},
     [
         {
+            "added_by": 1,
             "title": "Nike Releases Carbon",
             "url": "http://www.article-about-carbon/article/1/",
-            "tags": [
+            "ethicstags": [
                 {
                     "tag_type": {
                         "name": "Factory produces extra 10 tons carbon",
                         "subcategory": "Carbon",
                         "id": 4
                     },
+                    "added_by": 1,
                     "value": null,
                     "excerpt": "Quote about Nike using carbon",
                     "company": "Nike",
@@ -116,29 +120,32 @@
     ],
     {"comment_3": "Output for new article from NewArticleView.  Access in Django test as self.output[7"},
     {
-        "id": 4,
+        "id": 5,
         "url": "http://www.newarticle.com",
         "title": "New Article!",
-        "notes": "Article to test that article creation view works"
+        "notes": "Article to test that article creation view works",
+        "added_by": 1
     },
     {"comment_4": "Output for UpdateArticleView after changing object.  Access in Django test as self.output[9]"},
     {
+        "added_by": 1,
         "url": "http://www.adidas-group.com/en/workersaftey",
         "id": 2,
         "title": "New Balance Workers Rights",
         "notes": "Fictional Article Regarding Worker Safety.  Updated from Adidas to New Balance"
     },
-    {"comment_5": "Output for new Tag from NewTagView.  Access in Django test as self.output[11]"},
+    {"comment_5": "Output for new EthicsTag from NewEthicsTagView.  Access in Django test as self.output[11]"},
     {
-        "id": 3,
+        "id": 4,
         "company": 2,
         "tag_type": 5,
         "article": 2,
         "excerpt": "Article excerpt that confirms tag type",
         "product": null,
-        "value": null
+        "value": null,
+        "added_by": 1
     },
-    {"comment_6": "Output for updated Tag from UpdateTagView.  Access in Django tests as self.output[13]"},
+    {"comment_6": "Output for updated EthicsTag from UpdateEthicsTagView.  Access in Django tests as self.output[13]"},
     {
         "id": 2,
         "company": 1,
@@ -146,15 +153,94 @@
         "tag_type": 4,
         "article": 1,
         "product": null,
-        "value": null
+        "value": null,
+        "added_by": 1
     },
-    {"comment_7": "Output of new TagType from NewTagTypeView.  Access in Django tests as self.output[15]"},
+    {"comment_7": "Output of new EthicsType from NewEthicsTypeView.  Access in Django tests as self.output[15]"},
     {
         "subcategory": 2,
         "name": "20% more worker accidents than the global average",
         "id": 6
-    }
-
+    },
+    {"comment_8": "Output of ArticleNoDataView.  Access in Django tests as self.output[17]"},
+    [
+        {
+            "title": "This Has Nothing to do with the Ethics of Shoes",
+            "url": "http://www.irrelevant.com/shoes",
+            "metatags": [1],
+            "id": 4,
+            "notes": "Article that Exists to be Tagged as Irrelevant",
+            "added_by": 1
+        }
+    ],
+    {"comment_9": "Output of new MetaTag from the NoRelDataView.  Access in Django tests as self.output[19]"},
+    {
+        "article": 3,
+        "tag_type": 1,
+        "added_by": 1
+    },
+    {"comment_10": "Output of the EthicsProfileView.  Access in the Django tests as self.output[21]"},
+    [
+        {
+            "category": "Environment",
+            "sub": [
+                {
+                    "sub": "Carbon",
+                    "prefs": [
+                        {
+                            "type": "Factory produces extra 10 tons carbon",
+                            "id": 13,
+                            "preference": 0.0
+                        }
+                    ]
+                },
+                {
+                    "sub": "Pollution",
+                    "prefs": []
+                },
+                {
+                    "sub": "Recycling",
+                    "prefs": [
+                        {
+                            "type": "Factory produces excessive waste",
+                            "id": 12,
+                            "preference": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "category": "Labor",
+            "sub": [
+                {
+                    "sub": "Slave Labor",
+                    "prefs": [
+                        {
+                            "type": "Slave Labor found in factory producing company products",
+                            "id": 15,
+                            "preference": 0.0
+                        },
+                        {
+                            "type": "No slave labor found for this company",
+                            "id": 14,
+                            "preference": 0.0
+                        }
+                    ]
+                },
+                {
+                    "sub": "Worker Safety",
+                    "prefs": [
+                        {
+                            "type": "10% more worker accidents than global average",
+                            "id": 11,
+                            "preference": 0.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 ]
 
 

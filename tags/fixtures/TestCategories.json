@@ -1,0 +1,57 @@
+[
+{
+  "model": "tags.ethicscategory",
+  "fields": {
+    "name": "Labor"
+  },
+  "pk": 1
+},
+{
+  "model": "tags.ethicscategory",
+  "fields": {
+    "name": "Environment"
+  },
+  "pk": 2
+},
+{
+  "model": "tags.ethicssubcategory",
+  "fields": {
+    "name": "Slave Labor",
+    "category": 1
+  },
+  "pk": 1
+},
+{
+  "model": "tags.ethicssubcategory",
+  "fields": {
+    "name": "Worker Safety",
+    "category": 1
+  },
+  "pk": 2
+},
+{
+  "model": "tags.ethicssubcategory",
+  "fields": {
+    "name": "Pollution",
+    "category": 2
+  },
+  "pk": 3
+},
+{
+  "model": "tags.ethicssubcategory",
+  "fields": {
+    "name": "Recycling",
+    "category": 2
+  },
+  "pk": 4
+},
+{
+  "model": "tags.ethicssubcategory",
+  "fields": {
+    "name": "Carbon",
+    "category": 2
+  },
+  "pk": 5
+}
+
+]

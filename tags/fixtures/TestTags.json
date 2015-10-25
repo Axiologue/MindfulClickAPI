@@ -1,0 +1,73 @@
+[
+{
+    "model": "tags.ethicstype",
+    "fields": {
+        "subcategory": 1,
+        "name": "Slave Labor found in factory producing company products"
+    },
+    "pk": 1
+},
+{
+      "model": "tags.ethicstype",
+      "fields": {
+          "subcategory": 1,
+          "name": "No slave labor found for this company"
+        },
+    "pk": 2
+},
+{
+      "model": "tags.ethicstype",
+    "fields": {
+    "subcategory": 4,
+        "name": "Factory produces excessive waste"
+  },
+    "pk": 3
+},
+{
+      "model": "tags.ethicstype",
+    "fields": {
+        "subcategory": 5,
+        "name": "Factory produces extra 10 tons carbon"
+  },
+    "pk": 4
+},
+{
+      "model": "tags.ethicstype",
+    "fields": {
+        "subcategory": 2,
+        "name": "10% more worker accidents than global average"
+  },
+    "pk": 5
+},
+{
+      "model": "tags.ethicstag",
+    "fields": {
+        "product": null,
+        "excerpt": "Quote about Nike using carbon",
+        "value": null,
+        "tag_type": 4,
+        "article": 1,
+        "submitted_at": "2015-09-18T22:00:01.841Z",
+        "company": 1,
+        "added_by": 1
+  },
+"pk": 2
+},
+{
+    "model": "tags.metatype",
+    "fields": {
+        "name": "No Relevant Data"
+    },
+    "pk": 1
+},
+{
+    "model": "tags.metatag",
+    "fields": {
+        "article": 4,
+        "submitted_at":"2015-09-18T22:00:01.841Z",
+        "added_by": 1,
+        "tag_type": 1
+    },
+    "pk": 1
+}
+]
