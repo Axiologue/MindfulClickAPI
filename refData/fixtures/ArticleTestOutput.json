@@ -189,7 +189,7 @@
                     "prefs": [
                         {
                             "type": "Factory produces extra 10 tons carbon",
-                            "id": 13,
+                            "id": 18,
                             "preference": 0.0
                         }
                     ]
@@ -203,7 +203,7 @@
                     "prefs": [
                         {
                             "type": "Factory produces excessive waste",
-                            "id": 12,
+                            "id": 17,
                             "preference": 0.0
                         }
                     ]
@@ -218,12 +218,12 @@
                     "prefs": [
                         {
                             "type": "Slave Labor found in factory producing company products",
-                            "id": 15,
+                            "id": 20,
                             "preference": 0.0
                         },
                         {
                             "type": "No slave labor found for this company",
-                            "id": 14,
+                            "id": 19,
                             "preference": 0.0
                         }
                     ]
@@ -233,10 +233,62 @@
                     "prefs": [
                         {
                             "type": "10% more worker accidents than global average",
-                            "id": 11,
+                            "id": 16,
                             "preference": 0.0
                         }
                     ]
+                }
+            ]
+        }
+    ],
+    {"comment_11": "Output from get_company_score().  Access in the Django tests as self.output[23]"},
+    [
+        { 
+            "category": "Environment",
+            "score": -2,
+            "id": 2,
+            "subcategories": [
+                {
+                    "id": 5,
+                    "subcategory": "Carbon",
+                    "score": -2,
+                    "tags": [
+                        {
+                            "score": -2,
+                            "tag_type": "Factory produces extra 10 tons carbon"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "subcategory": "Pollution",
+                    "score": 0,
+                    "tags": []
+                },
+                {
+                    "id": 4,
+                    "subcategory": "Recycling",
+                    "score": 0,
+                    "tags": []
+                }
+            ]
+        },
+        { 
+            "category": "Labor",
+            "score": 0,
+            "id": 1,
+            "subcategories": [
+                {
+                    "id": 1,
+                    "subcategory": "Slave Labor",
+                    "score": 0,
+                    "tags": []
+                },
+                {
+                    "id": 2,
+                    "subcategory": "Worker Safety",
+                    "score": 0,
+                    "tags": []
                 }
             ]
         }

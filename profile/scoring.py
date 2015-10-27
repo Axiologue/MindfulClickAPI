@@ -11,6 +11,9 @@ def get_company_score(company, user):
     prefs = user.preferences.select_related('tag_type').values('tag_type__name','preference')
     tags = EthicsTag.objects.filter(company=company).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
 
+    # We want to make sure there's a preference there for all possible ethics types
+    populate_neutral(user)
+
     scores = [{'tag_type': x['tag_type__name'], 
               'score': x['preference']*y['count'],
               'subcat_id':y['tag_type__subcategory_id']
