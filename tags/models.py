@@ -73,7 +73,7 @@ class EthicsTag(Tag):
         ordering = ('article','tag_type')
 
     def __str__(self):
-        return "{1} : {1}".format(tag_type,article)
+        return "{0} : {1}".format(self.tag_type,self.article)
 
 class MetaTag(Tag):
     tag_type = models.ForeignKey(MetaType)

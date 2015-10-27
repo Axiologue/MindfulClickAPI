@@ -1,11 +1,14 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from profile.models import TagPref
-from tags.models import EthicsType, EthicsCategory
 from profile.populate import populate_neutral
 from profile.serializers import TagPrefSerializer
+from profile.scoring import get_company_score
+from tags.models import EthicsType, EthicsCategory
+from refData.models import Company
 
 class EthicsProfileView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -40,3 +43,12 @@ class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TagPrefSerializer
     permission_classes = (IsAuthenticated,)
     queryset = TagPref.objects.all()
+
+class CompanyScoreView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request,*args,**kwargs):
+        user = self.request.user
+        company = Company.objects.get(id=self.kwargs['pk'])
+
+        return Response(get_company_score(company,user))

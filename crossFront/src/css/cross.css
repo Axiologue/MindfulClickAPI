@@ -81,3 +81,14 @@
 .score-negative {
   color: #d9534f;
 }
+
+/* ACCORDION STYLING */
+
+.accordion-button {
+  border: none;
+  background: none;
+}
+
+.accordion-button:hover {
+  text-decoration: underline;
+}

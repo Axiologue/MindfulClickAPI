@@ -1,7 +1,7 @@
-from refData.models import Article, Product
+from refData.models import Article, Product, Company
 from tags.models import EthicsType
 from refData.serializers import ArticleSerializer, ProductSerializer, \
-       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer 
+       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -37,3 +37,6 @@ class ArticleNoDataView(generics.ListAPIView):
     serializer_class = ArticleMetaTagsSerializer
     queryset = Article.objects.filter(metatags__tag_type=1)
         
+class AllCompaniesView(generics.ListAPIView):
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()

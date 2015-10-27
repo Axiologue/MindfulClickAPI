@@ -85,6 +85,14 @@ cross.config(['$routeProvider',
           }],
         }
       })
+      .when('/company', {
+        templateUrl: 'templates/includes/company_score.html',
+        resolve: {
+          authenticated: ['djangoAuth', function(djangoAuth) {
+            return djangoAuth.authenticationStatus(true);
+          }],
+        }
+      })
       .otherwise({
         redirectTo: '/'
       });

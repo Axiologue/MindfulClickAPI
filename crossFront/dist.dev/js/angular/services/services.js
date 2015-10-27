@@ -2,7 +2,7 @@ var crossServices = angular.module('crossServices',['ngResource']);
 
 // use for setting the API endpoint location
 crossServices.factory('BaseUrl', [function () {
-  var baseUrl = 'http://api.axiologue.org/'
+  var baseUrl = 'http://localhost:8000/'
 
   return baseUrl;
 }]);
