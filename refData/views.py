@@ -6,6 +6,7 @@ from refData.serializers import ArticleSerializer, ProductSerializer, ProductSim
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
+from rest_framework.response import Response
 from django.db.models import Count, Prefetch
 import django_filters
 
@@ -58,3 +59,12 @@ class ProductListView(generics.ListAPIView):
     # Filter tools
     filter_class = ProductListFilter
     filter_backends = (filters.DjangoFilterBackend,)
+
+    # Reformat response to best process fir angucomplete format
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = {'products': serializer.data}
+
+        return Response(data)
