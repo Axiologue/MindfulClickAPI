@@ -3,9 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from profile.models import TagPref
-from profile.populate import populate_neutral
-from profile.serializers import TagPrefSerializer
+from profile.models import Preference
+from profile.populate import populate_preferences
+from profile.serializers import PreferenceSerializer
 from profile.scoring import get_company_score
 from tags.models import EthicsType, EthicsCategory
 from refData.models import Company
@@ -18,7 +18,7 @@ class EthicsProfileView(generics.ListAPIView):
        
         # Fill in any new Tags as neutral
         if EthicsType.objects.count() > user.preferences.all().count():
-            populate_neutral(user)
+            populate_preferences(user)
 
         # Get the user's current profiles
         prefs = user.preferences.select_related('tag_type').all()
@@ -40,9 +40,9 @@ class EthicsProfileView(generics.ListAPIView):
         return Response(data) 
 
 class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TagPrefSerializer
+    serializer_class = PreferenceSerializer
     permission_classes = (IsAuthenticated,)
-    queryset = TagPref.objects.all()
+    queryset = Preference.objects.all()
 
 class CompanyScoreView(APIView):
     permission_classes = (IsAuthenticated,)

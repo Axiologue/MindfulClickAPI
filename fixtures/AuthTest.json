@@ -16,5 +16,37 @@
   },
   "model": "auth.user",
   "pk": 1
+},
+{
+    "fields": {
+        "question": "What Political Party Are you Registered As?"
+    },
+    "model": "profile.question",
+    "pk": 1
+},
+{
+    "fields": {
+        "answer": "Republican",
+        "question": 1
+    },
+    "model": "profile.answer",
+    "pk": 1
+},
+{
+    "fields": {
+        "answer": "Democrat",
+        "question": 1
+    },
+    "model": "profile.answer",
+    "pk": 2
+},
+{
+    "fields": {
+        "answer": "Other",
+        "question": 1
+    },
+    "model": "profile.answer",
+    "pk": 3
 }
+
 ]

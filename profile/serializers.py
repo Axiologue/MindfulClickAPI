@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from profile.models import TagPref
+from profile.models import Preference
 
-class TagPrefSerializer(serializers.ModelSerializer):
+class PreferenceSerializer(serializers.ModelSerializer):
     tag_type = serializers.StringRelatedField()
 
     class Meta:
-        model = TagPref
+        model = Preference
         fields = ('tag_type','preference','id')

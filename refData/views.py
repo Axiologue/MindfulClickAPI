@@ -1,11 +1,13 @@
 from refData.models import Article, Product, Company
 from tags.models import EthicsType
-from refData.serializers import ArticleSerializer, ProductSerializer, \
+from refData.serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
        ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 from django.db.models import Count, Prefetch
+import django_filters
 
 class ArticleNoTagView(generics.ListAPIView):
     queryset = Article.objects.annotate(c=Count('ethicstags',distinct=True),
@@ -40,3 +42,19 @@ class ArticleNoDataView(generics.ListAPIView):
 class AllCompaniesView(generics.ListAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
+
+class ProductListFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_type='icontains')
+
+    class Meta:
+        model = Product
+        fields = ['name']
+
+class ProductListView(generics.ListAPIView):
+    model = Product
+    serializer_class = ProductSimpleSerializer
+    queryset = Product.objects.all()
+
+    # Filter tools
+    filter_class = ProductListFilter
+    filter_backends = (filters.DjangoFilterBackend,)

@@ -28,6 +28,11 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('company','name','division','category','price')
 
+class ProductSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('name','id')
+
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company

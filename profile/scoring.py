@@ -1,7 +1,7 @@
-from profile.models import TagPref
+from profile.models import Preference
 from tags.models import EthicsTag, EthicsCategory
 
-from profile.populate import populate_neutral
+from profile.populate import populate_preferences
 
 from django.db.models import Count
 
@@ -12,7 +12,7 @@ def get_company_score(company, user):
     tags = EthicsTag.objects.filter(company=company).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
 
     # We want to make sure there's a preference there for all possible ethics types
-    populate_neutral(user)
+    populate_preferences(user)
 
     scores = [{'tag_type': x['tag_type__name'], 
               'score': x['preference']*y['count'],
