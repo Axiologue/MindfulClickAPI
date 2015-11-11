@@ -7,6 +7,8 @@ from tags.serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
 from drf_multiple_model.views import MultipleModelAPIView
 
 from rest_framework import generics
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 class NewEthicsTagView(generics.CreateAPIView):
@@ -16,7 +18,25 @@ class NewEthicsTagView(generics.CreateAPIView):
     
     def create(self, request, *args, **kwargs):
         request.data['added_by'] = request.user.id
-        return super(NewEthicsTagView,self).create(request,*args,**kwargs)
+
+        # create Tag data for each product, if given
+        if request.data['products']:
+            data = []
+            for product in request.data['products']:
+                tagData = request.data.copy()
+                tagData['product'] = product['id']
+                tagData.pop('products',None)
+                data.append(tagData)
+            serializer = self.serializer_class(data=data,many=True)
+        else:
+            request.data.pop('products', None)
+            serializer = self.serializer_class(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class FormMetaView(MultipleModelAPIView):
     queryList = [

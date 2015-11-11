@@ -57,6 +57,10 @@ class Tag(models.Model):
     class Meta:
         abstract = True
 
+# Custom Exception for CrossReference
+class ChooseOneException(Exception):
+        pass
+
 class EthicsTag(Tag):
     tag_type = models.ForeignKey(EthicsType)
 
@@ -69,11 +73,11 @@ class EthicsTag(Tag):
 
 
     class Meta:
-        unique_together = ('tag_type','article','company')
         ordering = ('article','tag_type')
 
     def __str__(self):
         return "{0} : {1}".format(self.tag_type,self.article)
+
 
 class MetaTag(Tag):
     tag_type = models.ForeignKey(MetaType)

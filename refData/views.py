@@ -46,10 +46,11 @@ class AllCompaniesView(generics.ListAPIView):
 
 class ProductListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_type='icontains')
+    company = django_filters.CharFilter()
 
     class Meta:
         model = Product
-        fields = ['name']
+        fields = ['name','company_id']
 
 class ProductListView(generics.ListAPIView):
     model = Product
