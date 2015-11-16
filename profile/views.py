@@ -142,7 +142,7 @@ class NewAnswerView(generics.CreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         answer = Answer.objects.get(question=serializer.data['question'],answer=serializer.data['answer']) 
-        ans = {'answer':answer.answer,'modifiers':{}}
+        ans = {'answer':answer.answer,'modifiers':{},'id':answer.id}
         populate_modifiers(answer)
 
         for modifier in answer.modifiers.all():
