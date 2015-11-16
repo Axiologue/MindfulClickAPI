@@ -29,6 +29,7 @@ class Preference(models.Model):
 # Question to Help Set Tag Preferences 
 class Question(models.Model):
     question = models.TextField()
+    supplement = models.TextField(blank=True,null=True)
 
 # Possible Answers to any given question
 class Answer(models.Model):

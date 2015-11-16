@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from profile.models import Preference
+from profile.models import Preference, Question, Answer
 
 class PreferenceSerializer(serializers.ModelSerializer):
     tag_type = serializers.StringRelatedField()
@@ -8,3 +8,13 @@ class PreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preference
         fields = ('tag_type','preference','id')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('question','supplement','id')
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('question','answer')
