@@ -2,6 +2,7 @@ from refData.models import Article, Product, Company
 from tags.models import EthicsType
 from refData.serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
        ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer
+from profile.scoring import get_company_score
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -86,8 +87,14 @@ class ProductFetchView(APIView):
         if product_string[1] > 80:
             product = Product.objects.filter(name=product_string[0])[0]
 
-            print(serializer(product).data)
-            return Response(serializer(product).data)
+            user = request.user
+
+            data = {
+                    'product': serializer(product).data,
+                    'company': get_company_score(product.company,user)
+            }
+
+            return Response(data)
 
         else:
             return Response({'error': 'No product match'})
