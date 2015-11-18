@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^articles/noData/$',views.ArticleNoDataView.as_view()),
     url(r'^companies/all/$',views.AllCompaniesView.as_view()),
     url(r'^products/list/$',views.ProductListView.as_view()),
+    url(r'^products/fetch/$',views.ProductFetchView.as_view()),
 ]
