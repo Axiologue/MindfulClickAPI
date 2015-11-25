@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'drf_multiple_model',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'rest_auth',
     'rest_auth.registration',
     'tags',

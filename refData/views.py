@@ -76,6 +76,8 @@ class ProductListView(generics.ListAPIView):
 
 # Use fuzzy matching to find best product match
 class ProductFetchView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, *args, **kwargs):
         serializer = ProductSerializer
 

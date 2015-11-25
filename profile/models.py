@@ -31,6 +31,9 @@ class Question(models.Model):
     question = models.TextField()
     supplement = models.TextField(blank=True,null=True)
 
+    def __str__(self):
+        return self.question
+
 # Possible Answers to any given question
 class Answer(models.Model):
     question = models.ForeignKey(Question,related_name="answers")
@@ -39,6 +42,9 @@ class Answer(models.Model):
 
     # All users who have chosen this particular answer
     users = models.ManyToManyField(User,related_name="answered",blank=True)
+
+    def __str__(self):
+        return self.answer
 
 # Modifiers based on any given answer
 # Again, ideally there is a 1-to-1 ratio of Modifiers to EthicsTypes
@@ -49,8 +55,15 @@ class Modifier(models.Model):
     # Value to shift the preferences when applied
     modifier = models.IntegerField()
 
-    # Tracking users who have applied this migration
+    # Tracking users who have applied this modifier to their profile already 
     users = models.ManyToManyField(User,related_name="applied",blank=True)
 
     def __str__(self):
         return "{0} : {1}".format(self.answer,self.tag_type)
+
+# User meta data
+class ProfileMeta(models.Model):
+    user = models.OneToOneField(User,related_name="meta")
+
+    # Field to track whether the user has done the inital profile setting questions
+    answered = models.BooleanField(default=False)

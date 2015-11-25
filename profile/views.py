@@ -4,12 +4,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 
-from profile.models import Preference, Question, Answer, Modifier
-from profile.populate import populate_preferences, populate_modifiers
-from profile.serializers import PreferenceSerializer, QuestionSerializer, AnswerSerializer
+from profile.models import Preference, Question, Answer, Modifier, ProfileMeta
+from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
+from profile.serializers import PreferenceSerializer, QuestionSerializer, AnswerSerializer, \
+        QuestionAnswerSerializer
 from profile.scoring import get_company_score
 from tags.models import EthicsType, EthicsCategory
 from refData.models import Company
+
+from json import JSONDecoder
 
 class EthicsProfileView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -55,9 +58,12 @@ class CompanyScoreView(APIView):
         return Response(get_company_score(company,user))
 
 class QuestionListView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
+class QuestionWithAnswersListView(QuestionListView):
+    serializer_class = QuestionAnswerSerializer
 
 class NewQuestionView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -150,4 +156,41 @@ class NewAnswerView(generics.CreateAPIView):
 
         return Response(ans, status=status.HTTP_201_CREATED, headers=headers)
 
+# View to check if the user has gone through the login process
+class UserAnsweredView(APIView):
+    permission_classes= (IsAuthenticated,)
 
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+
+        try:
+            answered = user.meta.answered
+        except ObjectDoesNotExist:
+            answered = False
+
+        return Response({"answered": answered})
+
+# View that takes the chosen answers for a users and applies them to a base profile
+class SetAnswersView(APIView):
+    permission_classes= (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+
+        # Get an array of answer IDs, and set the user as having chosen that answer
+        answers = Answer.objects.filter(id__in=request.data['answers'])
+
+        for answer in answers:
+            answer.users.add(user)
+
+        # Apply answer modifiers for that user
+        populate_with_answers(user)
+
+        try:
+            user.meta.answered = True
+            user.meta.save()
+        except ObjectDoesNotExist:
+            m = ProfileMeta(user=user,answered=True)
+            m.save()
+
+        return Response(status=status.HTTP_200_OK)
