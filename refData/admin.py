@@ -21,14 +21,14 @@ class CompanyResource(resources.ModelResource):
 
 # Resource for importing Product info
 class ProductResource(resources.ModelResource):
-    company = fields.Field(column_name='Brand',
+    company = fields.Field(column_name='brand',
                            attribute='company',
                            widget=widgets.ForeignKeyWidget(Company,'name'))
-    price = fields.Field(column_name='Price ($)',attribute='price')
-    image_link = fields.Field(column_name='Image Link',attribute='image_link')
-    name = fields.Field(column_name='Name',attribute='name')
-    division = fields.Field(column_name='Division',attribute='division')
-    category = fields.Field(column_name='Category',attribute='category')
+    price = fields.Field(column_name='price',attribute='price')
+    image_link = fields.Field(column_name='image_link',attribute='image_link')
+    name = fields.Field(column_name='name',attribute='name')
+    division = fields.Field(column_name='division',attribute='division')
+    category = fields.Field(column_name='category',attribute='category')
 
     class Meta:
         model = Product
