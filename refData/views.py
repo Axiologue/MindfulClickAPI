@@ -1,7 +1,7 @@
 from refData.models import Article, Product, Company
 from tags.models import EthicsType
 from refData.serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
-       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer
+       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer, NewProductSerializer
 from profile.scoring import get_company_score
 
 from rest_framework import generics
@@ -100,3 +100,8 @@ class ProductFetchView(APIView):
 
         else:
             return Response({'error': 'No product match'})
+
+# New Product Endpoint
+class ProductNewView(generics.CreateAPIView):
+    serializer_class = NewProductSerializer
+    queryset = Product.objects.all()
