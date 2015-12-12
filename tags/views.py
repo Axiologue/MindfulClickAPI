@@ -20,7 +20,7 @@ class NewEthicsTagView(generics.CreateAPIView):
         request.data['added_by'] = request.user.id
 
         # create Tag data for each product, if given
-        if request.data['products']:
+        if request.data.get('products',None):
             data = []
             for product in request.data['products']:
                 tagData = request.data.copy()

@@ -45,5 +45,50 @@
         "tag_type": 1,
         "preference": 5,
         "id": 11
+    },
+    {"comment_7": "Put Data for updating modifiers in UpdateAnswersView.  Access in Django tests as self.postData[15]"},
+    [
+        {
+            "answer": "Republican",
+            "id": 1,
+            "modifiers": {
+                "1": -1,
+                "2": 1,
+                "3": 0,
+                "4": 0,
+                "5": -1
+            }
+        },
+        {
+            "answer": "Democrat",
+            "id": 2,
+            "modifiers": {
+                "1": -2,
+                "2": 2,
+                "3": -2,
+                "4": -2,
+                "5": -1
+            }
+        },
+        {
+            "answer": "Other",
+            "id": 3,
+            "modifiers": {
+                "1": -1,
+                "2": 1,
+                "3": 0,
+                "4": 0,
+                "5": -1
+            }
+        }
+    ],
+    {"comment_8": "Post Data for creating new Answer in NewAnsweredView.  Access in Django tests as self.postData[17]"},
+    {
+        "answer": "Green",
+        "question": 1
+    },
+    {"comment_9": "Post Data for setting answers in SetAnswersView.  Access in Django tests as self.postData[19]"},
+    {
+        "answers": [2]
     }
 ]

@@ -245,16 +245,19 @@
     [
         { 
             "category": "Environment",
-            "score": -2,
+            "score": -2.0,
             "id": 2,
+            "count":1,
             "subcategories": [
                 {
                     "id": 5,
                     "subcategory": "Carbon",
-                    "score": -2,
+                    "score": -2.0,
+                    "count": 1,
                     "tags": [
                         {
-                            "score": -2,
+                            "count": 1,
+                            "score": -2.0,
                             "tag_type": "Factory produces extra 10 tons carbon"
                         }
                     ]
@@ -263,36 +266,139 @@
                     "id": 3,
                     "subcategory": "Pollution",
                     "score": 0,
-                    "tags": []
+                    "tags": [],
+                    "count": 0
                 },
                 {
                     "id": 4,
                     "subcategory": "Recycling",
                     "score": 0,
-                    "tags": []
+                    "tags": [],
+                    "count": 0
                 }
             ]
         },
         { 
             "category": "Labor",
             "score": 0,
+            "count":0,
             "id": 1,
             "subcategories": [
                 {
                     "id": 1,
                     "subcategory": "Slave Labor",
                     "score": 0,
-                    "tags": []
+                    "tags": [],
+                    "count": 0
                 },
                 {
                     "id": 2,
                     "subcategory": "Worker Safety",
                     "score": 0,
-                    "tags": []
+                    "tags": [],
+                    "count": 0
                 }
             ]
         }
-    ]
+    ],
+    {"comment_12": "Output from QuestionAnswers view.  Access in DjangoTests as self.output[25]"},
+    {
+       "ethics": [
+            {
+                "name": "Environment",
+                "tag_types": [
+                    {
+                        "subcategory": "Recycling",
+                        "name": "Factory produces excessive waste",
+                        "id": 3
+                    },
+                    {
+                        "subcategory": "Carbon",
+                        "name": "Factory produces extra 10 tons carbon",
+                        "id": 4
+                    }
+                ]            
+            },
+            {
+                "name": "Labor",
+                "tag_types": [
+                    {
+                        "subcategory": "Worker Safety",
+                        "name": "10% more worker accidents than global average",
+                        "id": 5
+                    },
+                    {
+                        "subcategory": "Slave Labor",
+                        "name": "No slave labor found for this company",
+                        "id": 2
+                    },
+                    {
+                        "subcategory": "Slave Labor",
+                        "name": "Slave Labor found in factory producing company products",
+                        "id": 1
+                    }
+                ]
+            }
+        ],
+        "answers": [
+            {
+                "answer": "Republican",
+                "id": 1,
+                "modifiers": {
+                }
+            },
+            {
+                "answer": "Democrat",
+                "id": 2,
+                "modifiers": {
+                }
+            },
+            {
+                "answer": "Other",
+                "id": 3,
+                "modifiers": {
+                }
+            }
+        ],
+        "question": {
+            "question":  "What Political Party Are you Registered As?",
+            "supplement": "" 
+        }
+    },
+    {"comment_13": "Output for unfiltered ProductListView.  Access in Django tests as self.output[27]"},
+    {
+        "products": [
+            {
+                "name":"Classic Samba",
+                "id": 3
+            },
+            {
+                "name":"Air Jordans",
+                "id": 2
+            },
+            {
+                "name":"Nike Flex RUN 2015",
+                "id": 1
+            }
+        ]
+    },
+    {"comment_15": "Output for ProductListView filtered by company=Nike.  Access in Django tests as self.output[29]"},
+    {
+        "products": [
+            {
+                "name":"Nike Flex RUN 2015",
+                "id": 1
+            }
+        ]
+    },
+    {"comment_17": "Output of ProductSerializer for ProductFetchView. Access in Django tests as self.output[31]"},
+    {
+        "name": "Nike Flex RUN 2015",
+        "company": "Nike",
+        "division": "Men",
+        "price": "150.00",
+        "category": "Running"
+    }
 ]
 
 

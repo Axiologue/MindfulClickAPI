@@ -5,9 +5,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView
+from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
+        UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView
 from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
-from profile.models import Preference, Modifier, Answer
+from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
 from profile.scoring import get_company_score
 from tags.models import EthicsType
 from refData.models import Company
@@ -32,6 +33,10 @@ class ProfileLogicTests(TestCase):
         # Also used in front end tests
         with open(path + '/refData/fixtures/ArticleTestOutput.json') as data:
             self.output = json.load(data)
+
+        # JSON file that holds post/put data for tests
+        with open(path + '/refData/fixtures/ArticlePostData.json') as postData:
+            self.postData = json.load(postData)
 
     def test_populate_preferences_empty(self):
         # Confirm that are no current Ethical Preferences
@@ -300,3 +305,140 @@ class ProfileViewTests(APITestCase):
 
         # Compare the ouptput the expected 
         self.assertEqual(response.data, self.output[23])
+
+    # Test for QuestionAnswersView
+    def test_question_answers_view(self):
+        view = QuestionAnswersView.as_view()
+        
+        request = factory.get('/profile/question/answers/1/')
+        force_authenticate(request,user=self.user)
+        response = view(request,pk=1).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        # Compare the output with the expected json
+        test_data = self.output[25];
+        test_data['question']['supplement'] = None
+        for answer in test_data['answers']:
+            answer['modifiers'] = {1:0,2:0,3:0,4:0,5:0}
+        self.assertEqual(response.data, test_data)
+
+    def test_question_answers_view_url(self):
+        response = self.client.get('/profile/question/answers/1/')
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        # Compare the output with the expected json
+        test_data = self.output[25];
+        test_data['question']['supplement'] = None
+        for answer in test_data['answers']:
+            answer['modifiers'] = {1:0,2:0,3:0,4:0,5:0}
+        self.assertEqual(response.data, test_data)
+
+    # Test for UpdateAnswersView
+    def test_update_answers_view(self):
+        data = self.postData[15]
+
+        # Get Blank modifiers
+        for ans in data:
+            answer = Answer.objects.get(id=ans['id'])
+            populate_modifiers(answer)
+
+        self.assertEqual(15,Modifier.objects.filter(modifier=0).count())
+
+        view = UpdateAnswersView.as_view()
+
+        request = factory.put('/profile/question/answer/1/updateAll/',self.postData[15],format="json")
+        force_authenticate(request,user=self.user)
+        response = view(request,pk=1).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        # Check that the modifier scores are now adjusted
+        self.assertEqual(5,Modifier.objects.filter(modifier=-1).count())
+        self.assertEqual(3,Modifier.objects.filter(modifier=-2).count())
+        self.assertEqual(4,Modifier.objects.filter(modifier=0).count())
+
+    # Test NewAnswerView
+    def test_new_answer_view(self):
+        # Check initial states
+        self.assertEqual(Answer.objects.count(), 3)
+        
+        question = Question.objects.get(id=1)
+        self.assertEqual(question.answers.count(),3)
+
+        for answer in Answer.objects.all():
+            populate_modifiers(answer)
+
+        self.assertEqual(Modifier.objects.count(),15)
+
+        view = NewAnswerView.as_view()
+
+        request = factory.post('/profile/question/answer/1/new/',self.postData[17])
+        force_authenticate(request,user=self.user)
+        response = view(request,pk=1).render()
+
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)
+
+        self.assertEqual(Answer.objects.count(),4)
+        self.assertEqual(question.answers.count(),4)
+        self.assertEqual(Modifier.objects.count(),20)
+
+    # Test UserAnsweredView
+    def test_user_answered_view(self):
+        view = UserAnsweredView.as_view()
+
+        # Test Default Setting
+        request = factory.get('/profile/meta/answered/')
+        force_authenticate(request,user=self.user)
+        response = view(request)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data,{'answered':False})
+
+        ProfileMeta(user=self.user,answered=True).save()
+
+        # Test after answered questions
+        request = factory.get('/profile/meta/answered/')
+        force_authenticate(request,user=self.user)
+        response = view(request)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data,{'answered':True})
+
+    # Test SetAnswersView
+    def test_set_answers_view(self):
+        # test defaults
+        self.assertEqual(0,self.user.answered.count())
+        with self.assertRaises(ObjectDoesNotExist):
+            self.user.meta.answered
+
+        # Set up some default modifier values
+        answer = Answer.objects.get(id=2)
+        modifiers = {
+            1: -1,
+            2: 1,
+            3: -2,
+            4: 0,
+            5: -1
+        }
+        populate_modifiers(answer)
+        for i in range(1,6):
+            modifier = Modifier.objects.get(answer=answer,tag_type_id=i)
+            modifier.modifier = modifiers[i]
+            modifier.save()
+
+        view = SetAnswersView.as_view()
+
+        request = factory.post('/profile/question/answers/set',self.postData[19])
+        force_authenticate(request, user=self.user)
+        response = view(request)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        self.assertEqual(1,self.user.answered.count())
+        self.assertEqual(self.user.preferences.get(tag_type_id=1).preference,-1)
+        self.assertEqual(self.user.preferences.get(tag_type_id=2).preference,1)
+        self.assertEqual(self.user.preferences.get(tag_type_id=3).preference,-2)
+        self.assertEqual(self.user.preferences.get(tag_type_id=4).preference,0)
+        self.assertEqual(self.user.preferences.get(tag_type_id=5).preference,-1)

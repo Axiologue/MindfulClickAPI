@@ -3,7 +3,7 @@
   "fields": {
     "is_superuser": true,
     "password": "pbkdf2_sha256$20000$SBkK4liA7Hl8$9Yx8zO5E88twoTDvZDkTE1FgM7g/+1xxobY1UfvE+g8=",
-    "last_name": "Broach",
+    "last_name": "Nishi-Broach",
     "last_login": "2015-10-23T15:37:32.634Z",
     "email": "matt@axiologue.org",
     "username": "kid_for_today",

@@ -14,6 +14,7 @@ from refData.models import Company
 
 from json import JSONDecoder
 
+# List all the Ethical Preferences of a User
 class EthicsProfileView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
@@ -43,11 +44,13 @@ class EthicsProfileView(generics.ListAPIView):
 
         return Response(data) 
 
+# Alter a particular Preference
 class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PreferenceSerializer
     permission_classes = (IsAuthenticated,)
     queryset = Preference.objects.all()
 
+# Get the personalized score of a given user
 class CompanyScoreView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -57,21 +60,26 @@ class CompanyScoreView(APIView):
 
         return Response(get_company_score(company,user))
 
+# List All Current Questions for Profile Setting
 class QuestionListView(generics.ListAPIView):
     #permission_classes = (IsAuthenticated,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+# Same as Above, but includes answers
 class QuestionWithAnswersListView(QuestionListView):
     serializer_class = QuestionAnswerSerializer
 
+# For new Profile setting questions
 class NewQuestionView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+# Gives Given modifiers for all answers in a given question
+# Used to view and alter the modifiers for ALL answers to a given question
 class QuestionAnswersView(generics.ListAPIView):
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     queryset = EthicsCategory.objects.all()
 
     def list(self,requestion, *args, **kwargs):
@@ -117,6 +125,7 @@ class QuestionAnswersView(generics.ListAPIView):
                 }
             })
 
+# Update the modifiers for a given question
 class UpdateAnswersView(generics.UpdateAPIView):
     def update(self,request, *args, **kwargs):
         data = request.data
@@ -124,7 +133,7 @@ class UpdateAnswersView(generics.UpdateAPIView):
         # Fetch the requested questions
         try:
             question = Question.objects.get(id=self.kwargs['pk'])
-        except ObjectDoesNotExit:
+        except ObjectDoesNotExist:
             return Response({'error': 'No Question Matches that ID'})
 
         # iterate through answers, save any changes
@@ -137,6 +146,8 @@ class UpdateAnswersView(generics.UpdateAPIView):
 
         return Response(data)
 
+# Create a new answer
+# Also needs to set a blank set of modifiers 
 class NewAnswerView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Answer.objects.all()
@@ -156,7 +167,7 @@ class NewAnswerView(generics.CreateAPIView):
 
         return Response(ans, status=status.HTTP_201_CREATED, headers=headers)
 
-# View to check if the user has gone through the login process
+# View to check if the user has answered the profile setting questions
 class UserAnsweredView(APIView):
     permission_classes= (IsAuthenticated,)
 

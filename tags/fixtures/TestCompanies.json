@@ -22,5 +22,42 @@
     "owns": null
   },
   "pk": 3
+},
+{
+    "model": "refData.product",
+    "fields": {
+        "name": "Nike Flex RUN 2015",
+        "price": 150.00,
+        "company": 1,
+        "division": "Men",
+        "category": "Running",
+        "image_link": null 
+    },
+    "pk": 1
+},
+{
+    "model": "refData.product",
+    "fields": {
+        "name": "Air Jordans",
+        "price": 250.00,
+        "company": 1,
+        "division": "Men",
+        "category": "Basketball",
+        "image_link": "http://link.com/image.jpg" 
+    },
+    "pk": 2
+},
+{
+    "model": "refData.product",
+    "fields": {
+        "name": "Classic Samba",
+        "price": 80.00,
+        "company": 2,
+        "division": "Women",
+        "category": "Soccer",
+        "image_link": "http://link.com/image.jpg" 
+    },
+    "pk": 3
 }
+
 ]
