@@ -50,9 +50,11 @@ class NewProductSerializer(serializers.ModelSerializer):
 
 
 class ProductSimpleSerializer(serializers.ModelSerializer):
+    company = serializers.StringRelatedField()
+
     class Meta:
         model = Product
-        fields = ('name','id')
+        fields = ('name','id','company')
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:

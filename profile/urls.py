@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^prefs/all/$',views.EthicsProfileView.as_view()),
     url(r'^prefs/(?P<pk>\d+)/$',views.PrefUpdateView.as_view()),
     url(r'^scores/company/(?P<pk>\d+)/$',views.CompanyScoreView.as_view()),
+    url(r'^scores/product/(?P<pk>\d+)/$',views.ProductScoreView.as_view()),
     url(r'^question/all/$',views.QuestionListView.as_view()),
     url(r'^question/all-answers/$',views.QuestionWithAnswersListView.as_view()),
     url(r'^question/new/$',views.NewQuestionView.as_view()),

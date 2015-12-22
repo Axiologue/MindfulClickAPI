@@ -64,15 +64,16 @@ class SingleCompanyView(generics.RetrieveAPIView):
 class ProductListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_type='icontains')
     company = django_filters.CharFilter()
+    price = django_filters.RangeFilter()
 
     class Meta:
         model = Product
-        fields = ['name','company_id']
+        fields = ['name','company_id','category','division','price']
 
 class ProductListView(generics.ListAPIView):
     model = Product
     serializer_class = ProductSimpleSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('company').all()
 
     # Filter tools
     filter_class = ProductListFilter
@@ -118,3 +119,8 @@ class ProductFetchView(APIView):
 class ProductNewView(generics.CreateAPIView):
     serializer_class = NewProductSerializer
     queryset = Product.objects.all()
+
+class SingleProductView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+

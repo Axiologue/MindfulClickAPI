@@ -10,7 +10,7 @@ from profile.serializers import PreferenceSerializer, QuestionSerializer, Answer
         QuestionAnswerSerializer
 from profile.scoring import get_company_score
 from tags.models import EthicsType, EthicsCategory
-from refData.models import Company
+from refData.models import Company, Product
 
 from json import JSONDecoder
 
@@ -57,6 +57,16 @@ class CompanyScoreView(APIView):
     def get(self, request,*args,**kwargs):
         user = self.request.user
         company = Company.objects.get(id=self.kwargs['pk'])
+
+        return Response(get_company_score(company,user))
+
+# Get the personalized score for a user/product pair
+class ProductScoreView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        company = Product.objects.get(id=self.kwargs['pk']).company
 
         return Response(get_company_score(company,user))
 
@@ -205,3 +215,5 @@ class SetAnswersView(APIView):
             m.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
