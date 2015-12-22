@@ -1,5 +1,5 @@
 from refData.models import Article, Product, Company
-from tags.models import EthicsType
+from tags.models import EthicsType, EthicsTag
 from refData.serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
        ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer, NewProductSerializer
 from profile.scoring import get_company_score
@@ -25,6 +25,15 @@ class ArticleWithCrossView(generics.ListAPIView):
         Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory'))
         ).annotate(c=Count('ethicstags')).filter(c__gte=1)
     serializer_class = ArticleEthicsTagsSerializer;
+    
+class ArticleWithCrossByCompanyView(generics.ListAPIView):
+    serializer_class = ArticleEthicsTagsSerializer;
+
+    def get_queryset(self):
+        return Article.objects.prefetch_related(
+            Prefetch('ethicstags', queryset=EthicsTag.objects.select_related('company').filter(company_id=self.kwargs['pk'])),
+            Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory')),
+            ).annotate(c=Count('ethicstags')).filter(c__gte=1,ethicstags__company_id=self.kwargs['pk'])
 
 class UpdateArticleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArticleSerializer
@@ -45,6 +54,10 @@ class ArticleNoDataView(generics.ListAPIView):
     queryset = Article.objects.filter(metatags__tag_type=1)
         
 class AllCompaniesView(generics.ListAPIView):
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+
+class SingleCompanyView(generics.RetrieveAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
