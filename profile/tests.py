@@ -10,7 +10,7 @@ from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView, Q
 from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
 from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
 from profile.scoring import get_company_score
-from tags.models import EthicsType
+from tags.models import EthicsType, EthicsTag
 from refData.models import Company
 
 import os
@@ -104,6 +104,47 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(self.user.preferences.count(),5)
 
         self.assertEqual(results,self.output[23])
+
+    def test_get_company_score_averages(self):
+        # Create some preferences
+        type1 = EthicsType.objects.get(id=1) 
+        Preference(user=self.user,tag_type=type1,preference=-4).save()
+
+        type2 = EthicsType.objects.get(id=2) 
+        Preference(user=self.user,tag_type=type2,preference=3).save()
+
+        type3 = EthicsType.objects.get(id=5)
+        Preference(user=self.user,tag_type=type3,preference=-1).save()
+
+        # Create some tags that share categories
+        company = Company.objects.get(id=1)
+        user = self.user
+
+        EthicsTag(company=company,
+                added_by=user,
+                excerpt="some description",
+                tag_type=type1,
+                article_id=1).save()
+
+        EthicsTag(company=company,
+                added_by=user,
+                excerpt="some description",
+                tag_type=type2,
+                article_id=1).save()
+        
+        EthicsTag(company=company,
+                added_by=user,
+                excerpt="some description",
+                tag_type=type3,
+                article_id=1).save()
+        
+        results = get_company_score(company,user)
+
+        self.assertEqual(results[0]['count'],1) # Number of Environment tags
+        self.assertEqual(results[1]['count'],3) # Number of Labor tags
+        self.assertEqual(results[1]['subcategories'][0]['score'],-.5) # Slave Labor
+        self.assertEqual(results[1]['subcategories'][1]['score'],-1) # Worker Safety
+        self.assertEqual(results[1]['score'],-.8) # Overall Labor score, rounded to the nearest 10th (from .75)
 
     def test_populate_modifiers_empty(self):
         # Check that there are no modifiers

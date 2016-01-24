@@ -30,6 +30,7 @@ def get_company_score(company, user):
                'id':category.id,
                'count':0}
 
+        has_data = 0
         for subcat in category.subcategories.all():
             subcategory = {'subcategory': subcat.name,'id':subcat.id}
             subcategory['tags'] =  [{
@@ -37,13 +38,16 @@ def get_company_score(company, user):
                                     'score':x['score'],
                                     'count':x['count']
                                     } for x in scores if x['subcat_id']==subcat.id]
-            subcategory['score'] = sum(x['score'] for x in subcategory['tags'])
+            total = sum(x['score'] for x in subcategory['tags'])
             subcategory['count'] = sum(x['count'] for x in subcategory['tags'])
+            subcategory['score'] = round(total/subcategory['count'],1) if subcategory['count'] else 0
 
             cat['subcategories'].append(subcategory)
-            cat['score'] += subcategory['score']
+            cat['score'] += subcategory['score'] 
             cat['count'] += subcategory['count']
+            has_data += 1 if subcategory['count'] else 0
 
+        cat['score'] = round(cat['score']/has_data,1) if has_data else 0
         totals.append(cat)
 
     return totals
