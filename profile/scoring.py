@@ -7,21 +7,40 @@ from django.db.models import Count
 
 # Returns scores, with associated tag information, on any given company
 def get_company_score(company, user):
-    categories = EthicsCategory.objects.prefetch_related('subcategories').all() 
 
+    tags = EthicsTag.objects.filter(company=company,product=None).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
+    
+    return compute_score(tags, user)
+
+
+# Retuns personalized score, along with article/tag counts
+def get_product_score(product,user):
+    tags = EthicsTag.objects.filter(product=product).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
+
+    return compute_score(tags, user)
+
+# gets score for both a product AND its parent company (without double counting)
+def get_combined_score(product, user):
+
+    tags = list(EthicsTag.objects.filter(product=product).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')) + list(EthicsTag.objects.filter(company=product.company, product=None).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id'))
+
+    return compute_score(tags, user)
+
+def compute_score(tags,user):
     prefs = user.preferences.select_related('tag_type').values('tag_type__name','preference')
-    tags = EthicsTag.objects.filter(company=company).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
 
     # We want to make sure there's a preference there for all possible ethics types
     populate_preferences(user)
-
+   
+    # compute individual tag scores, based on preferences
     scores = [{'tag_type': x['tag_type__name'], 
-              'score': x['preference']*y['count'],
+              'score': x['preference'],
               'subcat_id':y['tag_type__subcategory_id'],
               'count': y['count'],
              } for x in prefs for y in tags if x['tag_type__name'] == y['tag_type__name']]
 
     # Organize data by categories and subcategories
+    categories = EthicsCategory.objects.prefetch_related('subcategories').all() 
     totals = []
     for category in categories:
         cat = {"category": category.name, 
@@ -51,14 +70,3 @@ def get_company_score(company, user):
         totals.append(cat)
 
     return totals
-
-# Retuns personalized score, along with article/tag counts
-#def get_product_score(product,user):
-#    categories = EthicsCategory.objects.prefetch_related('subcategories').all() 
-#
-#    prefs = user.preferences.select_related('tag_type').values('tag_type__name','preference')
-
-    # Get Relevant Tags
-#    company = product.company
-#    tags = EthicsTag.objects.filter(company=company).select_related('tag_type').annotate(count=Count('tag_type')).values('tag_type__name','count','tag_type__subcategory_id')
-    

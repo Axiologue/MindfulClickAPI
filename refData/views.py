@@ -2,7 +2,7 @@ from refData.models import Article, Product, Company
 from tags.models import EthicsType, EthicsTag
 from refData.serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
        ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer, NewProductSerializer
-from profile.scoring import get_company_score
+from profile.scoring import get_company_score, get_combined_score
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -107,7 +107,7 @@ class ProductFetchView(APIView):
 
             data = {
                     'product': serializer(product).data,
-                    'company': get_company_score(product.company,user)
+                    'company': get_combined_score(product,user)
             }
 
             return Response(data)

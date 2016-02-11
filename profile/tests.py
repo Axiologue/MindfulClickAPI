@@ -9,9 +9,9 @@ from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView, Q
         UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView
 from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
 from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
-from profile.scoring import get_company_score
+from profile.scoring import get_company_score, get_product_score, get_combined_score
 from tags.models import EthicsType, EthicsTag
-from refData.models import Company
+from refData.models import Company, Product
 
 import os
 import json
@@ -122,19 +122,19 @@ class ProfileLogicTests(TestCase):
 
         EthicsTag(company=company,
                 added_by=user,
-                excerpt="some description",
+                excerpt="Company used slaves",
                 tag_type=type1,
                 article_id=1).save()
 
         EthicsTag(company=company,
                 added_by=user,
-                excerpt="some description",
+                excerpt="Just Kidding.  Company didn't actually use slaves",
                 tag_type=type2,
                 article_id=1).save()
         
         EthicsTag(company=company,
                 added_by=user,
-                excerpt="some description",
+                excerpt="lots of accidents",
                 tag_type=type3,
                 article_id=1).save()
         
@@ -145,6 +145,52 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(results[1]['subcategories'][0]['score'],-.5) # Slave Labor
         self.assertEqual(results[1]['subcategories'][1]['score'],-1) # Worker Safety
         self.assertEqual(results[1]['score'],-.8) # Overall Labor score, rounded to the nearest 10th (from .75)
+
+    def test_product_scores(self):
+        # Create preferences and tags for both product and companies
+        type1 = EthicsType.objects.get(id=1) 
+        Preference(user=self.user,tag_type=type1,preference=-4).save()
+
+        type2 = EthicsType.objects.get(id=2) 
+        Preference(user=self.user,tag_type=type2,preference=3).save()
+
+        type3 = EthicsType.objects.get(id=4)
+        Preference(user=self.user,tag_type=type3,preference=-1).save()
+
+        # Create some tags that share categories
+        company = Company.objects.get(id=1) # Nike
+        product = Product.objects.get(id=1) # Nike Flex Run
+        user = self.user
+
+        EthicsTag(company=company,
+                added_by=user,
+                excerpt="Company used slaves",
+                tag_type=type1,
+                article_id=1).save()
+
+        EthicsTag(company=company,
+                product=product,
+                added_by=user,
+                excerpt="Just kidding.  Company didn't actually use slaves",
+                tag_type=type2,
+                article_id=1).save()
+        
+        EthicsTag(company=company,
+                added_by=user,
+                excerpt="Too much carbon produced",
+                tag_type=type3,
+                article_id=1).save()
+
+        product_score = get_product_score(product, self.user)
+        company_score = get_company_score(company, self.user)
+        combined_score = get_combined_score(product, self.user)
+
+        self.assertEqual(product_score[0]['score'],0) # individual product Environment score
+        self.assertEqual(product_score[1]['score'],3) # individual product Labor score
+        self.assertEqual(company_score[0]['score'],-1) # overall company Environment score (excluding product)
+        self.assertEqual(company_score[1]['score'],-4) # overall company Labor score (excluding product)
+        self.assertEqual(combined_score[0]['score'],-1) # combined Environment score 
+        self.assertEqual(combined_score[1]['score'],-.5) # combined  company Labor score 
 
     def test_populate_modifiers_empty(self):
         # Check that there are no modifiers

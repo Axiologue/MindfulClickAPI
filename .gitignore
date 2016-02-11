@@ -47,6 +47,7 @@ cross.sublime-project
 # Raw Data Files #
 ##################
 *.csv
+*.sql
 
 # Installed 3rd Party Modules #
 ###############
