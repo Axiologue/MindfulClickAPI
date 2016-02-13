@@ -27,6 +27,7 @@ def get_combined_score(product, user):
     return compute_score(tags, user)
 
 def compute_score(tags,user):
+    categories = EthicsCategory.objects.prefetch_related('subcategories').all() 
     prefs = user.preferences.select_related('tag_type').values('tag_type__name','preference')
 
     # We want to make sure there's a preference there for all possible ethics types
@@ -40,7 +41,6 @@ def compute_score(tags,user):
              } for x in prefs for y in tags if x['tag_type__name'] == y['tag_type__name']]
 
     # Organize data by categories and subcategories
-    categories = EthicsCategory.objects.prefetch_related('subcategories').all() 
     totals = []
     for category in categories:
         cat = {"category": category.name, 
@@ -69,4 +69,12 @@ def compute_score(tags,user):
         cat['score'] = round(cat['score']/has_data,1) if has_data else 0
         totals.append(cat)
 
-    return totals
+    # Compute the overall scores
+    count = len([x for x in totals if x['count'] != 0])
+    total = sum(x['score'] for x in totals)
+    overall = {
+            'overall': total/count if count else 0,
+            'categories': totals
+    }
+ 
+    return overall 

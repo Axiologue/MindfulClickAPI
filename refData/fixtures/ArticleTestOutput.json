@@ -242,65 +242,69 @@
         }
     ],
     {"comment_11": "Output from get_company_score().  Access in the Django tests as self.output[23]"},
-    [
-        { 
-            "category": "Environment",
-            "score": -2.0,
-            "id": 2,
-            "count":1,
-            "subcategories": [
-                {
-                    "id": 5,
-                    "subcategory": "Carbon",
+    {
+        "overall": -2.0,
+        "categories":
+            [   
+                { 
+                    "category": "Environment",
                     "score": -2.0,
-                    "count": 1,
-                    "tags": [
+                    "id": 2,
+                    "count":1,
+                    "subcategories": [
                         {
-                            "count": 1,
+                            "id": 5,
+                            "subcategory": "Carbon",
                             "score": -2.0,
-                            "tag_type": "Factory produces extra 10 tons carbon"
+                            "count": 1,
+                            "tags": [
+                                {
+                                    "count": 1,
+                                    "score": -2.0,
+                                    "tag_type": "Factory produces extra 10 tons carbon"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            "subcategory": "Pollution",
+                            "score": 0,
+                            "tags": [],
+                            "count": 0
+                        },
+                        {
+                            "id": 4,
+                            "subcategory": "Recycling",
+                            "score": 0,
+                            "tags": [],
+                            "count": 0
                         }
                     ]
                 },
-                {
-                    "id": 3,
-                    "subcategory": "Pollution",
+                { 
+                    "category": "Labor",
                     "score": 0,
-                    "tags": [],
-                    "count": 0
-                },
-                {
-                    "id": 4,
-                    "subcategory": "Recycling",
-                    "score": 0,
-                    "tags": [],
-                    "count": 0
-                }
-            ]
-        },
-        { 
-            "category": "Labor",
-            "score": 0,
-            "count":0,
-            "id": 1,
-            "subcategories": [
-                {
+                    "count":0,
                     "id": 1,
-                    "subcategory": "Slave Labor",
-                    "score": 0,
-                    "tags": [],
-                    "count": 0
-                },
-                {
-                    "id": 2,
-                    "subcategory": "Worker Safety",
-                    "score": 0,
-                    "tags": [],
-                    "count": 0
+                    "subcategories": [
+                        {
+                            "id": 1,
+                            "subcategory": "Slave Labor",
+                            "score": 0,
+                            "tags": [],
+                            "count": 0
+                        },
+                        {
+                            "id": 2,
+                            "subcategory": "Worker Safety",
+                            "score": 0,
+                            "tags": [],
+                            "count": 0
+                        }
+                    ]
                 }
             ]
-        }
-    ],
+    },
     {"comment_12": "Output from QuestionAnswers view.  Access in DjangoTests as self.output[25]"},
     {
        "ethics": [

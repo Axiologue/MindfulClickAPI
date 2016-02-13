@@ -140,11 +140,11 @@ class ProfileLogicTests(TestCase):
         
         results = get_company_score(company,user)
 
-        self.assertEqual(results[0]['count'],1) # Number of Environment tags
-        self.assertEqual(results[1]['count'],3) # Number of Labor tags
-        self.assertEqual(results[1]['subcategories'][0]['score'],-.5) # Slave Labor
-        self.assertEqual(results[1]['subcategories'][1]['score'],-1) # Worker Safety
-        self.assertEqual(results[1]['score'],-.8) # Overall Labor score, rounded to the nearest 10th (from .75)
+        self.assertEqual(results['categories'][0]['count'],1) # Number of Environment tags
+        self.assertEqual(results['categories'][1]['count'],3) # Number of Labor tags
+        self.assertEqual(results['categories'][1]['subcategories'][0]['score'],-.5) # Slave Labor
+        self.assertEqual(results['categories'][1]['subcategories'][1]['score'],-1) # Worker Safety
+        self.assertEqual(results['categories'][1]['score'],-.8) # Overall Labor score, rounded to the nearest 10th (from .75)
 
     def test_product_scores(self):
         # Create preferences and tags for both product and companies
@@ -185,12 +185,12 @@ class ProfileLogicTests(TestCase):
         company_score = get_company_score(company, self.user)
         combined_score = get_combined_score(product, self.user)
 
-        self.assertEqual(product_score[0]['score'],0) # individual product Environment score
-        self.assertEqual(product_score[1]['score'],3) # individual product Labor score
-        self.assertEqual(company_score[0]['score'],-1) # overall company Environment score (excluding product)
-        self.assertEqual(company_score[1]['score'],-4) # overall company Labor score (excluding product)
-        self.assertEqual(combined_score[0]['score'],-1) # combined Environment score 
-        self.assertEqual(combined_score[1]['score'],-.5) # combined  company Labor score 
+        self.assertEqual(product_score['categories'][0]['score'],0) # individual product Environment score
+        self.assertEqual(product_score['categories'][1]['score'],3) # individual product Labor score
+        self.assertEqual(company_score['categories'][0]['score'],-1) # overall company Environment score (excluding product)
+        self.assertEqual(company_score['categories'][1]['score'],-4) # overall company Labor score (excluding product)
+        self.assertEqual(combined_score['categories'][0]['score'],-1) # combined Environment score 
+        self.assertEqual(combined_score['categories'][1]['score'],-.5) # combined  company Labor score 
 
     def test_populate_modifiers_empty(self):
         # Check that there are no modifiers
