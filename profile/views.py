@@ -53,6 +53,7 @@ class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Preference.objects.all()
 
+
 # Get the personalized score of a given user
 class CompanyScoreView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -63,39 +64,46 @@ class CompanyScoreView(APIView):
 
         return Response(get_company_score(company,user))
 
+
 # Get the personalized score for a user/product pair
 class ProductScoreView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        company = Product.objects.get(id=self.kwargs['pk']).company
+        product = Product.objects.get(id=self.kwargs['pk'])
 
-        return Response(get_overall_score(company,user))
+        return Response(get_combined_score(product,user))
 
-class ProductScoreOverallOnly(APIView):
-    pemission_classes = (IsAuthenticated,)
+
+class ProductScoreOverallOnlyView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        company = Product.objects.get(id=self.kwargs['pk']).company
+        product = Product.objects.get(id=self.kwargs['pk'])
 
-        return Response({'score': get_overall_score(company,user)['overall']})
+        return Response({'score': get_combined_score(product,user)['overall']})
+
+
 # List All Current Questions for Profile Setting
 class QuestionListView(generics.ListAPIView):
     #permission_classes = (IsAuthenticated,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+
 # Same as Above, but includes answers
 class QuestionWithAnswersListView(QuestionListView):
     serializer_class = QuestionAnswerSerializer
+
 
 # For new Profile setting questions
 class NewQuestionView(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
 
 # Gives Given modifiers for all answers in a given question
 # Used to view and alter the modifiers for ALL answers to a given question
@@ -146,6 +154,7 @@ class QuestionAnswersView(generics.ListAPIView):
                 }
             })
 
+        
 # Update the modifiers for a given question
 class UpdateAnswersView(generics.UpdateAPIView):
     def update(self,request, *args, **kwargs):
@@ -166,6 +175,7 @@ class UpdateAnswersView(generics.UpdateAPIView):
                     modifier.save()
 
         return Response(data)
+
 
 # Create a new answer
 # Also needs to set a blank set of modifiers 
@@ -188,6 +198,7 @@ class NewAnswerView(generics.CreateAPIView):
 
         return Response(ans, status=status.HTTP_201_CREATED, headers=headers)
 
+
 # View to check if the user has answered the profile setting questions
 class UserAnsweredView(APIView):
     permission_classes= (IsAuthenticated,)
@@ -201,6 +212,7 @@ class UserAnsweredView(APIView):
             answered = False
 
         return Response({"answered": answered})
+
 
 # View that takes the chosen answers for a users and applies them to a base profile
 class SetAnswersView(APIView):
@@ -248,6 +260,7 @@ class ProductFetchView(APIView):
         }
 
         return Response(data)
+
 
 # Use fuzzy matching to find best product match
 # Returns only overall score
