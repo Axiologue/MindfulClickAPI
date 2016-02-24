@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 from refData.views import ArticleNoTagView, ArticleWithCrossView, NewArticleView, UpdateArticleView, \
-        ArticleNoDataView, ProductListView, ProductFetchView, ProductNewView
+        ArticleNoDataView, ProductListView, ProductNewView
 from refData.models import Article
 
 import json
@@ -226,36 +226,6 @@ class ArticleViewsTests(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[29])
 
-    # Test ProductFetchView
-    def test_product_fetch_view(self):
-        view = ProductFetchView.as_view()
-
-        # Create base preferences
-        self.user.preferences.create(tag_type_id=4,preference=-2)
-
-        request = factory.post('/articles/products/fetch/',{"product":'flex run',"brand":"Nike"})
-        force_authenticate(request, user=self.user)
-        response = view(request).render()
-
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-
-        data = {
-                'product': self.output[31],
-                'company': self.output[23]
-                }
-
-        self.assertEqual(response.data,data)
-
-    # Test ProductFetchView with product not in database
-    def test_product_fetch_view_no_match(self):
-        view = ProductFetchView.as_view()
-
-        request = factory.post('/articles/products/fetch/',{"product":'badonkadonk',"brand":"Blizzles"})
-        force_authenticate(request, user=self.user)
-        response = view(request).render()
-
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data,{'error': 'No product match'})
 
     # Test ProductNewView, with all possible fields
     def test_product_new_view(self):

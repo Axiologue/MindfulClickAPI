@@ -12,12 +12,11 @@ from rest_framework.response import Response
 from django.db.models import Count, Prefetch
 import django_filters
 
-from fuzzywuzzy import fuzz, process
-
 class ArticleNoTagView(generics.ListAPIView):
     queryset = Article.objects.annotate(c=Count('ethicstags',distinct=True),
             d=Count('metatags')).filter(c=0,d=0)
     serializer_class = ArticleSerializer
+
 
 class ArticleWithCrossView(generics.ListAPIView):
     queryset= Article.objects.prefetch_related(
@@ -25,7 +24,8 @@ class ArticleWithCrossView(generics.ListAPIView):
         Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory'))
         ).annotate(c=Count('ethicstags')).filter(c__gte=1)
     serializer_class = ArticleEthicsTagsSerializer;
-    
+
+
 class ArticleWithCrossByCompanyView(generics.ListAPIView):
     serializer_class = ArticleEthicsTagsSerializer;
 
@@ -35,10 +35,12 @@ class ArticleWithCrossByCompanyView(generics.ListAPIView):
             Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory')),
             ).annotate(c=Count('ethicstags')).filter(c__gte=1,ethicstags__company_id=self.kwargs['pk'])
 
+
 class UpdateArticleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArticleSerializer
     queryset= Article.objects.all()
     permission_classes = (IsAuthenticated,)    
+
 
 class NewArticleView(generics.CreateAPIView):
     serializer_class = ArticleSerializer
@@ -49,17 +51,21 @@ class NewArticleView(generics.CreateAPIView):
         request.data['added_by'] = request.user.id
         return super(NewArticleView,self).create(request,*args,**kwargs)
 
+
 class ArticleNoDataView(generics.ListAPIView):
     serializer_class = ArticleMetaTagsSerializer
     queryset = Article.objects.filter(metatags__tag_type=1)
-        
+
+
 class AllCompaniesView(generics.ListAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
 
+
 class SingleCompanyView(generics.RetrieveAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
+
 
 class ProductListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_type='icontains')
@@ -69,6 +75,7 @@ class ProductListFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ['name','company_id','category','division','price']
+
 
 class ProductListView(generics.ListAPIView):
     model = Product
@@ -88,37 +95,12 @@ class ProductListView(generics.ListAPIView):
 
         return Response(data)
 
-# Use fuzzy matching to find best product match
-class ProductFetchView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = ProductSerializer
-
-        products = Product.objects.all()
-        names_list = [x.name for x in products]
-        product_string = process.extractOne(request.data['product'],names_list,scorer=fuzz.token_set_ratio)
-
-        # Make sure there's a good enough match
-        if product_string[1] > 80:
-            product = Product.objects.filter(name=product_string[0])[0]
-
-            user = request.user
-
-            data = {
-                    'product': serializer(product).data,
-                    'company': get_combined_score(product,user)
-            }
-
-            return Response(data)
-
-        else:
-            return Response({'error': 'No product match'})
 
 # New Product Endpoint
 class ProductNewView(generics.CreateAPIView):
     serializer_class = NewProductSerializer
     queryset = Product.objects.all()
+
 
 class SingleProductView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer

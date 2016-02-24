@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
-        UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView
+        UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView, ProductFetchView, \
+        ProductFetchOverallOnlyView
 from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
 from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
 from profile.scoring import get_company_score, get_product_score, get_combined_score
@@ -139,12 +140,12 @@ class ProfileLogicTests(TestCase):
                 article_id=1).save()
         
         results = get_company_score(company,user)
-
         self.assertEqual(results['categories'][0]['count'],1) # Number of Environment tags
         self.assertEqual(results['categories'][1]['count'],3) # Number of Labor tags
-        self.assertEqual(results['categories'][1]['subcategories'][0]['score'],-.5) # Slave Labor
+        self.assertEqual(results['categories'][1]['subcategories'][0]['score'],-1) # Slave Labor
         self.assertEqual(results['categories'][1]['subcategories'][1]['score'],-1) # Worker Safety
-        self.assertEqual(results['categories'][1]['score'],-.8) # Overall Labor score, rounded to the nearest 10th (from .75)
+        self.assertEqual(results['categories'][1]['score'],-1) # Overall Labor score, rounded to the nearest 10th
+        self.assertEqual(results['overall'],-1)
 
     def test_product_scores(self):
         # Create preferences and tags for both product and companies
@@ -190,7 +191,7 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(company_score['categories'][0]['score'],-1) # overall company Environment score (excluding product)
         self.assertEqual(company_score['categories'][1]['score'],-4) # overall company Labor score (excluding product)
         self.assertEqual(combined_score['categories'][0]['score'],-1) # combined Environment score 
-        self.assertEqual(combined_score['categories'][1]['score'],-.5) # combined  company Labor score 
+        self.assertEqual(combined_score['categories'][1]['score'],-1) # combined  company Labor score 
 
     def test_populate_modifiers_empty(self):
         # Check that there are no modifiers
@@ -529,3 +530,53 @@ class ProfileViewTests(APITestCase):
         self.assertEqual(self.user.preferences.get(tag_type_id=3).preference,-2)
         self.assertEqual(self.user.preferences.get(tag_type_id=4).preference,0)
         self.assertEqual(self.user.preferences.get(tag_type_id=5).preference,-1)
+
+    # Test ProductFetchView
+    def test_product_fetch_view(self):
+        view = ProductFetchView.as_view()
+
+        # Create base preferences
+        self.user.preferences.create(tag_type_id=4,preference=-2)
+
+        request = factory.post('/articles/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        force_authenticate(request, user=self.user)
+        response = view(request).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        data = {
+                'product': self.output[31],
+                'company': self.output[23]
+                }
+
+        self.assertEqual(response.data,data)
+
+    # Test ProductFetchView with product not in database
+    def test_product_fetch_view_no_match(self):
+        view = ProductFetchView.as_view()
+
+        request = factory.post('/articles/products/fetch/',{"product":'badonkadonk',"brand":"Blizzles"})
+        force_authenticate(request, user=self.user)
+        response = view(request).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data,{'error': 'No product match'})
+
+    def test_product_fetch_overall_only_view(self):
+        view = ProductFetchOverallOnlyView.as_view()
+
+        # Create base preferences
+        self.user.preferences.create(tag_type_id=4,preference=-2)
+
+        request = factory.post('/articles/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        force_authenticate(request, user=self.user)
+        response = view(request).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+        data = {
+                'product': self.output[31],
+                'score': -2.0 
+                }
+
+        self.assertEqual(response.data,data)

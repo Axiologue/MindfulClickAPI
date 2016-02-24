@@ -8,11 +8,14 @@ from profile.models import Preference, Question, Answer, Modifier, ProfileMeta
 from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
 from profile.serializers import PreferenceSerializer, QuestionSerializer, AnswerSerializer, \
         QuestionAnswerSerializer
-from profile.scoring import get_company_score
+from profile.scoring import get_company_score, get_combined_score
 from tags.models import EthicsType, EthicsCategory
 from refData.models import Company, Product
+from refData.fetch import product_fetch
+from refData.serializers import ProductSerializer
 
 from json import JSONDecoder
+
 
 # List all the Ethical Preferences of a User
 class EthicsProfileView(generics.ListAPIView):
@@ -68,8 +71,16 @@ class ProductScoreView(APIView):
         user = self.request.user
         company = Product.objects.get(id=self.kwargs['pk']).company
 
-        return Response(get_company_score(company,user))
+        return Response(get_overall_score(company,user))
 
+class ProductScoreOverallOnly(APIView):
+    pemission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        company = Product.objects.get(id=self.kwargs['pk']).company
+
+        return Response({'score': get_overall_score(company,user)['overall']})
 # List All Current Questions for Profile Setting
 class QuestionListView(generics.ListAPIView):
     #permission_classes = (IsAuthenticated,)
@@ -217,3 +228,45 @@ class SetAnswersView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+# Use fuzzy matching to find best product match
+class ProductFetchView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProductSerializer
+
+        try:
+            product = product_fetch(request.data['product'])
+
+        except ObjectDoesNotExist:
+            return Response({'error': 'No product match'})
+
+        user = request.user
+        data = {
+                'product': serializer(product).data,
+                'company': get_combined_score(product,user)
+        }
+
+        return Response(data)
+
+# Use fuzzy matching to find best product match
+# Returns only overall score
+class ProductFetchOverallOnlyView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProductSerializer
+
+        try:
+            product = product_fetch(request.data['product'])
+
+        except ObjectDoesNotExist:
+            return Response({'error': 'No product match'})
+
+        user = request.user
+        data = {
+                'product': serializer(product).data,
+                'score': get_combined_score(product,user)['overall']
+        }
+
+        return Response(data)

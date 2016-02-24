@@ -41,7 +41,7 @@ def compute_score(tags,user):
              } for x in prefs for y in tags if x['tag_type__name'] == y['tag_type__name']]
 
     # Organize data by categories and subcategories
-    totals = []
+    parsed_categories = []
     for category in categories:
         cat = {"category": category.name, 
                'subcategories':[],
@@ -57,24 +57,28 @@ def compute_score(tags,user):
                                     'score':x['score'],
                                     'count':x['count']
                                     } for x in scores if x['subcat_id']==subcat.id]
-            total = sum(x['score'] for x in subcategory['tags'])
             subcategory['count'] = sum(x['count'] for x in subcategory['tags'])
-            subcategory['score'] = round(total/subcategory['count'],1) if subcategory['count'] else 0
+            subcategory['score'] = weighted_average([x['score'] for x in subcategory['tags']])
 
             cat['subcategories'].append(subcategory)
-            cat['score'] += subcategory['score'] 
             cat['count'] += subcategory['count']
-            has_data += 1 if subcategory['count'] else 0
 
-        cat['score'] = round(cat['score']/has_data,1) if has_data else 0
-        totals.append(cat)
+        cat['score'] = weighted_average([sub['score'] for sub in cat['subcategories']]) 
+        parsed_categories.append(cat)
 
     # Compute the overall scores
-    count = len([x for x in totals if x['count'] != 0])
-    total = sum(x['score'] for x in totals)
     overall = {
-            'overall': total/count if count else 0,
-            'categories': totals
+            'overall': weighted_average([cat['score'] for cat in parsed_categories]),
+            'categories': parsed_categories 
     }
  
     return overall 
+
+# Calculate weighted average used in scoring
+def weighted_average(nums):
+    total = sum(abs(x) for x in nums)
+    
+    weighted = sum((x * abs(x))/total for x in nums) if total > 0 else 0
+
+    return round(weighted,1)
+    
