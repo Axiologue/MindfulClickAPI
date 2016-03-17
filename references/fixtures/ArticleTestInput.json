@@ -1,6 +1,6 @@
 [
 {
-  "model": "refData.article",
+  "model": "references.article",
   "fields": {
     "url": "http://www.article-about-carbon/article/1/",
     "add_date": "2015-09-27T21:03:11.539Z",
@@ -12,7 +12,7 @@
   "pk": 1
 },
 {
-  "model": "refData.article",
+  "model": "references.article",
   "fields": {
     "url": "http://www.adidas-group.com/en/workersaftey",
     "add_date": "2015-09-27T21:03:11.539Z",
@@ -24,7 +24,7 @@
   "pk": 2
 },
 {
-  "model": "refData.article",
+  "model": "references.article",
   "fields": {
     "url": "http://www.polluting.com/shoes",
     "add_date": "2015-09-27T21:03:11.540Z",
@@ -36,7 +36,7 @@
   "pk": 3
 },
 {
-  "model": "refData.article",
+  "model": "references.article",
   "fields": {
     "url": "http://www.irrelevant.com/shoes",
     "add_date": "2015-09-27T21:03:11.540Z",

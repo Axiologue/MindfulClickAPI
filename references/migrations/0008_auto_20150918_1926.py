@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0007_auto_20150918_1757'),
+        ('references', '0007_auto_20150918_1757'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='tagtype',
             name='subcategory',
-            field=models.ForeignKey(related_name='tag_types', to='refData.EthicsSubCategory'),
+            field=models.ForeignKey(related_name='tag_types', to='references.EthicsSubCategory'),
         ),
     ]

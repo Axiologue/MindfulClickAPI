@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from refData import views
+from . import views
 from profile.views import ProductFetchView
 
 urlpatterns = [

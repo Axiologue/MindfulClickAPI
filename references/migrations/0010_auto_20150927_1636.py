@@ -7,13 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0006_auto_20150918_1755'),
+        ('references', '0009_auto_20150920_1655'),
     ]
 
     operations = [
-        migrations.RenameField(
+        migrations.AlterField(
             model_name='tag',
-            old_name='fact_type',
-            new_name='tag_type',
+            name='company',
+            field=models.ForeignKey(related_name='tags', to='references.Company', default=1),
+            preserve_default=False,
         ),
     ]

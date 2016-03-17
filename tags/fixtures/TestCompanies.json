@@ -1,6 +1,6 @@
 [
 {
-  "model": "refData.company",
+  "model": "references.company",
   "fields": {
     "name": "Nike",
     "owns": null
@@ -8,7 +8,7 @@
   "pk": 1
 },
 {
-  "model": "refData.company",
+  "model": "references.company",
   "fields": {
     "name": "Adidas",
     "owns": null
@@ -16,7 +16,7 @@
   "pk": 2
 },
 {
-  "model": "refData.company",
+  "model": "references.company",
   "fields": {
     "name": "New Balance",
     "owns": null
@@ -24,7 +24,7 @@
   "pk": 3
 },
 {
-    "model": "refData.product",
+    "model": "references.product",
     "fields": {
         "name": "Nike Flex RUN 2015",
         "price": 150.00,
@@ -36,7 +36,7 @@
     "pk": 1
 },
 {
-    "model": "refData.product",
+    "model": "references.product",
     "fields": {
         "name": "Air Jordans",
         "price": 250.00,
@@ -48,7 +48,7 @@
     "pk": 2
 },
 {
-    "model": "refData.product",
+    "model": "references.product",
     "fields": {
         "name": "Classic Samba",
         "price": 80.00,

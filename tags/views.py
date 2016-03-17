@@ -1,8 +1,7 @@
-from tags.models import Company 
-from tags.models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory
-from refData.serializers import CompanySerializer
-from tags.serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
+from .models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory, Company
+from .serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
         EthicsTypeSerializer, EthicsSubSerializer, EthicsTypeUpdateSerializer
+from references.serializers import CompanySerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
 

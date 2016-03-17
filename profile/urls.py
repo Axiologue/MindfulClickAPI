@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^prefs/(?P<pk>\d+)/$',views.PrefUpdateView.as_view()),
     url(r'^scores/company/(?P<pk>\d+)/$',views.CompanyScoreView.as_view()),
     url(r'^scores/product/(?P<pk>\d+)/$',views.ProductScoreView.as_view()),
+    url(r'^scores/product/overall-only/(?P<pk>\d+)/$',views.ProductScoreOverallOnlyView.as_view()),
     url(r'^scores/product/fetch/$',views.ProductFetchView.as_view()),
     url(r'^scores/product/fetch/overall-only/$',views.ProductFetchOverallOnlyView.as_view()),
     url(r'^question/all/$',views.QuestionListView.as_view()),

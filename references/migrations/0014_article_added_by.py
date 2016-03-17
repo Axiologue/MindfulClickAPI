@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('refData', '0013_tag_added_by'),
+        ('references', '0013_tag_added_by'),
     ]
 
     operations = [

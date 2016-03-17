@@ -10,8 +10,7 @@ Thumbs.db
 
 # Private Keys #
 ################
-cross/secret_keys.py
-
+axiologue/secret_keys.py
 
 # Running Vagrant Info #
 ########################
@@ -48,15 +47,6 @@ cross.sublime-project
 ##################
 *.csv
 *.sql
-
-# Installed 3rd Party Modules #
-###############
-crossFront/node_modules/
-crossFront/bower_components/
-
-# Testing Files #
-#################
-crossFront/coverage/
 
 # Server Files #
 ################

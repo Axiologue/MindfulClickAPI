@@ -19,12 +19,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from cross import views
+from . import views
 
 urlpatterns = [
     url('^$', views.LandingView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^articles/', include('refData.urls',namespace='articles')),
+    url(r'^articles/', include('references.urls',namespace='articles')),
     url(r'^tags/',include('tags.urls',namespace='tags')),
     url(r'^profile/',include('profile.urls',namespace='profile')),
     url(r'^accounts/', include('allauth.urls')),

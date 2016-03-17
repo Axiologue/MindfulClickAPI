@@ -1,4 +1,4 @@
-from refData.models import Product
+from .models import Product
 
 from django.core.exceptions import ObjectDoesNotExist
 

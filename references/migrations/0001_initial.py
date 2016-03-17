@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50, unique=True)),
-                ('owns', models.ForeignKey(to='refData.Company', related_name='parent', null=True, blank=True)),
+                ('owns', models.ForeignKey(to='references.Company', related_name='parent', null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -33,8 +33,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
                 ('score', models.SmallIntegerField(choices=[(-5, '-5'), (-4, '-4'), (-3, '-3'), (-2, '-2'), (-1, '-1'), (1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')], default=0)),
                 ('notes', models.TextField(blank=True, null=True)),
-                ('article', models.ForeignKey(related_name='data', to='refData.Article')),
-                ('company', models.ForeignKey(to='refData.Company', related_name='data', null=True, blank=True)),
+                ('article', models.ForeignKey(related_name='data', to='references.Article')),
+                ('company', models.ForeignKey(to='references.Company', related_name='data', null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=40)),
-                ('category', models.ForeignKey(related_name='subcategories', to='refData.EthicsCategory')),
+                ('category', models.ForeignKey(related_name='subcategories', to='references.EthicsCategory')),
             ],
         ),
         migrations.CreateModel(
@@ -61,18 +61,18 @@ class Migration(migrations.Migration):
                 ('category', models.CharField(max_length=40, blank=True, null=True)),
                 ('price', models.DecimalField(max_digits=7, decimal_places=2)),
                 ('image_link', models.URLField()),
-                ('company', models.ForeignKey(related_name='products', to='refData.Company')),
+                ('company', models.ForeignKey(related_name='products', to='references.Company')),
             ],
         ),
         migrations.AddField(
             model_name='crossreference',
             name='product',
-            field=models.ForeignKey(to='refData.Product', related_name='data', null=True, blank=True),
+            field=models.ForeignKey(to='references.Product', related_name='data', null=True, blank=True),
         ),
         migrations.AddField(
             model_name='crossreference',
             name='subcategory',
-            field=models.ForeignKey(related_name='data', to='refData.EthicsSubCategory'),
+            field=models.ForeignKey(related_name='data', to='references.EthicsSubCategory'),
         ),
         migrations.AlterUniqueTogether(
             name='product',

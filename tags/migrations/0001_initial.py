@@ -8,7 +8,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0015_auto_20151016_1804'),
+        ('references', '0015_auto_20151016_1804'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -42,9 +42,9 @@ class Migration(migrations.Migration):
                 ('excerpt', models.TextField()),
                 ('value', models.DecimalField(blank=True, decimal_places=2, max_digits=15, null=True)),
                 ('added_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('article', models.ForeignKey(to='refData.Article', related_name='ethicstag')),
-                ('company', models.ForeignKey(to='refData.Company', related_name='tags')),
-                ('product', models.ForeignKey(blank=True, to='refData.Product', related_name='tags', null=True)),
+                ('article', models.ForeignKey(to='references.Article', related_name='ethicstag')),
+                ('company', models.ForeignKey(to='references.Company', related_name='tags')),
+                ('product', models.ForeignKey(blank=True, to='references.Product', related_name='tags', null=True)),
             ],
             options={
                 'ordering': ('article', 'tag_type'),
@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('submitted_at', models.DateTimeField(auto_now_add=True)),
                 ('added_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('article', models.ForeignKey(to='refData.Article', related_name='metatag')),
+                ('article', models.ForeignKey(to='references.Article', related_name='metatag')),
             ],
         ),
         migrations.CreateModel(

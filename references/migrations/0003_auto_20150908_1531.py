@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0002_auto_20150811_1624'),
+        ('references', '0002_auto_20150811_1624'),
     ]
 
     operations = [
@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
                 ('fact_type', models.CharField(max_length=300)),
                 ('value', models.CharField(blank=True, max_length=50, null=True)),
                 ('notes', models.TextField(blank=True, null=True)),
-                ('article', models.ForeignKey(related_name='factoids', to='refData.Article')),
-                ('company', models.ForeignKey(blank=True, to='refData.Company', related_name='factoids', null=True)),
-                ('product', models.ForeignKey(blank=True, to='refData.Product', related_name='factoids', null=True)),
-                ('subcategory', models.ForeignKey(related_name='factoids', to='refData.EthicsSubCategory')),
+                ('article', models.ForeignKey(related_name='factoids', to='references.Article')),
+                ('company', models.ForeignKey(blank=True, to='references.Company', related_name='factoids', null=True)),
+                ('product', models.ForeignKey(blank=True, to='references.Product', related_name='factoids', null=True)),
+                ('subcategory', models.ForeignKey(related_name='factoids', to='references.EthicsSubCategory')),
             ],
         ),
         migrations.RemoveField(

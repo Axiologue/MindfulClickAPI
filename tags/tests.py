@@ -4,10 +4,10 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
-from tags.views import FormMetaView, NewEthicsTagView, UpdateEthicsTagView, NewEthicsTypeView, \
+from .views import FormMetaView, NewEthicsTagView, UpdateEthicsTagView, NewEthicsTypeView, \
         NoRelDataView, UpdateMetaTagView
-from refData.models import Article
-from tags.models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag
+from .models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag
+from references.models import Article
 
 import os
 import json
@@ -32,11 +32,11 @@ class TagViewsTests(APITestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/refData/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/refData/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
             self.postData = json.load(postData)
 
     # Test for FormMetaView

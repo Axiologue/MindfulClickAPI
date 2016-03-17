@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0014_article_added_by'),
+        ('references', '0014_article_added_by'),
     ]
 
     operations = [

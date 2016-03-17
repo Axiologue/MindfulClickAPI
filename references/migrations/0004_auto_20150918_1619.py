@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('refData', '0003_auto_20150908_1531'),
+        ('references', '0003_auto_20150908_1531'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, verbose_name='ID', auto_created=True, serialize=False)),
                 ('name', models.CharField(max_length=300)),
-                ('subcategory', models.ForeignKey(to='refData.EthicsSubCategory', related_name='factoids')),
+                ('subcategory', models.ForeignKey(to='references.EthicsSubCategory', related_name='factoids')),
             ],
         ),
         migrations.CreateModel(
@@ -28,10 +28,10 @@ class Migration(migrations.Migration):
                 ('excerpt', models.TextField()),
                 ('value', models.IntegerField(null=True, blank=True)),
                 ('submitted_at', models.DateTimeField(auto_now_add=True)),
-                ('article', models.ForeignKey(to='refData.Article', related_name='tags')),
-                ('company', models.ForeignKey(null=True, blank=True, to='refData.Company', related_name='tags')),
-                ('fact_type', models.ForeignKey(to='refData.FactoidType')),
-                ('product', models.ForeignKey(null=True, blank=True, to='refData.Product', related_name='tags')),
+                ('article', models.ForeignKey(to='references.Article', related_name='tags')),
+                ('company', models.ForeignKey(null=True, blank=True, to='references.Company', related_name='tags')),
+                ('fact_type', models.ForeignKey(to='references.FactoidType')),
+                ('product', models.ForeignKey(null=True, blank=True, to='references.Product', related_name='tags')),
                 ('submited_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),

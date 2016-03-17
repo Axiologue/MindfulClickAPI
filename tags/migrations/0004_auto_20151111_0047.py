@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ethicstag',
             name='company',
-            field=models.ForeignKey(related_name='tags', to='refData.Company', default=1),
+            field=models.ForeignKey(related_name='tags', to='references.Company', default=1),
             preserve_default=False,
         ),
     ]

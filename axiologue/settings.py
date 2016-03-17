@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #options are: local, staging, and production
 DJANGO_LOCATION = os.environ['DJANGO_LOCATION']
  
-from cross.secret_keys import DJANGO_KEY, POSTMARK_KEY
+from axiologue.secret_keys import DJANGO_KEY, POSTMARK_KEY
 
 SECRET_KEY = DJANGO_KEY
 
@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'refData',
+    'references',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -79,7 +79,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'cross.urls'
+ROOT_URLCONF = 'axiologue.urls'
 
 
 TEMPLATES = [
@@ -99,7 +99,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = 'cross.wsgi.application'
+WSGI_APPLICATION = 'axiologue.wsgi.application'
 
 # DJANGO ALLAUTH SETTINGS
 

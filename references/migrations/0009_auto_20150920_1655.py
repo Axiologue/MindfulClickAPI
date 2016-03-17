@@ -7,12 +7,12 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0004_auto_20150918_1619'),
+        ('references', '0008_auto_20150918_1926'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='tag',
-            name='submited_by',
+        migrations.AlterUniqueTogether(
+            name='tag',
+            unique_together=set([('tag_type', 'article', 'company')]),
         ),
     ]

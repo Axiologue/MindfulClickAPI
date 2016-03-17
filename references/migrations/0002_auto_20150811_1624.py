@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('refData', '0015_auto_20151016_1804'),
+        ('references', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='product',
             name='image_link',
-            field=models.URLField(max_length=350, blank=True, null=True),
+            field=models.URLField(max_length=350),
         ),
     ]

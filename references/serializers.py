@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from refData.models import Article, Product, Company
+from .models import Article, Product, Company
 from tags.serializers import EthicsTagSerializer
 
 class ArticleSerializer(serializers.ModelSerializer):

@@ -12,7 +12,7 @@ from profile.populate import populate_preferences, populate_modifiers, populate_
 from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
 from profile.scoring import get_company_score, get_product_score, get_combined_score
 from tags.models import EthicsType, EthicsTag
-from refData.models import Company, Product
+from references.models import Company, Product
 
 import os
 import json
@@ -32,11 +32,11 @@ class ProfileLogicTests(TestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/refData/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/refData/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
             self.postData = json.load(postData)
 
     def test_populate_preferences_empty(self):
@@ -306,11 +306,11 @@ class ProfileViewTests(APITestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/refData/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/refData/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
             self.postData = json.load(postData)
 
     # Test EthicsProfileView with no set Preferences

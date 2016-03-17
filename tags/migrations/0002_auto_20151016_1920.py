@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ethicstag',
             name='article',
-            field=models.ForeignKey(to='refData.Article', related_name='ethicstags'),
+            field=models.ForeignKey(to='references.Article', related_name='ethicstags'),
         ),
         migrations.AlterField(
             model_name='metatag',
             name='article',
-            field=models.ForeignKey(to='refData.Article', related_name='metatags'),
+            field=models.ForeignKey(to='references.Article', related_name='metatags'),
         ),
     ]

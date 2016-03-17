@@ -1,6 +1,6 @@
 from import_export import resources, fields, widgets
 
-from refData.models import Article, Product, Company
+from .models import Article, Product, Company
 
 # Resource for importing CSV file of article
 class ArticleResource(resources.ModelResource):

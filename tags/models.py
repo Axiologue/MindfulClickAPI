@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from refData.models import Article, Company, Product
+from references.models import Article, Company, Product
 
 # Model for our general categories
 class EthicsCategory(models.Model):
