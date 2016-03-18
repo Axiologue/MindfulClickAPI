@@ -10,9 +10,9 @@ from .serializers import PreferenceSerializer, QuestionSerializer, AnswerSeriali
         QuestionAnswerSerializer
 from .scoring import get_company_score, get_combined_score
 from tags.models import EthicsType, EthicsCategory
-from references.models import Company, Product
-from references.fetch import product_fetch
-from references.serializers import ProductSerializer
+from products.models import Company, Product
+from products.fetch import product_fetch
+from products.serializers import ProductSerializer
 
 from json import JSONDecoder
 

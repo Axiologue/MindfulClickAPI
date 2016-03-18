@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from references.models import Reference, Company, Product
+from references.models import Reference
+from products.models import Product, Company
 
 # Model for our general categories
 class EthicsCategory(models.Model):
@@ -68,7 +69,7 @@ class EthicsTag(Tag):
 
     value = models.DecimalField(max_digits=15,decimal_places=2,blank=True,null=True)
 
-    product = models.ForeignKey(Product, related_name='tags',blank=True,null=True)
+    product = models.ForeignKey(Product, related_name='tags', blank=True, null=True)
     company = models.ForeignKey(Company, related_name='tags')
 
 

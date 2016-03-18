@@ -5,14 +5,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from profile.views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
+from .views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
         UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView, ProductFetchView, \
         ProductFetchOverallOnlyView
-from profile.populate import populate_preferences, populate_modifiers, populate_with_answers
-from profile.models import Preference, Modifier, Answer, Question, ProfileMeta
-from profile.scoring import get_company_score, get_product_score, get_combined_score
+from .populate import populate_preferences, populate_modifiers, populate_with_answers
+from .models import Preference, Modifier, Answer, Question, ProfileMeta
+from .scoring import get_company_score, get_product_score, get_combined_score
 from tags.models import EthicsType, EthicsTag
-from references.models import Company, Product
+from products.models import Company, Product
 
 import os
 import json

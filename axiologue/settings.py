@@ -58,7 +58,8 @@ INSTALLED_APPS = (
     'rest_auth',
     'rest_auth.registration',
     'tags',
-    'profile'
+    'profile',
+    'products'
 )
 
 if DEBUG:
