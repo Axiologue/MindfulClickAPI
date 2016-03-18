@@ -1,6 +1,6 @@
-from .models import Article, Product, Company
-from .serializers import ArticleSerializer, ProductSerializer, ProductSimpleSerializer, \
-       ArticleEthicsTagsSerializer, ArticleMetaTagsSerializer, CompanySerializer, NewProductSerializer
+from .models import Reference, Product, Company
+from .serializers import ReferenceSerializer, ProductSerializer, ProductSimpleSerializer, \
+       ReferenceEthicsTagsSerializer, ReferenceMetaTagsSerializer, CompanySerializer, NewProductSerializer
 from tags.models import EthicsType, EthicsTag
 from profile.scoring import get_company_score, get_combined_score
 
@@ -12,49 +12,49 @@ from rest_framework.response import Response
 from django.db.models import Count, Prefetch
 import django_filters
 
-class ArticleNoTagView(generics.ListAPIView):
-    queryset = Article.objects.annotate(c=Count('ethicstags',distinct=True),
+class ReferenceNoTagView(generics.ListAPIView):
+    queryset = Reference.objects.annotate(c=Count('ethicstags',distinct=True),
             d=Count('metatags')).filter(c=0,d=0)
-    serializer_class = ArticleSerializer
+    serializer_class = ReferenceSerializer
 
 
-class ArticleWithCrossView(generics.ListAPIView):
-    queryset= Article.objects.prefetch_related(
+class ReferenceWithCrossView(generics.ListAPIView):
+    queryset= Reference.objects.prefetch_related(
         'ethicstags__company',
         Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory'))
         ).annotate(c=Count('ethicstags')).filter(c__gte=1)
-    serializer_class = ArticleEthicsTagsSerializer;
+    serializer_class = ReferenceEthicsTagsSerializer;
 
 
-class ArticleWithCrossByCompanyView(generics.ListAPIView):
-    serializer_class = ArticleEthicsTagsSerializer;
+class ReferenceWithCrossByCompanyView(generics.ListAPIView):
+    serializer_class = ReferenceEthicsTagsSerializer;
 
     def get_queryset(self):
-        return Article.objects.prefetch_related(
+        return Reference.objects.prefetch_related(
             Prefetch('ethicstags', queryset=EthicsTag.objects.select_related('company').filter(company_id=self.kwargs['pk'])),
             Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory')),
             ).annotate(c=Count('ethicstags')).filter(c__gte=1,ethicstags__company_id=self.kwargs['pk'])
 
 
-class UpdateArticleView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ArticleSerializer
-    queryset= Article.objects.all()
+class UpdateReferenceView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ReferenceSerializer
+    queryset= Reference.objects.all()
     permission_classes = (IsAuthenticated,)    
 
 
-class NewArticleView(generics.CreateAPIView):
-    serializer_class = ArticleSerializer
-    queryset= Article.objects.all()
+class NewReferenceView(generics.CreateAPIView):
+    serializer_class = ReferenceSerializer
+    queryset= Reference.objects.all()
     permission_classes = (IsAuthenticated,)    
 
     def create(self, request, *args, **kwargs):
         request.data['added_by'] = request.user.id
-        return super(NewArticleView,self).create(request,*args,**kwargs)
+        return super(NewReferenceView,self).create(request,*args,**kwargs)
 
 
-class ArticleNoDataView(generics.ListAPIView):
-    serializer_class = ArticleMetaTagsSerializer
-    queryset = Article.objects.filter(metatags__tag_type=1)
+class ReferenceNoDataView(generics.ListAPIView):
+    serializer_class = ReferenceMetaTagsSerializer
+    queryset = Reference.objects.filter(metatags__tag_type=1)
 
 
 class AllCompaniesView(generics.ListAPIView):

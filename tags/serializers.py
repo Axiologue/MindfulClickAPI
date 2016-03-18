@@ -26,7 +26,7 @@ class EthicsTagSerializer(serializers.ModelSerializer):
 class EthicsTagChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EthicsTag
-        fields = ('tag_type','value','excerpt','company','product','article','id','added_by')
+        fields = ('tag_type','value','excerpt','company','product','reference','id','added_by')
 
 class EthicsSubSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
@@ -39,5 +39,5 @@ class EthicsSubSerializer(serializers.ModelSerializer):
 class MetaTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaTag
-        fields = ('article','tag_type','added_by')
+        fields = ('reference','tag_type','added_by')
 

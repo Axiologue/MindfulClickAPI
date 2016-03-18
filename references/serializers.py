@@ -1,24 +1,24 @@
 from rest_framework import serializers
 
-from .models import Article, Product, Company
+from .models import Reference, Product, Company
 from tags.serializers import EthicsTagSerializer
 
-class ArticleSerializer(serializers.ModelSerializer):
+class ReferenceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
+        model = Reference
         fields = ('id','title','url','notes','added_by')
 
 
-class ArticleEthicsTagsSerializer(serializers.ModelSerializer):
+class ReferenceEthicsTagsSerializer(serializers.ModelSerializer):
     ethicstags = EthicsTagSerializer(read_only=True, many=True)
 
     class Meta:
-        model = Article
+        model = Reference
         fields = ('title','url','ethicstags','id','notes','added_by')
 
-class ArticleMetaTagsSerializer(serializers.ModelSerializer):
+class ReferenceMetaTagsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
+        model = Reference
         fields = ('title','url','metatags','id','notes','added_by')
 
 class ProductSerializer(serializers.ModelSerializer):

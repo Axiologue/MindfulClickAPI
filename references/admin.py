@@ -1,12 +1,12 @@
 from import_export import resources, fields, widgets
 
-from .models import Article, Product, Company
+from .models import Reference, Product, Company
 
 # Resource for importing CSV file of article
-class ArticleResource(resources.ModelResource):
+class ReferenceResource(resources.ModelResource):
 
     class Meta:
-        model = Article
+        model = Reference
         fields = ('title','url','notes')
         import_id_fields = ('url',)
 

@@ -76,29 +76,29 @@
             ]
         }
     ],
-    { "comment_1": "Output for ArticleNoTagView.  Access in Django test as self.output[3]"},
+    { "comment_1": "Output for ReferenceNoTagView.  Access in Django test as self.output[3]"},
     [
         {
             "id": 2,
             "title": "Adidas Workers Rights",
             "url": "http://www.adidas-group.com/en/workersaftey",
-            "notes": "Fictional Article Regarding Worker Safety",
+            "notes": "Fictional Reference Regarding Worker Safety",
             "added_by": 1
         },
         {
             "id": 3,
             "title": "Lots of Companies pollute",
             "url": "http://www.polluting.com/shoes",
-            "notes": "Fictional Article with Lots of Information about Polluting",
+            "notes": "Fictional Reference with Lots of Information about Polluting",
             "added_by": 1
         }
     ],
-    {"comment_2": "Output for ArticleWithTagView.  Access in Django test as self.output[5]"},
+    {"comment_2": "Output for ReferenceWithTagView.  Access in Django test as self.output[5]"},
     [
         {
             "added_by": 1,
             "title": "Nike Releases Carbon",
-            "url": "http://www.article-about-carbon/article/1/",
+            "url": "http://www.reference-about-carbon/reference/1/",
             "ethicstags": [
                 {
                     "tag_type": {
@@ -115,32 +115,32 @@
                 }
             ],
             "id": 1,
-            "notes":  "Fictional placeholder article about wasteful manufacturing practices"
+            "notes":  "Fictional placeholder Reference about wasteful manufacturing practices"
         }
     ],
-    {"comment_3": "Output for new article from NewArticleView.  Access in Django test as self.output[7"},
+    {"comment_3": "Output for new reference from NewReferenceView.  Access in Django test as self.output[7"},
     {
         "id": 5,
-        "url": "http://www.newarticle.com",
-        "title": "New Article!",
-        "notes": "Article to test that article creation view works",
+        "url": "http://www.newreference.com",
+        "title": "New Reference!",
+        "notes": "Reference to test that reference creation view works",
         "added_by": 1
     },
-    {"comment_4": "Output for UpdateArticleView after changing object.  Access in Django test as self.output[9]"},
+    {"comment_4": "Output for UpdateReferenceView after changing object.  Access in Django test as self.output[9]"},
     {
         "added_by": 1,
         "url": "http://www.adidas-group.com/en/workersaftey",
         "id": 2,
         "title": "New Balance Workers Rights",
-        "notes": "Fictional Article Regarding Worker Safety.  Updated from Adidas to New Balance"
+        "notes": "Fictional Reference Regarding Worker Safety.  Updated from Adidas to New Balance"
     },
     {"comment_5": "Output for new EthicsTag from NewEthicsTagView.  Access in Django test as self.output[11]"},
     {
         "id": 4,
         "company": 2,
         "tag_type": 5,
-        "article": 2,
-        "excerpt": "Article excerpt that confirms tag type",
+        "reference": 2,
+        "excerpt": "Reference excerpt that confirms tag type",
         "product": null,
         "value": null,
         "added_by": 1
@@ -151,7 +151,7 @@
         "company": 1,
         "excerpt": "Different quote about Nike using carbon",
         "tag_type": 4,
-        "article": 1,
+        "reference": 1,
         "product": null,
         "value": null,
         "added_by": 1
@@ -162,20 +162,20 @@
         "name": "20% more worker accidents than the global average",
         "id": 6
     },
-    {"comment_8": "Output of ArticleNoDataView.  Access in Django tests as self.output[17]"},
+    {"comment_8": "Output of ReferenceNoDataView.  Access in Django tests as self.output[17]"},
     [
         {
             "title": "This Has Nothing to do with the Ethics of Shoes",
             "url": "http://www.irrelevant.com/shoes",
             "metatags": [1],
             "id": 4,
-            "notes": "Article that Exists to be Tagged as Irrelevant",
+            "notes": "Reference that Exists to be Tagged as Irrelevant",
             "added_by": 1
         }
     ],
     {"comment_9": "Output of new MetaTag from the NoRelDataView.  Access in Django tests as self.output[19]"},
     {
-        "article": 3,
+        "reference": 3,
         "tag_type": 1,
         "added_by": 1
     },

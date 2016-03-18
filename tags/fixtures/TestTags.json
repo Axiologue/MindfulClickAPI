@@ -46,7 +46,7 @@
         "excerpt": "Quote about Nike using carbon",
         "value": null,
         "tag_type": 4,
-        "article": 1,
+        "reference": 1,
         "submitted_at": "2015-09-18T22:00:01.841Z",
         "company": 1,
         "added_by": 1
@@ -63,7 +63,7 @@
 {
     "model": "tags.metatag",
     "fields": {
-        "article": 4,
+        "reference": 4,
         "submitted_at":"2015-09-18T22:00:01.841Z",
         "added_by": 1,
         "tag_type": 1

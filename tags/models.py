@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from references.models import Article, Company, Product
+from references.models import Reference, Company, Product
 
 # Model for our general categories
 class EthicsCategory(models.Model):
@@ -49,7 +49,7 @@ class MetaType(TagType):
     pass
 
 class Tag(models.Model):
-    article = models.ForeignKey(Article, related_name='%(class)ss')
+    reference = models.ForeignKey(Reference, related_name='%(class)ss')
 
     submitted_at = models.DateTimeField(auto_now_add=True)
     added_by = models.ForeignKey(User)
@@ -73,7 +73,7 @@ class EthicsTag(Tag):
 
 
     class Meta:
-        ordering = ('article','tag_type')
+        ordering = ('reference','tag_type')
 
     def __str__(self):
         return "{0} : {1}".format(self.tag_type,self.article)
@@ -83,5 +83,5 @@ class MetaTag(Tag):
     tag_type = models.ForeignKey(MetaType)
 
     class Meta:
-        unique_together = ('tag_type','article')
+        unique_together = ('tag_type','reference')
 

@@ -1,25 +1,25 @@
 [
-    {"comment_0": "Post Data for New Article.  Access in Django tests as self.postData[1]"},
+    {"comment_0": "Post Data for New Reference.  Access in Django tests as self.postData[1]"},
     {
         "id": 0,
-        "url": "http://www.newarticle.com",
-        "title": "New Article!",
-        "notes": "Article to test that article creation view works"
+        "url": "http://www.newreference.com",
+        "title": "New Reference!",
+        "notes": "Reference to test that reference creation view works"
     },
-    {"comment_1": "Put data for updating article.  Access in Django tests as self.postData[3]"},
+    {"comment_1": "Put data for updating reference.  Access in Django tests as self.postData[3]"},
     {
         "added_by": 1,
         "title": "New Balance Workers Rights",
         "url": "http://www.adidas-group.com/en/workersaftey",
         "id": 2,
-        "notes": "Fictional Article Regarding Worker Safety.  Updated from Adidas to New Balance"
+        "notes": "Fictional Reference Regarding Worker Safety.  Updated from Adidas to New Balance"
     },
     {"comment_2": "Post Data for new EthicsTag.  Access in Django tests as self.postData[5]"},
     {
         "company": 2,
         "tag_type": 5,
-        "article": 2,
-        "excerpt": "Article excerpt that confirms tag type"
+        "reference": 2,
+        "excerpt": "Reference excerpt that confirms tag type"
     },
     {"comment_3": "Put data for updating EthicsTag.  Access in Django tests as self.postData[7]"},
     {
@@ -27,7 +27,7 @@
         "company": 1,
         "excerpt": "Different quote about Nike using carbon",
         "tag_type": 4,
-        "article": 1,
+        "reference": 1,
         "added_by": 1
     },
     {"comment_4": "Post data for new EthicsType.  Access in Django tests as self.postData[9"},
@@ -35,9 +35,9 @@
         "subcategory": 2,
         "name": "20% more worker accidents than the global average"
     },
-    {"comment_5": "Post data for marking article as irrelevant.  Access in Django tests as self.postData[11]"},
+    {"comment_5": "Post data for marking reference as irrelevant.  Access in Django tests as self.postData[11]"},
     {
-        "article": 3,
+        "reference": 3,
         "tag_type": 1
     },
     {"comment_6": "Post data for updating TagPref in TagPrefUpdateView.  Access in Django tests as self.postData[13]"},

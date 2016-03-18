@@ -18,7 +18,7 @@ class Company(models.Model):
 
 # Article is the base link to outside information
 # an 'article' can actually be a report, journalism, or anything else relevant to our research
-class Article(models.Model):
+class Reference(models.Model):
     title = models.CharField(max_length=200)
     url = models.URLField(unique=True)
 

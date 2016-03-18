@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from .views import FormMetaView, NewEthicsTagView, UpdateEthicsTagView, NewEthicsTypeView, \
         NoRelDataView, UpdateMetaTagView
 from .models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag
-from references.models import Article
+from references.models import Reference
 
 import os
 import json
@@ -16,7 +16,7 @@ factory = APIRequestFactory()
 
 # Check that the article API endpoints are all functioning currently
 class TagViewsTests(APITestCase):
-    fixtures = ['AuthTest','ArticleTestInput','TestCategories','TestCompanies','TestTags']
+    fixtures = ['AuthTest','ReferenceTestInput','TestCategories','TestCompanies','TestTags']
 
     maxDiff = None
 
@@ -32,11 +32,11 @@ class TagViewsTests(APITestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ReferenceTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ReferencePostData.json') as postData:
             self.postData = json.load(postData)
 
     # Test for FormMetaView
@@ -66,7 +66,7 @@ class TagViewsTests(APITestCase):
         self.assertEqual(EthicsTag.objects.count(),1)
 
         # Confirm article in questions has no tags
-        article = Article.objects.get(id=2)
+        article = Reference.objects.get(id=2)
         self.assertEqual(article.ethicstags.count(),0)
 
         view = NewEthicsTagView.as_view()
@@ -81,7 +81,7 @@ class TagViewsTests(APITestCase):
         self.assertEqual(EthicsTag.objects.count(),2)
 
         # Confirm tag is on correct article
-        article = Article.objects.get(id=2)
+        article = Reference.objects.get(id=2)
         self.assertEqual(article.ethicstags.count(),1)
         tag = article.ethicstags.all()[0]
         self.assertEqual(tag.id,4)

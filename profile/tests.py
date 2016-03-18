@@ -21,7 +21,7 @@ factory = APIRequestFactory()
 
 class ProfileLogicTests(TestCase):
     
-    fixtures = ['AuthTest','ArticleTestInput','TestCategories','TestCompanies','TestTags']
+    fixtures = ['AuthTest','ReferenceTestInput','TestCategories','TestCompanies','TestTags']
 
     maxDiff = None
 
@@ -32,11 +32,11 @@ class ProfileLogicTests(TestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ReferenceTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ReferencePostData.json') as postData:
             self.postData = json.load(postData)
 
     def test_populate_preferences_empty(self):
@@ -125,19 +125,19 @@ class ProfileLogicTests(TestCase):
                 added_by=user,
                 excerpt="Company used slaves",
                 tag_type=type1,
-                article_id=1).save()
+                reference_id=1).save()
 
         EthicsTag(company=company,
                 added_by=user,
                 excerpt="Just Kidding.  Company didn't actually use slaves",
                 tag_type=type2,
-                article_id=1).save()
+                reference_id=1).save()
         
         EthicsTag(company=company,
                 added_by=user,
                 excerpt="lots of accidents",
                 tag_type=type3,
-                article_id=1).save()
+                reference_id=1).save()
         
         results = get_company_score(company,user)
         self.assertEqual(results['categories'][0]['count'],1) # Number of Environment tags
@@ -167,20 +167,20 @@ class ProfileLogicTests(TestCase):
                 added_by=user,
                 excerpt="Company used slaves",
                 tag_type=type1,
-                article_id=1).save()
+                reference_id=1).save()
 
         EthicsTag(company=company,
                 product=product,
                 added_by=user,
                 excerpt="Just kidding.  Company didn't actually use slaves",
                 tag_type=type2,
-                article_id=1).save()
+                reference_id=1).save()
         
         EthicsTag(company=company,
                 added_by=user,
                 excerpt="Too much carbon produced",
                 tag_type=type3,
-                article_id=1).save()
+                reference_id=1).save()
 
         product_score = get_product_score(product, self.user)
         company_score = get_company_score(company, self.user)
@@ -290,7 +290,7 @@ class ProfileLogicTests(TestCase):
 
 class ProfileViewTests(APITestCase):
 
-    fixtures = ['AuthTest','ArticleTestInput','TestCategories','TestCompanies','TestTags']
+    fixtures = ['AuthTest','ReferenceTestInput','TestCategories','TestCompanies','TestTags']
 
     maxDiff = None
 
@@ -306,11 +306,11 @@ class ProfileViewTests(APITestCase):
 
         # JSON file that holds the expect output of the tests
         # Also used in front end tests
-        with open(path + '/references/fixtures/ArticleTestOutput.json') as data:
+        with open(path + '/references/fixtures/ReferenceTestOutput.json') as data:
             self.output = json.load(data)
 
         # JSON file that holds post/put data for tests
-        with open(path + '/references/fixtures/ArticlePostData.json') as postData:
+        with open(path + '/references/fixtures/ReferencePostData.json') as postData:
             self.postData = json.load(postData)
 
     # Test EthicsProfileView with no set Preferences
@@ -538,7 +538,7 @@ class ProfileViewTests(APITestCase):
         # Create base preferences
         self.user.preferences.create(tag_type_id=4,preference=-2)
 
-        request = factory.post('/articles/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        request = factory.post('/references/products/fetch/',{"product":'flex run',"brand":"Nike"})
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
@@ -555,7 +555,7 @@ class ProfileViewTests(APITestCase):
     def test_product_fetch_view_no_match(self):
         view = ProductFetchView.as_view()
 
-        request = factory.post('/articles/products/fetch/',{"product":'badonkadonk',"brand":"Blizzles"})
+        request = factory.post('/references/products/fetch/',{"product":'badonkadonk',"brand":"Blizzles"})
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
@@ -568,7 +568,7 @@ class ProfileViewTests(APITestCase):
         # Create base preferences
         self.user.preferences.create(tag_type_id=4,preference=-2)
 
-        request = factory.post('/articles/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        request = factory.post('/references/products/fetch/',{"product":'flex run',"brand":"Nike"})
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
