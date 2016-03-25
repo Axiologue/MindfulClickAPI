@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}Axiologue Blog{% endblock title%}
+
+{% block content %}
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url({% static 'images/blog_landing.jpg' %})">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="site-heading">
+              <h1>Axiologue Blog</h1>
+              <hr class="small">
+               <span class="subheading">Writing at the Intersection of Technology, Consumption, and Ethics</span>
+             </div>
+           </div>
+         </div>
+       </div>
+     </header>
+
+     <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                {% for post in posts %}
+                <div class="post-preview">
+                    <a href="{% url 'blog:post' post.title_url %}">
+                        <h2 class="post-title">
+                            {{post.title}}
+                        </h2>
+                        <h3 class="post-subtitle">
+                            {{post.sub_title}}
+                        </h3>
+                    </a>
+                    <p class="post-meta">Posted by {{post.posted_by}} on {{post.pub_time}}</p>
+                </div>
+                <hr>
+                {% endfor %}
+                <!-- Pager -->
+                <ul class="pager">
+                    {% if page_obj.has_next %}
+                    <li class="next">
+                        <a href="?page={{ page_obj.next_page_number }}">Older Posts &rarr;</a>
+                    </li>
+                    {% endif %}
+                    {% if page_obj.has_previous %}
+                    <li class="previous">
+                        <a href="?page={{ page_obj.previous_page_number}}">&larr; Newer Posts</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock extra_js %}
