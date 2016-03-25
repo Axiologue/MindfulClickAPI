@@ -17,4 +17,11 @@ urlpatterns = [
     url(r'^products/list/$', productViews.ProductListView.as_view()),
     url(r'^products/fetch/$', ProductFetchView.as_view()),
     url(r'^products/new/$', productViews.ProductNewView.as_view()),
+
+    url(r'^untagged/$', views.ReferenceNoTagView.as_view()),
+    url(r'^tagged/$', views.ReferenceWithCrossView.as_view()),
+    url(r'^tagged/company/(?P<pk>\d+)/$', views.ReferenceWithCrossByCompanyView.as_view()),
+    url(r'^new/$', views.NewReferenceView.as_view()),
+    url(r'^(?P<pk>\d+)/$', views.UpdateReferenceView.as_view()),
+    url(r'^noData/$', views.ReferenceNoDataView.as_view()),
 ]
