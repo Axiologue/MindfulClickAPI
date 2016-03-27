@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^products/list/$', productViews.ProductListView.as_view()),
     url(r'^products/fetch/$', ProductFetchView.as_view()),
     url(r'^products/new/$', productViews.ProductNewView.as_view()),
-
+    # Abvoe is outdated endpoints: below are the new and improved ones
     url(r'^untagged/$', views.ReferenceNoTagView.as_view()),
     url(r'^tagged/$', views.ReferenceWithCrossView.as_view()),
     url(r'^tagged/company/(?P<pk>\d+)/$', views.ReferenceWithCrossByCompanyView.as_view()),

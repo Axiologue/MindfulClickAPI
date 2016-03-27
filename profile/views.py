@@ -283,3 +283,20 @@ class ProductFetchOverallOnlyView(APIView):
         }
 
         return Response(data)
+
+
+# Product fetch by ID
+class ProductFetchByIDView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Product.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        product = self.get_object()
+
+        user = request.user
+        data = {
+                'product': ProductSerializer(product).data,
+                'score': get_combined_score(product,user)
+        }
+
+        return Response(data)
