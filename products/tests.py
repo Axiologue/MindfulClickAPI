@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase, APIRequestFactory, APIClient, force
 from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from .views import ProductListView, ProductNewView
 
@@ -11,6 +11,7 @@ import os
 
 factory = APIRequestFactory()
 
+User = get_user_model()
 
 # Check that the article API endpoints are all functioning currently
 class ProductViewsTests(APITestCase):

@@ -1,21 +1,24 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 from tags.models import EthicsType
+
 
 # Class for holding individual prefreences on ethical issues
 # There should be a one-to-one ratio Preferences and and EthicalTypes for any given user
 class Preference(models.Model):
-    user = models.ForeignKey(User,related_name="preferences")
     tag_type = models.ForeignKey(EthicsType)
 
     preference = models.FloatField()
 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='preferences')
+
     class Meta:
-        unique_together = ('user','tag_type')
+        unique_together = ('user', 'tag_type')
 
     def __str__(self):
-        return "{0} - {1}: {2}".format(self.user,self.tag_type,self.preference)
+        return "{0}: {1}".format(self.tag_type, self.preference)
 
     def save(self, *args, **kwargs):
         # Ensure that the preference stays in the proper range:
@@ -26,22 +29,32 @@ class Preference(models.Model):
 
         return super(Preference, self).save(*args, **kwargs)
 
+
+class AxiologueUser(AbstractUser):
+    # Field to track whether the user has done the inital profile setting questions
+    initial_answers = models.BooleanField(default=False)
+
+    # field tracking whether this is a generic, public profile or not
+    generic = models.BooleanField(default=False)
+
+
+
 # Question to Help Set Tag Preferences 
 class Question(models.Model):
     question = models.TextField()
-    supplement = models.TextField(blank=True,null=True)
+    supplement = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.question
 
 # Possible Answers to any given question
 class Answer(models.Model):
-    question = models.ForeignKey(Question,related_name="answers")
+    question = models.ForeignKey(Question, related_name="answers")
 
     answer = models.TextField()
 
     # All users who have chosen this particular answer
-    users = models.ManyToManyField(User,related_name="answered",blank=True)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="answered", blank=True)
 
     def __str__(self):
         return self.answer
@@ -56,14 +69,8 @@ class Modifier(models.Model):
     modifier = models.IntegerField()
 
     # Tracking users who have applied this modifier to their profile already 
-    users = models.ManyToManyField(User,related_name="applied",blank=True)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="applied", blank=True)
 
     def __str__(self):
-        return "{0} : {1}".format(self.answer,self.tag_type)
+        return "{0} : {1}".format(self.answer, self.tag_type)
 
-# User meta data
-class ProfileMeta(models.Model):
-    user = models.OneToOneField(User,related_name="meta")
-
-    # Field to track whether the user has done the inital profile setting questions
-    answered = models.BooleanField(default=False)

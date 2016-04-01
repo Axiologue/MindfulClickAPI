@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
 
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Post(models.Model):
     # Meta info
     pub_time = models.DateTimeField(auto_now_add=True)
-    posted_by = models.ForeignKey(User)
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     # Post Content
     title = models.CharField(max_length = 300, unique=True)

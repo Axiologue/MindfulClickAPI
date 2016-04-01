@@ -1,7 +1,6 @@
 from django.db import models
 
-from django.contrib.auth.models import User
-
+from django.conf import settings
 
 # Article is the base link to outside information
 # an 'article' can actually be a report, journalism, or anything else relevant to our research
@@ -13,10 +12,10 @@ class Reference(models.Model):
 
     pub_date = models.DateTimeField(blank=True,null=True)
     add_date = models.DateTimeField(auto_now_add=True)
-    added_by = models.ForeignKey(User)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     def __str__(self):
         return self.title
 
     class Meta:
-        ordering = ('add_date',)
+        ordering = ('-add_date',)

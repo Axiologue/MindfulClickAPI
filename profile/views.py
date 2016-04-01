@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Preference, Question, Answer, Modifier, ProfileMeta
+from .models import Preference, Question, Answer, Modifier
 from .populate import populate_preferences, populate_modifiers, populate_with_answers
 from .serializers import PreferenceSerializer, QuestionSerializer, AnswerSerializer, \
         QuestionAnswerSerializer
@@ -207,7 +207,7 @@ class UserAnsweredView(APIView):
         user = self.request.user
 
         try:
-            answered = user.meta.answered
+            answered = user.initial_answers
         except ObjectDoesNotExist:
             answered = False
 
@@ -230,12 +230,8 @@ class SetAnswersView(APIView):
         # Apply answer modifiers for that user
         populate_with_answers(user)
 
-        try:
-            user.meta.answered = True
-            user.meta.save()
-        except ObjectDoesNotExist:
-            m = ProfileMeta(user=user,answered=True)
-            m.save()
+        user.initial_answers = True
+        user.save()
 
         return Response(status=status.HTTP_200_OK)
 

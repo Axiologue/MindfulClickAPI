@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase, APIRequestFactory, APIClient, force
 from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from .views import FormMetaView, NewEthicsTagView, UpdateEthicsTagView, NewEthicsTypeView, \
         NoRelDataView, UpdateMetaTagView
@@ -11,6 +11,8 @@ from references.models import Reference
 
 import os
 import json
+
+User = get_user_model()
 
 factory = APIRequestFactory()
 

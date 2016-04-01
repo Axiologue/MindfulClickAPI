@@ -2,14 +2,14 @@ from rest_framework.test import APITestCase, APIRequestFactory, APIClient, force
 from rest_framework import status
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from .views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
         UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView, ProductFetchView, \
         ProductFetchOverallOnlyView
 from .populate import populate_preferences, populate_modifiers, populate_with_answers
-from .models import Preference, Modifier, Answer, Question, ProfileMeta
+from .models import Preference, Modifier, Answer, Question
 from .scoring import get_company_score, get_product_score, get_combined_score
 from tags.models import EthicsType, EthicsTag
 from products.models import Company, Product
@@ -18,6 +18,8 @@ import os
 import json
 
 factory = APIRequestFactory()
+
+User = get_user_model()
 
 class ProfileLogicTests(TestCase):
     
@@ -56,15 +58,17 @@ class ProfileLogicTests(TestCase):
             self.assertEqual(pref.preference,0)
 
     def test_populate_preferences_not_empty(self):
+        user = self.user
+
         # Create a few manual preferences
         tt = EthicsType.objects.get(id=1) 
-        Preference(user=self.user,tag_type=tt,preference=-4).save()
+        Preference(tag_type=tt, preference=-4, user=user).save()
 
         tt = EthicsType.objects.get(id=2) 
-        Preference(user=self.user,tag_type=tt,preference=3).save()
+        Preference(tag_type=tt, preference=3, user=user).save()
 
         tt = EthicsType.objects.get(id=3) 
-        Preference(user=self.user,tag_type=tt,preference=-2).save()
+        Preference(tag_type=tt, preference=-2, user=user).save()
 
         # Confirm that are the right number of Ethical Preferences
         self.assertEqual(Preference.objects.count(),3)
@@ -81,22 +85,23 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(Preference.objects.filter(preference=0).count(),2)
 
     def test_get_company_score(self):
+        user = self.user
+
         # Create some preferences
         tt = EthicsType.objects.get(id=1) 
-        Preference(user=self.user,tag_type=tt,preference=-4).save()
+        Preference(tag_type=tt, preference=-4, user=user).save()
 
         tt = EthicsType.objects.get(id=2) 
-        Preference(user=self.user,tag_type=tt,preference=3).save()
+        Preference(tag_type=tt, preference=3, user=user).save()
 
         tt = EthicsType.objects.get(id=4) 
-        Preference(user=self.user,tag_type=tt,preference=-2).save()
+        Preference(tag_type=tt, preference=-2, user=user).save()
 
         # Confirm that are the right number of Ethical Preferences
         self.assertEqual(Preference.objects.count(),3)
         self.assertEqual(self.user.preferences.count(),3)
 
         company = Company.objects.get(id=1)
-        user = self.user
 
         results = get_company_score(company,user)
 
@@ -107,19 +112,20 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(results,self.output[23])
 
     def test_get_company_score_averages(self):
+        user = self.user
+
         # Create some preferences
         type1 = EthicsType.objects.get(id=1) 
-        Preference(user=self.user,tag_type=type1,preference=-4).save()
+        Preference(tag_type=type1, preference=-4, user=user).save()
 
         type2 = EthicsType.objects.get(id=2) 
-        Preference(user=self.user,tag_type=type2,preference=3).save()
+        Preference(tag_type=type2, preference=3, user=user).save()
 
         type3 = EthicsType.objects.get(id=5)
-        Preference(user=self.user,tag_type=type3,preference=-1).save()
+        Preference(tag_type=type3, preference=-1, user=user).save()
 
         # Create some tags that share categories
         company = Company.objects.get(id=1)
-        user = self.user
 
         EthicsTag(company=company,
                 added_by=user,
@@ -148,20 +154,21 @@ class ProfileLogicTests(TestCase):
         self.assertEqual(results['overall'],-1)
 
     def test_product_scores(self):
-        # Create preferences and tags for both product and companies
+        user = self.user
+
+        # Create some preferences
         type1 = EthicsType.objects.get(id=1) 
-        Preference(user=self.user,tag_type=type1,preference=-4).save()
+        Preference(tag_type=type1, preference=-4, user=user).save()
 
         type2 = EthicsType.objects.get(id=2) 
-        Preference(user=self.user,tag_type=type2,preference=3).save()
+        Preference(tag_type=type2, preference=3, user=user).save()
 
         type3 = EthicsType.objects.get(id=4)
-        Preference(user=self.user,tag_type=type3,preference=-1).save()
+        Preference(tag_type=type3, preference=-1, user=user).save()
 
         # Create some tags that share categories
         company = Company.objects.get(id=1) # Nike
         product = Product.objects.get(id=1) # Nike Flex Run
-        user = self.user
 
         EthicsTag(company=company,
                 added_by=user,
@@ -238,6 +245,7 @@ class ProfileLogicTests(TestCase):
 
     def test_populate_with_answers(self):
         answer = Answer.objects.get(id=1)
+        user = self.user
 
         # Create a few manual preferences
         tt = EthicsType.objects.get(id=1) 
@@ -261,30 +269,30 @@ class ProfileLogicTests(TestCase):
         populate_with_answers(self.user)
        
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=1)
+        pref = user.preferences.get(tag_type_id=1)
         self.assertEqual(pref.preference,-2)
 
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=2)
+        pref = user.preferences.get(tag_type_id=2)
         self.assertEqual(pref.preference,2)
 
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=3)
+        pref = user.preferences.get(tag_type_id=3)
         self.assertEqual(pref.preference,-1)
 
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=4)
+        pref = user.preferences.get(tag_type_id=4)
         self.assertEqual(pref.preference,0)
 
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=4)
+        pref = user.preferences.get(tag_type_id=4)
         self.assertEqual(pref.preference,0)
 
         # Ensure modifiers aren't rerun when populating again
         populate_with_answers(self.user)
 
         # Check that our scores are appropriately modified
-        pref = Preference.objects.get(user=self.user,tag_type_id=1)
+        pref = user.preferences.get(tag_type_id=1)
         self.assertEqual(pref.preference,-2)
 
 
@@ -345,7 +353,7 @@ class ProfileViewTests(APITestCase):
     def test_pref_update_view(self):
         # Create single Preference object to alter
         et = EthicsType.objects.get(id=1)
-        t = Preference(user=self.user,tag_type=et,preference=2)
+        t = Preference(tag_type=et, preference=2, user=self.user)
         t.save()
 
         view = PrefUpdateView.as_view()
@@ -362,15 +370,17 @@ class ProfileViewTests(APITestCase):
 
     # Test for CompanyScoreView
     def test_get_company_score_view(self):
+        user = self.user
+
         # Create some preferences
         tt = EthicsType.objects.get(id=1) 
-        Preference(user=self.user,tag_type=tt,preference=-4).save()
+        Preference(tag_type=tt, preference=-4, user=user).save()
 
         tt = EthicsType.objects.get(id=2) 
-        Preference(user=self.user,tag_type=tt,preference=3).save()
+        Preference(tag_type=tt, preference=3, user=user).save()
 
         tt = EthicsType.objects.get(id=4) 
-        Preference(user=self.user,tag_type=tt,preference=-2).save()
+        Preference(tag_type=tt, preference=-2, user=user).save()
         
         view = CompanyScoreView.as_view()
 
@@ -384,8 +394,9 @@ class ProfileViewTests(APITestCase):
         self.assertEqual(response.data, self.output[23])
 
     def test_get_company_score_view_url(self):
+        user = self.user
         tt = EthicsType.objects.get(id=4) 
-        Preference(user=self.user,tag_type=tt,preference=-2).save()
+        Preference(tag_type=tt,  preference=-2, user=user).save()
 
         response = self.client.get('/profile/scores/company/1/')
 
@@ -484,7 +495,9 @@ class ProfileViewTests(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data,{'answered':False})
 
-        ProfileMeta(user=self.user,answered=True).save()
+        user = self.user
+        user.initial_answers = True
+        user.save()
 
         # Test after answered questions
         request = factory.get('/profile/meta/answered/')
@@ -497,9 +510,8 @@ class ProfileViewTests(APITestCase):
     # Test SetAnswersView
     def test_set_answers_view(self):
         # test defaults
-        self.assertEqual(0,self.user.answered.count())
-        with self.assertRaises(ObjectDoesNotExist):
-            self.user.meta.answered
+        user = self.user
+        self.assertEqual(user.initial_answers, False)
 
         # Set up some default modifier values
         answer = Answer.objects.get(id=2)
@@ -519,12 +531,12 @@ class ProfileViewTests(APITestCase):
         view = SetAnswersView.as_view()
 
         request = factory.post('/profile/question/answers/set',self.postData[19])
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=user)
         response = view(request)
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-        self.assertEqual(1,self.user.answered.count())
+        self.assertEqual(True, user.initial_answers)
         self.assertEqual(self.user.preferences.get(tag_type_id=1).preference,-1)
         self.assertEqual(self.user.preferences.get(tag_type_id=2).preference,1)
         self.assertEqual(self.user.preferences.get(tag_type_id=3).preference,-2)

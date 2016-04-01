@@ -8,14 +8,14 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('blog', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('profile', '0003_auto_20151106_1320'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='answer',
-            name='users',
-            field=models.ManyToManyField(to=settings.AUTH_USER_MODEL, null=True, blank=True, related_name='answered'),
+            model_name='post',
+            name='posted_by',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
     ]

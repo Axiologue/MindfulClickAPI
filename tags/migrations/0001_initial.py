@@ -8,16 +8,17 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('references', '0015_auto_20151016_1804'),
+        ('products', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('references', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='EthicsCategory',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=30, unique=True)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('name', models.CharField(unique=True, max_length=30)),
             ],
             options={
                 'ordering': ('name',),
@@ -26,9 +27,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EthicsSubCategory',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('name', models.CharField(max_length=40)),
-                ('category', models.ForeignKey(to='tags.EthicsCategory', related_name='subcategories')),
+                ('category', models.ForeignKey(related_name='subcategories', to='tags.EthicsCategory')),
             ],
             options={
                 'ordering': ('category', 'name'),
@@ -37,25 +38,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EthicsTag',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('submitted_at', models.DateTimeField(auto_now_add=True)),
                 ('excerpt', models.TextField()),
-                ('value', models.DecimalField(blank=True, decimal_places=2, max_digits=15, null=True)),
+                ('value', models.DecimalField(decimal_places=2, null=True, max_digits=15, blank=True)),
                 ('added_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('article', models.ForeignKey(to='references.Article', related_name='ethicstag')),
-                ('company', models.ForeignKey(to='references.Company', related_name='tags')),
-                ('product', models.ForeignKey(blank=True, to='references.Product', related_name='tags', null=True)),
+                ('company', models.ForeignKey(related_name='tags', to='products.Company')),
+                ('product', models.ForeignKey(related_name='tags', null=True, to='products.Product', blank=True)),
+                ('reference', models.ForeignKey(related_name='ethicstags', to='references.Reference')),
             ],
             options={
-                'ordering': ('article', 'tag_type'),
+                'ordering': ('reference', 'tag_type'),
             },
         ),
         migrations.CreateModel(
             name='EthicsType',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('name', models.CharField(max_length=300)),
-                ('subcategory', models.ForeignKey(to='tags.EthicsSubCategory', related_name='tag_types')),
+                ('subcategory', models.ForeignKey(related_name='tag_types', to='tags.EthicsSubCategory')),
             ],
             options={
                 'ordering': ('name',),
@@ -64,16 +65,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MetaTag',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('submitted_at', models.DateTimeField(auto_now_add=True)),
                 ('added_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('article', models.ForeignKey(to='references.Article', related_name='metatag')),
+                ('reference', models.ForeignKey(related_name='metatags', to='references.Reference')),
             ],
         ),
         migrations.CreateModel(
             name='MetaType',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
                 ('name', models.CharField(max_length=300)),
             ],
             options={
@@ -92,10 +93,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='metatag',
-            unique_together=set([('tag_type', 'article')]),
-        ),
-        migrations.AlterUniqueTogether(
-            name='ethicstag',
-            unique_together=set([('tag_type', 'article', 'company')]),
+            unique_together=set([('tag_type', 'reference')]),
         ),
     ]

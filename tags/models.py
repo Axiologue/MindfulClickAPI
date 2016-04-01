@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 from references.models import Reference
 from products.models import Product, Company
@@ -53,7 +53,7 @@ class Tag(models.Model):
     reference = models.ForeignKey(Reference, related_name='%(class)ss')
 
     submitted_at = models.DateTimeField(auto_now_add=True)
-    added_by = models.ForeignKey(User)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     class Meta:
         abstract = True
@@ -77,7 +77,7 @@ class EthicsTag(Tag):
         ordering = ('reference','tag_type')
 
     def __str__(self):
-        return "{0} : {1}".format(self.tag_type,self.article)
+        return "{0} : {1}".format(self.tag_type, self.reference)
 
 
 class MetaTag(Tag):

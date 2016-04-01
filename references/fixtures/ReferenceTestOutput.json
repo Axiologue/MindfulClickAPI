@@ -79,17 +79,17 @@
     { "comment_1": "Output for ReferenceNoTagView.  Access in Django test as self.output[3]"},
     [
         {
-            "id": 2,
-            "title": "Adidas Workers Rights",
-            "url": "http://www.adidas-group.com/en/workersaftey",
-            "notes": "Fictional Reference Regarding Worker Safety",
-            "added_by": 1
-        },
-        {
             "id": 3,
             "title": "Lots of Companies pollute",
             "url": "http://www.polluting.com/shoes",
             "notes": "Fictional Reference with Lots of Information about Polluting",
+            "added_by": 1
+        },
+        {
+            "id": 2,
+            "title": "Adidas Workers Rights",
+            "url": "http://www.adidas-group.com/en/workersaftey",
+            "notes": "Fictional Reference Regarding Worker Safety",
             "added_by": 1
         }
     ],

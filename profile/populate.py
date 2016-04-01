@@ -27,8 +27,10 @@ def _populate_neutral(obj,model):
         # For the remaining Tag Types, create a model object with the value set to 0
         for t in etypes:
             m = model(tag_type=t)
-            setattr(m,obj.__class__.__name__.lower(),obj)
-            setattr(m,model.__name__.lower(),0)
+            class_name = obj.__class__.__name__.lower()
+            class_name = class_name.replace('axiologue','')
+            setattr(m, class_name, obj)
+            setattr(m, model.__name__.lower(), 0)
             m.save()
 
 # Find New tags and populate with modified tags

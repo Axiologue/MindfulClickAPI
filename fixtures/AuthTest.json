@@ -12,9 +12,10 @@
     "user_permissions": [],
     "groups": [],
     "date_joined": "2015-07-31T19:29:19Z",
-    "first_name": "Matt"
+    "first_name": "Matt",
+    "generic": false
   },
-  "model": "auth.user",
+  "model": "profile.axiologueuser",
   "pk": 1
 },
 {
