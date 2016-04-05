@@ -6,8 +6,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from .views import EthicsProfileView, PrefUpdateView, CompanyScoreView, QuestionAnswersView, \
-        UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView, ProductFetchView, \
-        ProductFetchOverallOnlyView
+        UpdateAnswersView, NewAnswerView, UserAnsweredView, SetAnswersView, ProductScoreView
 from .populate import populate_preferences, populate_modifiers, populate_with_answers
 from .models import Preference, Modifier, Answer, Question
 from .scoring import get_company_score, get_product_score, get_combined_score
@@ -384,26 +383,48 @@ class ProfileViewTests(APITestCase):
         
         view = CompanyScoreView.as_view()
 
-        request = factory.get('/profile/scores/company/1/')
+        request = factory.get('/profile/scores/company/?id=1')
         force_authenticate(request,user=self.user)
-        response = view(request,pk=1).render()
+        response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
         # Compare the ouptput the expected 
-        self.assertEqual(response.data, self.output[23])
+        self.assertEqual(len(response.data.keys()),2) # Check for the right number of keys
+        self.assertTrue('scores' in response.data) # Check Scores key is there
+        self.assertTrue('Company' in response.data) # Check Company key is there
+        self.assertEqual('Nike', response.data['Company']['name']) # Check we got the right company
+        self.assertEqual(len(response.data['scores']), 2) # make sure we got the right number of usere
+        self.assertEqual('kid_for_today', response.data['scores'][0]['user']) # make sure the logged in user is first
+        self.assertEqual(-2.0, response.data['scores'][0]['overall']) # make sure logged in overall score is correct
+        self.assertEqual(2, len(response.data['scores'][0]['categories'])) # assert we have the right number of categories
+        self.assertEqual('Environment', response.data['scores'][0]['categories'][0]['category'])
+        self.assertEqual(-2.0, response.data['scores'][0]['categories'][0]['score']) # check category info
+        self.assertEqual('Generic_Liberal', response.data['scores'][1]['user']) # make sure the generic user is second
+        self.assertEqual(0, response.data['scores'][1]['overall']) # make sure the generic user has no score
 
     def test_get_company_score_view_url(self):
         user = self.user
         tt = EthicsType.objects.get(id=4) 
         Preference(tag_type=tt,  preference=-2, user=user).save()
 
-        response = self.client.get('/profile/scores/company/1/')
+        response = self.client.get('/profile/scores/company/?id=1')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Compare the ouptput the expected 
-        self.assertEqual(response.data, self.output[23])
+        self.assertEqual(len(response.data.keys()),2) # Check for the right number of keys
+        self.assertTrue('scores' in response.data) # Check Scores key is there
+        self.assertTrue('Company' in response.data) # Check Company key is there
+        self.assertEqual('Nike', response.data['Company']['name']) # Check we got the right company
+        self.assertEqual(len(response.data['scores']), 2) # make sure we got the right number of usere
+        self.assertEqual('kid_for_today', response.data['scores'][0]['user']) # make sure the logged in user is first
+        self.assertEqual(-2.0, response.data['scores'][0]['overall']) # make sure logged in overall score is correct
+        self.assertEqual(2, len(response.data['scores'][0]['categories'])) # assert we have the right number of categories
+        self.assertEqual('Environment', response.data['scores'][0]['categories'][0]['category'])
+        self.assertEqual(-2.0, response.data['scores'][0]['categories'][0]['score']) # check category info
+        self.assertEqual('Generic_Liberal', response.data['scores'][1]['user']) # make sure the generic user is second
+        self.assertEqual(0, response.data['scores'][1]['overall']) # make sure the generic user has no score
 
     # Test for QuestionAnswersView
     def test_question_answers_view(self):
@@ -530,7 +551,7 @@ class ProfileViewTests(APITestCase):
 
         view = SetAnswersView.as_view()
 
-        request = factory.post('/profile/question/answers/set',self.postData[19])
+        request = factory.post('/profile/question/answers/set/',self.postData[19])
         force_authenticate(request, user=user)
         response = view(request)
 
@@ -545,50 +566,75 @@ class ProfileViewTests(APITestCase):
 
     # Test ProductFetchView
     def test_product_fetch_view(self):
-        view = ProductFetchView.as_view()
+        view = ProductScoreView.as_view()
 
         # Create base preferences
         self.user.preferences.create(tag_type_id=4,preference=-2)
 
-        request = factory.post('/references/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        request = factory.get('/profile/scores/product/?name=flex%20run')
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-
-        data = {
-                'product': self.output[31],
-                'company': self.output[23]
-                }
-
-        self.assertEqual(response.data,data)
+        self.assertEqual(len(response.data.keys()),2) # Check for the right number of keys
+        self.assertTrue('scores' in response.data) # Check Scores key is there
+        self.assertTrue('Product' in response.data) # Check Product key is there
+        self.assertEqual('Nike Flex RUN 2015', response.data['Product']['name']) # Check we got the right company
+        self.assertEqual('Nike', response.data['Product']['company'])
+        self.assertEqual(len(response.data['scores']), 2) # make sure we got the right number of users
+        self.assertEqual('kid_for_today', response.data['scores'][0]['user']) # make sure the logged in user is first
+        self.assertEqual(2, len(response.data['scores'][0]['categories'])) # assert we have the right number of categories
+        self.assertEqual('Environment', response.data['scores'][0]['categories'][0]['category'])
+        self.assertEqual(-2.0, response.data['scores'][0]['categories'][0]['score']) # check category info
+        self.assertEqual(1.0, response.data['scores'][0]['categories'][0]['count']) # check category info
 
     # Test ProductFetchView with product not in database
     def test_product_fetch_view_no_match(self):
-        view = ProductFetchView.as_view()
+        view = ProductScoreView.as_view()
 
-        request = factory.post('/references/products/fetch/',{"product":'badonkadonk',"brand":"Blizzles"})
+        request = factory.get('/profile/scores/product/?name=badonkadonk')
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(response.data,{'error': 'No product match'})
+        self.assertEqual(response.data,{'error': 'No Product Matches badonkadonk'})
 
     def test_product_fetch_overall_only_view(self):
-        view = ProductFetchOverallOnlyView.as_view()
+        view = ProductScoreView.as_view()
 
         # Create base preferences
         self.user.preferences.create(tag_type_id=4,preference=-2)
 
-        request = factory.post('/references/products/fetch/',{"product":'flex run',"brand":"Nike"})
+        request = factory.get('/profile/scores/product/?name=flex%20run&include_subcategories=false')
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
 
-        data = {
-                'product': self.output[31],
-                'score': -2.0 
-                }
+        self.assertEqual(len(response.data.keys()),2) # Check for the right number of keys
+        self.assertTrue('scores' in response.data) # Check Scores key is there
+        self.assertTrue('Product' in response.data) # Check Product key is there
+        self.assertEqual('Nike Flex RUN 2015', response.data['Product']['name']) # Check we got the right company
+        self.assertEqual(len(response.data['scores']), 2) # make sure we got the right number of users
+        self.assertEqual('kid_for_today', response.data['scores'][0]['user']) # make sure the logged in user is first
+        self.assertEqual(-2.0, response.data['scores'][0]['overall']) # make sure logged in overall score is correct
+        self.assertEqual(len(response.data['scores'][0].keys()), 2) # make sure we got the right number of keys in the scores objects
+        self.assertFalse('categories' in response.data['scores'][0]) # assert there are no categories present 
+        self.assertEqual('Generic_Liberal', response.data['scores'][1]['user']) # make sure the generic user is second
+        self.assertEqual(0, response.data['scores'][1]['overall']) # make sure the generic user has no score
 
-        self.assertEqual(response.data,data)
+    def test_product_fetch_overall_only_no_generic(self):
+        view = ProductScoreView.as_view()
+
+        # Create base preferences
+        self.user.preferences.create(tag_type_id=4,preference=-2)
+
+        request = factory.get('/profile/scores/product/?name=flex%20run&include_subcategories=false&use_generics=false')
+        force_authenticate(request, user=self.user)
+        response = view(request).render()
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(len(response.data['scores']), 1) # Ensure we only have one user
+        self.assertEqual('kid_for_today', response.data['scores'][0]['user']) # ensure the remaining user is the logged in user
+
+

@@ -19,6 +19,25 @@
   "pk": 1
 },
 {
+  "fields": {
+    "is_superuser": false,
+    "password": "pbkdf2_sha256$20000$SBkK4liA7Hl8$9Yx8zO5E88twoTDvZDkTE1FgM7g/+1xxobY1UfvE+g8=",
+    "last_name": "Liberal",
+    "last_login": "2015-10-23T15:37:32.634Z",
+    "email": "fake@fake.org",
+    "username": "Generic_Liberal",
+    "is_active": true,
+    "is_staff": false,
+    "user_permissions": [],
+    "groups": [],
+    "date_joined": "2015-07-31T19:29:19Z",
+    "first_name": "Generic",
+    "generic": true
+  },
+  "model": "profile.axiologueuser",
+  "pk": 2
+},
+{
     "fields": {
         "question": "What Political Party Are you Registered As?"
     },

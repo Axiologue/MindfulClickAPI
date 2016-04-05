@@ -1,8 +1,11 @@
-from rest_framework import generics, status
+import itertools
+
+from rest_framework import generics, status, exceptions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import get_user_model
 
 from .models import Preference, Question, Answer, Modifier
 from .populate import populate_preferences, populate_modifiers, populate_with_answers
@@ -11,8 +14,8 @@ from .serializers import PreferenceSerializer, QuestionSerializer, AnswerSeriali
 from .scoring import get_company_score, get_combined_score
 from tags.models import EthicsType, EthicsCategory
 from products.models import Company, Product
-from products.fetch import product_fetch
-from products.serializers import ProductSerializer
+from products.fetch import fuzzy_fetch 
+from products.serializers import ProductSerializer, CompanySerializer
 
 from json import JSONDecoder
 
@@ -52,38 +55,6 @@ class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PreferenceSerializer
     permission_classes = (IsAuthenticated,)
     queryset = Preference.objects.all()
-
-
-# Get the personalized score of a given user
-class CompanyScoreView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request,*args,**kwargs):
-        user = self.request.user
-        company = Company.objects.get(id=self.kwargs['pk'])
-
-        return Response(get_company_score(company,user))
-
-
-# Get the personalized score for a user/product pair
-class ProductScoreView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        product = Product.objects.get(id=self.kwargs['pk'])
-
-        return Response(get_combined_score(product,user))
-
-
-class ProductScoreOverallOnlyView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        product = Product.objects.get(id=self.kwargs['pk'])
-
-        return Response({'score': get_combined_score(product,user)['overall']})
 
 
 # List All Current Questions for Profile Setting
@@ -236,63 +207,162 @@ class SetAnswersView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# Use fuzzy matching to find best product match
-class ProductFetchView(APIView):
-    permission_classes = (IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
-        serializer = ProductSerializer
+# Get scores of Generic users by company
+# Also returns user score if user is logged in
+class BaseGenericScoreView(generics.RetrieveAPIView):
+    serializer_class = None
+    queryset = None
+    score_function = None
 
-        try:
-            product = product_fetch(request.data['product'])
-
-        except ObjectDoesNotExist:
-            return Response({'error': 'No product match'})
-
-        user = request.user
-        data = {
-                'product': serializer(product).data,
-                'company': get_combined_score(product,user)
-        }
-
-        return Response(data)
-
-
-# Use fuzzy matching to find best product match
-# Returns only overall score
-class ProductFetchOverallOnlyView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request, *args, **kwargs):
-        serializer = ProductSerializer
-
-        try:
-            product = product_fetch(request.data['product'])
-
-        except ObjectDoesNotExist:
-            return Response({'error': 'No product match'})
-
-        user = request.user
-        data = {
-                'product': serializer(product).data,
-                'score': get_combined_score(product,user)['overall']
-        }
-
-        return Response(data)
-
-
-# Product fetch by ID
-class ProductFetchByIDView(generics.RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    queryset = Product.objects.all()
+    # view settings flags
+    include_object = True
+    include_subcategories = True
+    use_fuzzy_fetch = True
+    use_generics = True
 
     def retrieve(self, request, *args, **kwargs):
-        product = self.get_object()
+        users = self.get_users()
 
-        user = request.user
-        data = {
-                'product': ProductSerializer(product).data,
-                'score': get_combined_score(product,user)
-        }
+        # Try to get the object and catch various exceptions
+        try:
+            obj = self.get_object()
+        except ObjectDoesNotExist as e:
+            return Response({'error': str(e)})
+        except KeyError as e:
+            return Response({'error': str(e)})
+
+        scores = self.get_scores(obj, users)
+
+        include_object = self.get_boolean_from_request(request, 'include_object')
+
+        if include_object:
+            serializer = self.get_serializer(obj)
+
+            data = {
+                self.queryset.model.__name__: serializer.data,
+                'scores': scores
+            }
+
+        else:
+            data = scores
 
         return Response(data)
+
+    def get_scores(self, obj, users):
+        """
+        returns list of users and their scores
+        """
+
+        return [
+            dict(itertools.chain({'user': user.username}.items(), self.get_individual_score(obj, user).items())) 
+            for user in users
+        ]
+
+    def get_individual_score(self, obj, user):
+        """
+        Gets a score for a product or company
+        Returns only the overall score if `include_subcategories` is set to false
+        """
+
+        score_func = self.get_score_function()
+
+        include_subcategories = self.get_boolean_from_request(self.request, 'include_subcategories')
+
+        return score_func(obj, user) if include_subcategories else {'overall': score_func(obj, user)['overall']}
+    
+    def get_score_function(self):
+        """
+        Return the scoring function for this object/set
+        Defaults to using `self.score_function`.
+        """
+        
+        assert self.score_function is not None, (
+            "'%s' should either include a `score_function` attribute, "
+            "or override the `get_score_function` method."
+            % self.__class__.__name__
+        )
+
+        return self.score_function
+
+    def get_users(self):
+        """
+        By default, returns a list with Generic users and the current user (if authenticated)
+        """
+        use_generics = self.get_boolean_from_request(self.request, 'use_generics')
+
+        users = []
+
+        if self.request.user.is_authenticated():
+           users.append(self.request.user)
+
+        if use_generics:
+            User = get_user_model() 
+            users += list(User.objects.filter(generic=True))
+
+        if not users:
+            raise exceptions.AuthenticationFailed('Please Log in to See Your Scores')
+
+        return users
+       
+    def get_object(self):
+        """
+        Returns object based on query params
+        requires either 'id' or 'name' in the query_params
+        """
+
+        if 'id' not in self.request.query_params and 'name' not in self.request.query_params:
+            raise KeyError('This view requires a querystring with a name or id attribute')
+
+        queryset = self.get_queryset()
+
+        if 'name' in self.request.query_params:
+            if self.use_fuzzy_fetch:
+                try:
+                    obj = fuzzy_fetch(queryset, self.request.query_params['name'])
+                except ObjectDoesNotExist as e:
+                    raise ObjectDoesNotExist(str(e)) 
+
+            else:
+                obj = queryset.get(name=self.request.query_params['name'])
+
+        else:
+            obj = queryset.get(id=self.request.query_params['id'])
+
+        return obj
+
+    def get_boolean_from_request(self, request, key):
+        """
+        Checks for a certain boolean querystring.
+        If present, returns appropriate true/false value
+        else, returns default class setting for value
+        """
+
+        if key in request.query_params:
+            val = request.query_params[key]
+
+            if val == 'True' or val == 'true':
+                return True
+
+            else:
+                return False
+
+        else:
+            return getattr(self, key)
+
+
+# Get the personalized score of a given user
+class CompanyScoreView(BaseGenericScoreView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+    score_function = staticmethod(get_company_score)
+    use_fuzzy_fetch = False
+
+
+# Get the personalized score for a user/product pair
+class ProductScoreView(BaseGenericScoreView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    score_function = staticmethod(get_combined_score)
+
+

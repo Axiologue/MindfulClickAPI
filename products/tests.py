@@ -43,7 +43,7 @@ class ProductViewsTests(APITestCase):
         view = ProductListView.as_view()
 
         # test unfiltered version
-        request = factory.get('/articles/products/list/')
+        request = factory.get('/products/products/list/')
         response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
@@ -54,7 +54,7 @@ class ProductViewsTests(APITestCase):
         view = ProductListView.as_view()
 
         # test filtered version
-        request = factory.get('/articles/products/list/?company_id=1&name=run',{'company_id':'1',"name":"run"})
+        request = factory.get('/products/products/list/?company_id=1&name=run',{'company_id':'1',"name":"run"})
         response = view(request).render()
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
@@ -62,13 +62,13 @@ class ProductViewsTests(APITestCase):
 
     # Test ProductListView as endpoint
     def test_product_list_view_url(self):
-        response = self.client.get('/articles/products/list/')
+        response = self.client.get('/products/products/list/')
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[27])
 
     def test_product_list_view_filtered_url(self):
-        response = self.client.get('/articles/products/list/?company_id=1&name=run')
+        response = self.client.get('/products/products/list/?company_id=1&name=run')
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[29])

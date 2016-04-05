@@ -49,7 +49,7 @@ class ReferenceViewsTests(APITestCase):
 
         view = ReferenceNoTagView.as_view()
 
-        request = factory.get('/articles/articles/untagged/')
+        request = factory.get('/references/untagged/')
 
         with self.assertNumQueries(1):
             response = view(request).render()
@@ -59,7 +59,7 @@ class ReferenceViewsTests(APITestCase):
 
     # Test ReferenceNoTagView url endpoints
     def test_article_no_tag_view_url(self):
-        response = self.client.get('/articles/articles/untagged/')
+        response = self.client.get('/references/untagged/')
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[3])
@@ -70,7 +70,7 @@ class ReferenceViewsTests(APITestCase):
 
         view = ReferenceWithCrossView.as_view()
 
-        request = factory.get('/articles/articles/tagged/')
+        request = factory.get('/references/tagged/')
 
         with self.assertNumQueries(4):
             response = view(request).render()
@@ -80,7 +80,7 @@ class ReferenceViewsTests(APITestCase):
 
     # Test ReferenceWithCrossView url endpoints
     def test_article_with_cross_view_url(self):
-        response = self.client.get('/articles/articles/tagged/')
+        response = self.client.get('/references/tagged/')
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[5])
@@ -93,7 +93,7 @@ class ReferenceViewsTests(APITestCase):
         # Confirm existing Reference count
         self.assertEqual(Reference.objects.count(),4)
 
-        request = factory.post('/articles/articles/new/',self.postData[1])
+        request = factory.post('/references/new/',self.postData[1])
         force_authenticate(request, user=self.user)
         response = view(request).render()
 
@@ -107,7 +107,7 @@ class ReferenceViewsTests(APITestCase):
 
     # Test NewReferenceView url endpoints
     def test_new_article_view_url(self):
-        response = self.client.post('/articles/articles/new/',self.postData[1])
+        response = self.client.post('/references/new/',self.postData[1])
 
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
 
@@ -123,7 +123,7 @@ class ReferenceViewsTests(APITestCase):
 
         view = UpdateReferenceView.as_view()
 
-        request = factory.put('/articles/articles/2/',self.postData[3])
+        request = factory.put('/references/2/',self.postData[3])
         force_authenticate(request, user=self.user)
         response = view(request, pk=2).render()
 
@@ -142,7 +142,7 @@ class ReferenceViewsTests(APITestCase):
 
     # Test UpdateReferenceView put endpoints
     def test_edit_article_view_update_edit(self):
-        response = self.client.put('/articles/articles/2/',self.postData[3])
+        response = self.client.put('/references/2/',self.postData[3])
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data,self.output[9])
@@ -155,7 +155,7 @@ class ReferenceViewsTests(APITestCase):
 
         view = UpdateReferenceView.as_view()
 
-        request = factory.delete('/articles/articles/2/')
+        request = factory.delete('/references/2/')
         force_authenticate(request, user=self.user)
         response = view(request,pk=2).render()
 
@@ -167,8 +167,8 @@ class ReferenceViewsTests(APITestCase):
             article = Reference.objects.get(id=2)
 
     # Test UpdateReferenceView delete endpoints
-    def test_Edit_article_view_update(self):
-        response = self.client.delete('/articles/articles/2/')
+    def test_edit_article_view_update(self):
+        response = self.client.delete('/references/2/')
 
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
 
@@ -178,7 +178,7 @@ class ReferenceViewsTests(APITestCase):
 
         view = ReferenceNoDataView.as_view()
 
-        request = factory.get('/articles/articles/noData/')
+        request = factory.get('/references/noData/')
 
         with self.assertNumQueries(2):
             response = view(request).render()
@@ -188,7 +188,7 @@ class ReferenceViewsTests(APITestCase):
 
     # Test ReferenceNoDataView url endpoints
     def test_article_no_data_tag_view_url(self):
-        response = self.client.get('/articles/articles/noData/')
+        response = self.client.get('/references/noData/')
 
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(response.data, self.output[17])

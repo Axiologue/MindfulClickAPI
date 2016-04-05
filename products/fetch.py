@@ -4,16 +4,15 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from fuzzywuzzy import fuzz, process
 
-def product_fetch(product_string):
-    products = Product.objects.all()
-    names_list = [x.name for x in products]
-    product_string = process.extractOne(product_string,names_list,scorer=fuzz.token_set_ratio)
+def fuzzy_fetch(queryset, object_string):
+    names_list = queryset.values_list('name', flat=True)
+    extracted = process.extractOne(object_string,names_list,scorer=fuzz.token_set_ratio)
 
     # Make sure there's a good enough match
-    if product_string[1] > 80:
-        product = Product.objects.filter(name=product_string[0])[0]
+    if extracted[1] > 80:
+        obj = queryset.filter(name=extracted[0])[0]
        
-        return product
+        return obj
 
     else:
-        raise ObjectDoesNotExist('No Product Matches that Name')
+        raise ObjectDoesNotExist('No {0} Matches {1}'.format(queryset.model.__name__, object_string))
