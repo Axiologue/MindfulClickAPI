@@ -11,7 +11,8 @@ class PostFullSerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(serializers.ModelSerializer):
+    posted_by = serializers.StringRelatedField()
 
     class Meta:
         model = Post
-        fields = ('title', 'sub_title', 'id')
+        fields = ('title', 'sub_title', 'title_url', 'pub_time', 'posted_by')
