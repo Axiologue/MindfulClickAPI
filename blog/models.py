@@ -1,5 +1,8 @@
+import markdown
+
 from django.db import models
 from django.utils.text import slugify
+from django.utils.html import strip_tags
 
 from django.conf import settings
 
@@ -27,3 +30,11 @@ class Post(models.Model):
         self.title_url = slugify(self.title)[:50]
 
         super(Post, self).save(*args,**kwargs)
+
+    @property
+    def excerpt(self):
+        # convert markdown to html and then strip
+        html = markdown.markdown(self.body[:500])
+        excerpt = strip_tags(html)
+
+        return excerpt
