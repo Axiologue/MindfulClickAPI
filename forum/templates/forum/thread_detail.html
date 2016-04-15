@@ -1,0 +1,30 @@
+{% extends 'forum/base.html' %}
+
+	{% block content %}
+
+	<div>
+	    <h1><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.subject }}</a></h1>
+	    <p>subject: {{ thread.subject }}</p>
+	</div>
+
+	<div class="">
+		<h1><a href="{% url 'post_new' pk=thread.pk %}">Add a Post</a></h1>
+
+
+	</div>
+
+    <div>
+        {% for post in posts %}
+	    <div class="post">
+	        <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+	        <p>{{ post.text|linebreaks }}</p>
+	    </div>
+	    <div class="date">
+	            <p>last_edited: {{ post.last_edited_date }}</p>
+	    </div>
+		{% endfor %}
+
+		
+
+    </div>
+	{% endblock %}
