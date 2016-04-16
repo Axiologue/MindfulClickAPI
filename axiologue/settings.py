@@ -62,7 +62,8 @@ INSTALLED_APPS = (
     'products',
     'blog',
     'events',
-    'landing'
+    'landing',
+    'forum',
 )
 
 if DEBUG:

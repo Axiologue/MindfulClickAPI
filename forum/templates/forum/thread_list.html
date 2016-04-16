@@ -1,0 +1,28 @@
+{% extends 'forum/base.html' %}
+
+	{% block content %}
+
+    <div class="new">
+        <h1><a href="{% url 'thread_new' %}">Add a Thread</a></h1>
+
+
+    </div>
+
+
+
+
+	{% for thread in threads %}
+	    <div>
+	        <h1><a href="{% url 'thread_detail' pk=thread.pk %}">{{ thread.subject }}</a></h1>
+	        <p>subject: {{ thread.subject }}</p>
+	    </div>
+	{% endfor %}
+
+	
+
+
+	{% endblock %}
+
+
+
+

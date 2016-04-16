@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^landing/', include('landing.urls')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^', include('django.contrib.auth.urls')),
+    url(r'^forum/', include('forum.urls', namespace='forum')),
 ]
 
 if settings.DEBUG:
