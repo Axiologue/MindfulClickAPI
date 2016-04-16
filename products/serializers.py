@@ -41,5 +41,5 @@ class ProductSimpleSerializer(serializers.ModelSerializer):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ('name','id')
+        fields = ('name','id', 'owns')
 

@@ -20,6 +20,12 @@ class SingleCompanyView(generics.RetrieveAPIView):
     queryset = Company.objects.all()
 
 
+class SingleByNameCompanyView(generics.RetrieveAPIView):
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+    lookup_field = 'name'
+
+
 class ProductListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_type='icontains')
     company = django_filters.CharFilter()
