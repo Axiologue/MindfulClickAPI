@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class Company(models.Model):
     name = models.CharField(max_length=50,unique=True)
 
-    owns = models.ForeignKey('self',related_name='parent',blank=True,null=True)
+    owned_by = models.ForeignKey('self', related_name='owns', blank=True, null=True)
 
     def __str__(self):
         return self.name

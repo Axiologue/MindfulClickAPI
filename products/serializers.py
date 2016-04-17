@@ -39,7 +39,10 @@ class ProductSimpleSerializer(serializers.ModelSerializer):
         fields = ('name','id','company')
 
 class CompanySerializer(serializers.ModelSerializer):
+    owned_by = serializers.StringRelatedField()
+    owns = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Company
-        fields = ('name','id', 'owns')
+        fields = ('name','id', 'owns', 'owned_by')
 
