@@ -16,6 +16,7 @@ class ReferenceEthicsTagsSerializer(serializers.ModelSerializer):
         model = Reference
         fields = ('title','url','ethicstags','id','notes','added_by')
 
+
 class ReferenceMetaTagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reference

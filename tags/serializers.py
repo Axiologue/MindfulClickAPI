@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from tags.models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag, EthicsCategory
+from .models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag, EthicsCategory
+from references.models import Reference
 
 
 class EthicsTypeSerializer(serializers.ModelSerializer):
@@ -45,6 +46,27 @@ class EthicsTagChangeSerializer(serializers.ModelSerializer):
         fields = ('tag_type','value','excerpt','company','product','reference','id','added_by')
 
 
+class ReferenceShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reference
+        fields = ('title', 'url', 'id', 'notes')
+
+
+class EthicsTagByObjectSerializer(serializers.ModelSerializer):
+    tag_type = serializers.StringRelatedField()
+    added_by = serializers.StringRelatedField()
+    submitted_at = serializers.DateTimeField(format="%-I:%M%p %m/%d/%Y")
+    reference = ReferenceShortSerializer(read_only=True)
+    category = serializers.SerializerMethodField()
+
+    def get_category(self, obj):
+        return obj.tag_type.subcategory.category.name
+
+    class Meta:
+        model = EthicsTag
+        field = ('tag_type', 'value', 'excerpt', 'reference', 'added_by', 'submitted_at', 'category')
+
+
 class EthicsSubSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
     tag_types = EthicsTypeSerializer(read_only=True,many=True)
@@ -58,4 +80,3 @@ class MetaTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = MetaTag
         fields = ('reference','tag_type','added_by')
-

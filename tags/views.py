@@ -1,14 +1,16 @@
-from .models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory, Company
+from .models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory, EthicsCategory
 from .serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
-        EthicsTypeSerializer, EthicsSubSerializer, EthicsTypeUpdateSerializer
+        EthicsTypeSerializer, EthicsSubSerializer, EthicsTypeUpdateSerializer, \
+        EthicsTagByObjectSerializer
+from products.models import Company
 from products.serializers import CompanySerializer
 
 from drf_multiple_model.views import MultipleModelAPIView
 
-from rest_framework import generics
-from rest_framework import status
+from rest_framework import generics, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+import django_filters
 
 class NewEthicsTagView(generics.CreateAPIView):
     queryset = EthicsTag.objects.all()
@@ -65,3 +67,35 @@ class NoRelDataView(generics.CreateAPIView):
 class UpdateMetaTagView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MetaTag.objects.all()
     serializer_class = MetaTagSerializer
+
+
+class EthicsTagFilter(django_filters.FilterSet):
+    company = django_filters.CharFilter(name='company__name', lookup_type='icontains')
+    product = django_filters.CharFilter(name='product__name', lookup_type='icontains')
+    
+    class Meta:
+        model = EthicsTag
+        field = ['company_id', 'company', 'product', 'product_id']
+
+
+class TagsByObjectView(generics.ListAPIView):
+    serializer_class = EthicsTagByObjectSerializer
+    queryset = EthicsTag.objects.select_related(
+            'tag_type', 
+            'tag_type__subcategory__category',
+            'reference',
+            'added_by')
+    filter_class = EthicsTagFilter
+    filter_backends = (filters.DjangoFilterBackend,)
+
+    # split tag types into categories before returning
+    def list(self, request, *arg, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
+        tag_data = serializer.data
+
+        categories = EthicsCategory.objects.all()
+        data = [{'category': x.name, 'tags': [y for y in tag_data if y['category'] == x.name]} for x in categories]
+
+        return Response(data)

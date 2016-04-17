@@ -28,16 +28,15 @@ class SingleByNameCompanyView(generics.RetrieveAPIView):
 
 class ProductListFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(lookup_type='icontains')
-    company = django_filters.CharFilter()
+    company = django_filters.CharFilter(name='company__name', lookup_type='icontains')
     price = django_filters.RangeFilter()
 
     class Meta:
         model = Product
-        fields = ['name','company_id','category','division','price']
+        fields = ['name','company_id','category','division','price', 'company']
 
 
 class ProductListView(generics.ListAPIView):
-    model = Product
     serializer_class = ProductSimpleSerializer
     queryset = Product.objects.select_related('company').all()
 
@@ -45,7 +44,7 @@ class ProductListView(generics.ListAPIView):
     filter_class = ProductListFilter
     filter_backends = (filters.DjangoFilterBackend,)
 
-    # Reformat response to best process fir angucomplete format
+    # Reformat response to best process for angucomplete format
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
