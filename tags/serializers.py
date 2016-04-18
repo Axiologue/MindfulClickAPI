@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import EthicsType, EthicsTag, EthicsSubCategory, MetaTag, EthicsCategory
 from references.models import Reference
+from common.serializers import LocalDateTimeField
 
 
 class EthicsTypeSerializer(serializers.ModelSerializer):
@@ -55,7 +56,7 @@ class ReferenceShortSerializer(serializers.ModelSerializer):
 class EthicsTagByObjectSerializer(serializers.ModelSerializer):
     tag_type = serializers.StringRelatedField()
     added_by = serializers.StringRelatedField()
-    submitted_at = serializers.DateTimeField(format="%-I:%M%p %m/%d/%Y")
+    submitted_at = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
     reference = ReferenceShortSerializer(read_only=True)
     category = serializers.SerializerMethodField()
 

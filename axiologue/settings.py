@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'events',
     'landing',
     'forum',
+    'common'
 )
 
 if DEBUG:

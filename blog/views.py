@@ -1,11 +1,11 @@
 from rest_framework import generics 
 
 from .models import Post
-from .serializers import PostFullSerializer, PostListSerializer
+from .serializers import PostFullSerializer, PostListSerializer, PostListExcerptSerializer
 
 class AllPostsView(generics.ListAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostListSerializer
+    serializer_class = PostListExcerptSerializer
 
 
 class RecentPostsView(generics.ListAPIView):

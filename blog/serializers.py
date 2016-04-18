@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Post
+from common.serializers import LocalDateTimeField
 
 class PostFullSerializer(serializers.ModelSerializer):
     posted_by = serializers.StringRelatedField()
@@ -11,7 +12,18 @@ class PostFullSerializer(serializers.ModelSerializer):
 
 
 class PostListSerializer(serializers.ModelSerializer):
+    posted_by = serializers.StringRelatedField()
+    pub_time = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
 
     class Meta:
         model = Post
-        fields = ('title', 'sub_title', 'title_url', 'excerpt')
+        fields = ('title', 'sub_title', 'title_url', 'pub_time', 'posted_by')
+
+
+class PostListExcerptSerializer(serializers.ModelSerializer):
+    posted_by = serializers.StringRelatedField()
+    pub_time = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
+
+    class Meta:
+        model = Post
+        fields = ('title', 'sub_title', 'title_url', 'excerpt', 'pub_time', 'posted_by')
