@@ -72,10 +72,12 @@ class UpdateMetaTagView(generics.RetrieveUpdateDestroyAPIView):
 class EthicsTagFilter(django_filters.FilterSet):
     company = django_filters.CharFilter(name='company__name', lookup_type='icontains')
     product = django_filters.CharFilter(name='product__name', lookup_type='icontains')
+    company_id = django_filters.NumberFilter(name='company_id')
+    product_id = django_filters.NumberFilter(name='product_id')
+    no_product = django_filters.BooleanFilter(name='product__isnull')
     
     class Meta:
         model = EthicsTag
-        field = ['company_id', 'company', 'product', 'product_id']
 
 
 class TagsByObjectView(generics.ListAPIView):
