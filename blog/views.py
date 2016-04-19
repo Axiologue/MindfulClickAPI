@@ -16,4 +16,5 @@ class RecentPostsView(generics.ListAPIView):
 class PostView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostFullSerializer
+    lookup_field = 'title_url'
     
