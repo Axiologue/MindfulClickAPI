@@ -18,6 +18,7 @@ from products.fetch import fuzzy_fetch
 from products.serializers import ProductSerializer, CompanySerializer
 
 from json import JSONDecoder
+import json
 
 
 # List all the Ethical Preferences of a User
@@ -221,6 +222,7 @@ class BaseGenericScoreView(generics.RetrieveAPIView):
     use_fuzzy_fetch = True
     use_generics = True
 
+
     def retrieve(self, request, *args, **kwargs):
         users = self.get_users()
 
@@ -357,6 +359,32 @@ class CompanyScoreView(BaseGenericScoreView):
     serializer_class = CompanySerializer
     score_function = staticmethod(get_company_score)
     use_fuzzy_fetch = False
+
+
+# View for getting ALL current company scores
+class CompanyScoreAllView(CompanyScoreView):
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, args, kwargs)
+
+    def list(self, request, *args, **kwargs):
+        users = self.get_users()
+
+        all_scores = []
+        for obj in self.queryset.all():
+            scores = self.get_scores(obj, users)
+
+            serializer = self.get_serializer(obj)
+
+            data = {
+                self.queryset.model.__name__: serializer.data,
+                'scores': scores
+            }
+
+            all_scores.append(data)
+
+        return Response(all_scores)
+    
 
 
 # Get the personalized score for a user/product pair
