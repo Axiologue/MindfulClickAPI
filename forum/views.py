@@ -29,6 +29,15 @@ class APIPostList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        thread = self.request.query_params.get('thread', None)
+        if thread is not None:
+            queryset = queryset.filter(thread=thread)
+        return queryset
+
+
+
 class APIPostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
