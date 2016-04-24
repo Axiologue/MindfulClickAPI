@@ -25,6 +25,13 @@ class APIThreadList(generics.ListCreateAPIView):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
 
+    def get_queryset(self):
+        queryset = Thread.objects.all()
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            queryset = queryset.filter(category=category)
+        return queryset
+
 class APIThreadDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
