@@ -2,16 +2,24 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 #from django.contrib.auth.models import User
-from .models import Thread, Post
-from .forms import PostForm, ThreadForm
+from .models import Thread, Post, Category
+from .forms import PostForm, ThreadForm, CategoryForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from .serializers import ThreadSerializer, PostSerializer, UserSerializer
+from .serializers import ThreadSerializer, PostSerializer, UserSerializer, CategorySerializer
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+class APICategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class APICategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 class APIThreadList(generics.ListCreateAPIView):
     queryset = Thread.objects.all()
