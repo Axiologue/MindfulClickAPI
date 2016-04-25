@@ -1,0 +1,4 @@
+{{ object.name }}
+{{ object.company.name }}
+{{ object.category }}
+{{ object.division }}

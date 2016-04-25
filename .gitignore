@@ -55,3 +55,4 @@ ax_nginx.conf
 ax_uwsgi.ini
 uwsgi_params
 static/
+server_configs/

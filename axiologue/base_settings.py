@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'haystack',
     'references',
     'rest_framework',
     'rest_framework.authtoken',
@@ -42,7 +43,8 @@ INSTALLED_APPS = (
     'events',
     'landing',
     'forum',
-    'common'
+    'common',
+    'search'
 )
 
 
@@ -181,3 +183,12 @@ DEFAULT_FROM_EMAIL = 'admin@axiologue.org'
 
 # Extra Fixtures directory for tests
 FIXTURE_DIRS = [os.path.join(BASE_DIR,'fixtures')]
+
+# Search settings
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'axiologue',
+    },
+}
