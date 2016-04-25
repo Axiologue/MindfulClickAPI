@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'landing',
     'forum',
     'common',
-    'locate'
+    'search'
 )
 
 
