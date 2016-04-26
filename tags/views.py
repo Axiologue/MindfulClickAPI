@@ -74,7 +74,7 @@ class EthicsTagFilter(django_filters.FilterSet):
     product = django_filters.CharFilter(name='product__name', lookup_type='icontains')
     company_id = django_filters.NumberFilter(name='company_id')
     product_id = django_filters.NumberFilter(name='product_id')
-    no_product = django_filters.BooleanFilter(name='product__isnull')
+    no_product = django_filters.BooleanFilter(name='product', lookup_type='isnull')
     
     class Meta:
         model = EthicsTag
