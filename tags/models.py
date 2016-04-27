@@ -86,3 +86,6 @@ class MetaTag(Tag):
     class Meta:
         unique_together = ('tag_type','reference')
 
+    def __str__(self):
+        return self.tag_type.name
+

@@ -1,5 +1,6 @@
 from .models import Reference
-from .serializers import ReferenceSerializer, ReferenceEthicsTagsSerializer, ReferenceMetaTagsSerializer
+from .serializers import ReferenceSerializer, ReferenceEthicsTagsSerializer, ReferenceMetaTagsSerializer, \
+        ReferenceAllTagsSerializer
 from tags.models import EthicsType, EthicsTag
 from profile.scoring import get_company_score, get_combined_score
 
@@ -18,9 +19,24 @@ class ReferenceNoTagView(generics.ListAPIView):
 class ReferenceWithCrossView(generics.ListAPIView):
     queryset= Reference.objects.prefetch_related(
         'ethicstags__company',
+        'ethicstags__product',
+        'added_by',
         Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory'))
         ).annotate(c=Count('ethicstags')).filter(c__gte=1)
     serializer_class = ReferenceEthicsTagsSerializer;
+
+
+class ReferenceWithTagsView(generics.ListAPIView):
+    queryset= Reference.objects.prefetch_related(
+        'ethicstags__company',
+        'ethicstags__product',
+        'added_by',
+        Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory')),
+        'metatags',
+        'metatags__tag_type'
+    )
+        
+    serializer_class = ReferenceAllTagsSerializer;
 
 
 class ReferenceWithCrossByCompanyView(generics.ListAPIView):
