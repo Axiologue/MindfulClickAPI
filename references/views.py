@@ -49,10 +49,28 @@ class ReferenceWithCrossByCompanyView(generics.ListAPIView):
             ).annotate(c=Count('ethicstags')).filter(c__gte=1,ethicstags__company_id=self.kwargs['pk'])
 
 
-class UpdateReferenceView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ReferenceSerializer
-    queryset= Reference.objects.all()
-    permission_classes = (IsAuthenticated,)    
+class SingleReferenceView(generics.RetrieveUpdateDestroyAPIView):
+
+    def get_queryset(self):
+        queryset = Reference.objects.all()
+
+        if self.request.method.lower() == 'get':
+            queryset = queryset.prefetch_related(
+                'ethicstags__company',
+                'ethicstags__product',
+                'added_by',
+                Prefetch('ethicstags__tag_type', queryset=EthicsType.objects.select_related('subcategory')),
+                'metatags',
+                'metatags__tag_type'
+            )
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method.lower() == 'get':
+            return ReferenceAllTagsSerializer
+        else:
+            return ReferenceSerializer
 
 
 class NewReferenceView(generics.CreateAPIView):
