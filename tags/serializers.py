@@ -59,13 +59,14 @@ class EthicsTagByObjectSerializer(serializers.ModelSerializer):
     submitted_at = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
     reference = ReferenceShortSerializer(read_only=True)
     category = serializers.SerializerMethodField()
+    company = serializers.StringRelatedField()
 
     def get_category(self, obj):
         return obj.tag_type.subcategory.category.name
 
     class Meta:
         model = EthicsTag
-        field = ('tag_type', 'value', 'excerpt', 'reference', 'added_by', 'submitted_at', 'category')
+        fields = ('tag_type', 'value', 'excerpt', 'reference', 'added_by', 'submitted_at', 'category', 'company', 'product', 'id')
 
 
 class EthicsSubSerializer(serializers.ModelSerializer):
