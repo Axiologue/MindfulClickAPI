@@ -16,3 +16,23 @@ POSTMARK_TRACK_OPENS = True
 # Static Files Config
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'watched_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/var/log/django/axiologue.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['watched_file',],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
