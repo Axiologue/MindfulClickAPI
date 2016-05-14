@@ -1,16 +1,24 @@
 from rest_framework import serializers
-from forum.models import Thread, Post
+from forum.models import Thread, Post, Category
 #from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Category
+        fields = ('id','name',)
 
 class ThreadSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
         model = Thread
-        fields = ('id', 'subject',)
+        fields = ('id', 'subject', 'category')
 
 
 class PostSerializer(serializers.ModelSerializer):

@@ -2,20 +2,35 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 #from django.contrib.auth.models import User
-from .models import Thread, Post
-from .forms import PostForm, ThreadForm
+from .models import Thread, Post, Category
+from .forms import PostForm, ThreadForm, CategoryForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from .serializers import ThreadSerializer, PostSerializer, UserSerializer
+from .serializers import ThreadSerializer, PostSerializer, UserSerializer, CategorySerializer
 from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class APICategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class APICategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 class APIThreadList(generics.ListCreateAPIView):
     queryset = Thread.objects.all()
     serializer_class = ThreadSerializer
+
+    def get_queryset(self):
+        queryset = Thread.objects.all()
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            queryset = queryset.filter(category=category)
+        return queryset
 
 class APIThreadDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Thread.objects.all()
@@ -28,6 +43,15 @@ class APIPostList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        thread = self.request.query_params.get('thread', None)
+        if thread is not None:
+            queryset = queryset.filter(thread=thread)
+        return queryset
+
+
 
 class APIPostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()

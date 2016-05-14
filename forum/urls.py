@@ -14,8 +14,10 @@ urlpatterns = [
     url(r'^api/thread/(?P<pk>[0-9]+)/$', views.APIThreadDetail.as_view()),
     url(r'^api/post/$', views.APIPostList.as_view()),
     url(r'^api/post/(?P<pk>[0-9]+)/$', views.APIPostDetail.as_view()),
-    url(r'^api/users/$', views.APIUserList.as_view()),
-    url(r'^api/users/(?P<pk>[0-9]+)/$', views.APIUserDetail.as_view()),
+    #url(r'^api/users/$', views.APIUserList.as_view()),
+    #url(r'^api/users/(?P<pk>[0-9]+)/$', views.APIUserDetail.as_view()),
+    url(r'^api/category/$', views.APICategoryList.as_view()),
+    url(r'^api/category/(?P<pk>[0-9]+)/$', views.APICategoryDetail.as_view()),
        
 ]
 
