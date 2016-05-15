@@ -1,40 +1,56 @@
 from rest_framework import serializers
-from forum.models import Thread, Post, Category
-#from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+
+from .models import Thread, Post, Category
+from common.serializers import LocalDateTimeField
+
 
 User = get_user_model()
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategoryListSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    thread_count = serializers.IntegerField()
+    post_count = serializers.IntegerField()
+    latest = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'description', 'thread_count', 'latest', 'post_count')
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
         model = Category
-        fields = ('id','name',)
+        fields = ('id', 'name', 'description')
 
-class ThreadSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
+
+class ThreadListSerializer(serializers.ModelSerializer):
+    post_count = serializers.IntegerField()
+    latest = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
+    created_date = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
+    author = serializers.StringRelatedField()
 
     class Meta:
         model = Thread
-        fields = ('id', 'subject', 'category')
+        fields = ('id', 'subject', 'category', 'post_count', 'latest', 'author', 'created_date')
+
+
+class ThreadCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Thread
+        fields = ('subject', 'category', 'author')
 
 
 class PostSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.StringRelatedField()
 
     class Meta:
         model = Post
-        fields = ('id', 'author', 'title', 'created_date', 'text',
+        fields = ('id', 'author', 'created_date', 'text',
             'last_edited_date', 'thread',)
-
-
-class UserSerializer(serializers.ModelSerializer):
-    posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'posts')
 

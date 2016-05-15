@@ -44,7 +44,8 @@ INSTALLED_APPS = (
     'landing',
     'forum',
     'common',
-    'search'
+    'search',
+    'django_extensions'
 )
 
 
