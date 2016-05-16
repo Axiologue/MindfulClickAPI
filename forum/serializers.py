@@ -19,14 +19,6 @@ class CategoryListSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description', 'thread_count', 'latest', 'post_count')
 
 
-class CategoryDetailSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'description')
-
-
 class ThreadListSerializer(serializers.ModelSerializer):
     post_count = serializers.IntegerField()
     latest = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
@@ -35,7 +27,16 @@ class ThreadListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Thread
-        fields = ('id', 'subject', 'category', 'post_count', 'latest', 'author', 'created_date')
+        fields = ('id', 'subject', 'post_count', 'latest', 'author', 'created_date')
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    threads = ThreadListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'description', 'threads')
 
 
 class ThreadCreateSerializer(serializers.ModelSerializer):
@@ -54,3 +55,16 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ('id', 'author', 'created_date', 'text',
             'last_edited_date', 'thread',)
 
+
+class ThreadDetailSerializer(serializers.ModelSerializer):
+    posts = PostSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Thread
+        fields = ('subject', 'author', 'posts')
+
+
+class PostNewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('author', 'text', 'thread')

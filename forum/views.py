@@ -2,13 +2,13 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.contrib.auth import get_user_model
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Prefetch
 from rest_framework import generics
 from rest_framework import permissions
 
 from .models import Thread, Post, Category
 from .serializers import ThreadListSerializer, ThreadCreateSerializer, PostSerializer, CategoryListSerializer, \
-        CategoryDetailSerializer
+        CategoryDetailSerializer, ThreadDetailSerializer, PostNewSerializer
 
 User = get_user_model()
 
@@ -27,58 +27,39 @@ class CategoryListView(generics.ListCreateAPIView):
 
 
 class CategoryDetailView(generics.RetrieveAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategoryDetailSerializer
-
-
-class ThreadListView(generics.ListAPIView):
-    serializer_class = ThreadListSerializer
-
-    def get_queryset(self):
-        queryset = Thread.objects.all()
-        try:
-            category = Category.objects.get(id=self.kwargs.get('pk', None))
-            queryset = queryset.filter(category=category)
-        except Category.DoesNotExist:
-            raise Http404("No Matching Category Found")
-
-        queryset = queryset.prefetch_related('posts').annotate(
+    queryset = Category.objects.all().prefetch_related(
+            Prefetch('threads', queryset=Thread.objects.prefetch_related('posts').annotate(
                 post_count=Count('posts')
             ).annotate(
                 latest=Max('posts__created_date')
-            )
-
-        return queryset
+            ))
+        )
+    serializer_class = CategoryDetailSerializer
 
 
 class ThreadNewView(generics.CreateAPIView):
     queryset = Thread.objects.all()
     serializer_class = ThreadCreateSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     def create(self, request, *args, **kwargs):
          request.data['author'] = request.user.id
          return super(ThreadNewView,self).create(request,*args,**kwargs)
 
 
-class PostListView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+class ThreadDetailView(generics.RetrieveAPIView):
+    queryset = Thread.objects.prefetch_related('posts', 'posts__author').all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-    def get_queryset(self):
-        queryset = self.queryset 
-        try:
-            thread = Thread.objects.get(id=self.request.kwargs.get('pk', None))
-            queryset = queryset.filter(category=category)
-        except Category.DoesNotExist:
-            raise Http404("No Matching Category Found")
-        return queryset
+    serializer_class = ThreadDetailSerializer
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+class PostNewView(generics.CreateAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostNewSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+ 
+    def create(self, request, *args, **kwargs):
+         request.data['author'] = request.user.id
+         return super(PostNewView,self).create(request,*args,**kwargs)
+
+
