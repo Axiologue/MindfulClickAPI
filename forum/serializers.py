@@ -40,20 +40,23 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 
 
 class ThreadCreateSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
 
     class Meta:
         model = Thread
-        fields = ('subject', 'category', 'author')
+        fields = ('subject', 'category', 'author', 'id')
 
 
 class PostSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     author = serializers.StringRelatedField()
+    created_date = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
+    last_edited_date = LocalDateTimeField(format="%-I:%M%p %m/%d/%Y")
 
     class Meta:
         model = Post
         fields = ('id', 'author', 'created_date', 'text',
-            'last_edited_date', 'thread',)
+            'last_edited_date', 'thread', 'sticky')
 
 
 class ThreadDetailSerializer(serializers.ModelSerializer):
