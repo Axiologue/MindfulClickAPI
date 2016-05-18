@@ -11,7 +11,6 @@ class CategoryAdmin(admin.ModelAdmin):
     class Media:
         js = ['js/jquery-1.11.0.min.js',
             'js/jquery-ui-1.10.4.custom.min.js', 
-            'js/dynamic_inlines_with_sort_reversed.js',
             'js/admin-list-reorder.js',]
         css = { 'all' : ['css/dynamic_inlines_with_sort.css'], }
 

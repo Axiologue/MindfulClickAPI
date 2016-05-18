@@ -1,9 +1,10 @@
 import itertools
+from json import JSONDecoder
+import json
 
-from rest_framework import generics, status, exceptions
+from rest_framework import generics, status, exceptions, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
 
@@ -17,13 +18,11 @@ from products.models import Company, Product
 from products.fetch import fuzzy_fetch 
 from products.serializers import ProductSerializer, CompanySerializer
 
-from json import JSONDecoder
-import json
 
 
 # List all the Ethical Preferences of a User
 class EthicsProfileView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
@@ -51,28 +50,30 @@ class EthicsProfileView(generics.ListAPIView):
 
         return Response(data) 
 
+
 # Alter a particular Preference
 class PrefUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PreferenceSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Preference.objects.all()
 
 
 # List All Current Questions for Profile Setting
 class QuestionListView(generics.ListAPIView):
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAdminUser, )
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
 
 # Same as Above, but includes answers
 class QuestionWithAnswersListView(QuestionListView):
+    permission_classes = (permissions.IsAdminUser, )
     serializer_class = QuestionAnswerSerializer
 
 
 # For new Profile setting questions
 class NewQuestionView(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAdminUser, )
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
@@ -80,7 +81,7 @@ class NewQuestionView(generics.CreateAPIView):
 # Gives Given modifiers for all answers in a given question
 # Used to view and alter the modifiers for ALL answers to a given question
 class QuestionAnswersView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAdminUser, )
     queryset = EthicsCategory.objects.all()
 
     def list(self,requestion, *args, **kwargs):
@@ -129,6 +130,7 @@ class QuestionAnswersView(generics.ListAPIView):
         
 # Update the modifiers for a given question
 class UpdateAnswersView(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAdminUser, )
     def update(self,request, *args, **kwargs):
         data = request.data
 
@@ -152,7 +154,7 @@ class UpdateAnswersView(generics.UpdateAPIView):
 # Create a new answer
 # Also needs to set a blank set of modifiers 
 class NewAnswerView(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAdminUser, )
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
 
@@ -173,7 +175,7 @@ class NewAnswerView(generics.CreateAPIView):
 
 # View to check if the user has answered the profile setting questions
 class UserAnsweredView(APIView):
-    permission_classes= (IsAuthenticated,)
+    permission_classes= (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
@@ -188,7 +190,7 @@ class UserAnsweredView(APIView):
 
 # View that takes the chosen answers for a users and applies them to a base profile
 class SetAnswersView(APIView):
-    permission_classes= (IsAuthenticated,)
+    permission_classes= (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         user = request.user
