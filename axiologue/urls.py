@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^landing/', include('landing.urls')),
     url(r'^search/', include('search.urls')),
     url(r'^forum/', include('forum.urls', namespace='forum')),
+    url(r'^events/', include('events.urls', namespace='events')),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^', include('django.contrib.auth.urls')),
 ]
