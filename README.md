@@ -1,6 +1,6 @@
 # The Axiologue API
 
-The Axiologue project is about tracking the ethical histories of products and companies.  In part of our commitment to open, community-based sharing, our data is available as an open API.  This repo contains both the code underlying our data collection/organizing and a description for our API endpoints, for developers. For more information on the axiologue project, check out [axiologue.org](http://www.axiologue.org).
+The Axiologue project is about tracking the ethical histories of products and companies.  In part of our commitment to open, community-based sharing, our data is available as an open API.  This repo contains both the code underlying our data collection/organizing and a description for our API endpoints, for developers. For more information on the axiologue project, check out [axiologue.org](https://www.axiologue.org).
 
 ## API Description
 
@@ -8,57 +8,79 @@ Our Data is broken down into the following models:
 
 * Company: Self-explanatory
 * Product: Same
-* Article: The sources from which our data is derived -- the article is essentially a link to an external source (journalism, NGO reports, company policies, etc), with metadata
+* Reference: The sources from which our data is derived -- a reference is essentially a link to an external source (journalism, NGO reports, company policies, etc), with metadata
 * Catgories / Subcategories: The ethical taxonomy
-* Tags / TagTypes: Instances and Descriptions of ethical facts (which are associated with articles, companies, and Products)
+* Tags / TagTypes: A TagType is a specific kind of ethical fact (such as "50% reduction in carbon use" or "No sexual harassment policy"). A Tag is a single instance tying a TagType to an reference and a product/company.  It is from this association that our data is derived 
 * User:
-  * Preference: a numerical rating (-5 to 5) the indicates how a user feels about a given Tag.  Used to construct personalized rankings
+    * Preference: a numerical rating (-5 to 5) the indicates how a user feels about a given Tag.  Used to construct personalized rankings
 
 ## API Endpoints
+
+#### Scores
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+All Company Scores | https://api.axiologue.org/profile/scores/company/all/ | GET | | No (for Generic Scores), Yes (for Personal Scores) | include_subcategories, include_object, use_generics, use_fuzzy_fetch 
+Company Score | https://api.axiologue.org/profile/scores/company/ | GET | | No (for Generic Scores), Yes (for Personal Scores) | name, id, include_subcategories, include_object, use_generics, use_fuzzy_fetch 
+Product Score | https://api.axiologue.org/profile/scores/product/ | GET | | No (for Generic Scores), Yes (for Personal Scores) | name, id, include_subcategories, include_object, use_generics, use_fuzzy_fetch 
+
+#### Products
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+Product List | https://api.axiologue.org/products/products/list/ | GET |    | No | none, name, company, company_id, price_min, price_max, category, division
+Product Detail | https://api.axiologue.org/products/products/{PRODUCT:ID}/ | GET |    | No | 
+Add Product | https://api.axiologue.org/products/products/new/ | POST | name, company_id, price [optional: category, division, image_url] | Yes | 
+
+#### Companies
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+All Companies | https://api.axiologue.org/products/companies/all/ | GET |    | No |
+Company Detail | https://api.axiologue.org/products/companies/{COMPANY:ID}/ | GET |    | No |
+Company Detail (alt) | https://api.axiologue.org/products/companies/{COMPANY:NAME}/ | GET |    | No |
+
+#### References
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+All Tagged References  |  https://api.axiologue.org/references/tagged/  |  GET  |    |  No
+All Untagged References  |  https://api.axiologue.org/references/untagged/  |  GET  |   |  No
+All References w/out Relevant Data  |  https://api.axiologue.org/references/noData/  |  GET  |   |  No
+Add Reference  |  https://api.axiologue.org/references/new/  |  POST  |  url, title, notes  |  Yes
+Edit Reference  |  https://api.axiologue.org/references/{REFERENCE:ID}/  |  PUT  |  url, title, notes |  Yes
+
+#### Tags
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+Create Ethics Tag  |  https://api.axiologue.org/tags/etags/new/  |  POST  |  company, subcategory, tag_type, excerpt, [optional: value]  |  Yes
+Edit Ethics Tag  |  https://api.axiologue.org/tags/etags/{TAG:ID}/  |  PUT  |  company, subcategory, tag_type, excerpt, [optional: value]  |  Yes
+Create New Ethics Type  |  https://api.axiologue.org/tags/etypes/new/  |  POST  |  subcategory, name  |  Yes
+Mark Reference as Having No Relevant Data  |  https://api.axiologue.org/tags/mtags/  |  POST  |  reference  |  Yes
+Remove No Relevant Data Tag  |  https://api.axiologe.org/tags/mtags/{TAG:ID}/  |  DELETE  |   |  Yes
+
+#### Profile
+
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+Get User's Ethical Preferences  |  https://api.axiologue.org/profile/prefs/all/  |  GET  |    |  Yes
+Alter Individaul Preference  |  https://api.axiologue.org/profile/prefs/{PREF:ID}/  |  PUT  |  id, preference  |  Yes
+User Account Info | http://api.axiologue.org/rest-auth/user/ | GET | | Yes | 
 
 #### Authentication
 
 Some of our content is avialable without login.  However, editing Axiologue data will always require authentication (for many reasons, not the least of which is accountability).  Axiologue is set up to use Token authentication, with the following endpoints:
 
-Description  |  Endpoint  |  Method  |  Expected Data  | Login Required
------------  |  --------  |  ------  |  -------------  | --------------
-Login  |  http://api.axiologue.org/rest-auth/login  |  POST  |  username, password  |  No
-Registration  | http://api.axiologue.org/rest-auth/regsitration/  |  POST  | username, password1, password2, email  |  No
-Logout  |  http://api.axiologue.org/rest-auth/login/  |  POST  |   |   Yes
-Password Change  |  http://api.axiologue.org/rest-auth/password/change/  |  POST  |  password1, password2  |  Yes
-Password Reset  |  http://api.axiologue.org/rest-auth/password/reset/  |  POST  |  email  |  Yes
-Get Profile Information  |  http://api.axiologue.org/rest-auth/user/  |  GET  |     |  Yes
-Update Profile  |  http://api.axiologue.org/rest-auth/user  |  PATCH  |  data  |  Yes
-Email Verification  |  http://api.axiologue.org/registration/verify-email/  |  POST  |  key  |  No
-Password Reset Confirm  |  http://api.axiologue.org/password/reset/confirm/  |  POST  |  uid, token, password1, password2  |  Yes
-
-#### Articles
-
-Description  |  Endpoint  |  Method  |  Expected Data  | Login Required
------------  |  --------  |  ------  |  -------------  | --------------
-All Tagged Articles  |  http://api.axiologue.org/articles/articles/tagged/  |  GET  |    |  No
-All Untagged Articles  |  http://api.axiologue.org/articles/articles/untagged/  |  GET  |   |  No
-All Articles w/out Relevant Data  |  http://api.axiologue.org/articles/noData/  |  GET  |   |  No
-Add Article  |  http://api.axiologue.org/articles/new/  |  POST  |  url, title, notes  |  Yes
-Edit Article  |  http://api.axiologue.org/articles/{ARTICLE:ID}/  |  PUT  |  url, title, notes, id  |  Yes
-All Companies  |  http://api.axiologue.org/articles/companies/all/  |  GET  |  |  No
-
-#### Tags
-
-Description  |  Endpoint  |  Method  |  Expected Data  | Login Required
------------  |  --------  |  ------  |  -------------  | --------------
-Create Ethics Tag  |  http://api.axiologue.org/tags/etags/new/  |  POST  |  company, subcategory, tag_type, excerpt, [value]  |  Yes
-Edit Ethics Tag  |  http://api.axiologue.org/tags/etags/tagsID/  |  PUT  |  company, subcategory, tag_type, excerpt, id, [value]  |  Yes
-Create New Ethics Type  |  http://api.axiologue.org/tags/etypes/new/  |  POST  |  subcategory, name  |  Yes
-Mark Article as Having No Relevant Data  |  http://api.axiologue.org/tags/mtags/  |  POST  |  article  |  Yes
-Remove No Relevant Data Tag  |  http://api.axiologe.org/tags/mtags/{TAG:ID}/  |  DELETE  |   |  Yes
-
-#### Profile
-
-Description  |  Endpoint  |  Method  |  Expected Data  | Login Required
------------  |  --------  |  ------  |  -------------  | --------------
-Get User's Ethical Preferences  |  http://api.axiologue.org/profile/prefs/all/  |  GET  |    |  Yes
-Alter Individaul Preference  |  http://api.axiologue.org/profile/prefs/{PREF:ID}/  |  PUT  |  id, preference  |  Yes
-Get Company Ranking  |  http://api.axiologue.org/profile/scores/company/{COMPANY:ID}/  |  GET  |  |  Yes
-
+Description  |  Endpoint  |  Method  |  Expected Data  | Login Required | Query Parameters
+-----------  |  --------  |  ------  |  -------------  | -------------- | ----------------
+Login  |  https://api.axiologue.org/rest-auth/login  |  POST  |  username, password  |  No
+Registration  | https://api.axiologue.org/rest-auth/regsitration/  |  POST  | username, password1, password2, email  |  No
+Logout  |  https://api.axiologue.org/rest-auth/login/  |  POST  |   |   Yes
+Password Change  |  https://api.axiologue.org/rest-auth/password/change/  |  POST  |  password1, password2  |  Yes
+Password Reset  |  https://api.axiologue.org/rest-auth/password/reset/  |  POST  |  email  |  Yes
+Get Profile Information  |  https://api.axiologue.org/rest-auth/user/  |  GET  |     |  Yes
+Update Profile  |  https://api.axiologue.org/rest-auth/user  |  PATCH  |  data  |  Yes
+Email Verification  |  https://api.axiologue.org/registration/verify-email/  |  POST  |  key  |  No
+Password Reset Confirm  |  https://api.axiologue.org/password/reset/confirm/  |  POST  |  uid, token, password1, password2  |  Yes
 
