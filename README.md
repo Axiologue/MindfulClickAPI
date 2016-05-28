@@ -9,7 +9,7 @@ Our Data is broken down into the following models:
 * Company: Self-explanatory
 * Product: Same
 * Reference: The sources from which our data is derived -- a reference is essentially a link to an external source (journalism, NGO reports, company policies, etc), with metadata
-* Catgories / Subcategories: The ethical taxonomy
+* Categories / Subcategories: The ethical taxonomy
 * Tags / TagTypes: A TagType is a specific kind of ethical fact (such as "50% reduction in carbon use" or "No sexual harassment policy"). A Tag is a single instance tying a TagType to an reference and a product/company.  It is from this association that our data is derived 
 * User:
     * Preference: a numerical rating (-5 to 5) the indicates how a user feels about a given Tag.  Used to construct personalized rankings
