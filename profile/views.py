@@ -67,7 +67,7 @@ class QuestionListView(generics.ListAPIView):
 
 # Same as Above, but includes answers
 class QuestionWithAnswersListView(QuestionListView):
-    permission_classes = (permissions.IsAdminUser, )
+    permission_classes = (permissions.IsAuthenticated, )
     serializer_class = QuestionAnswerSerializer
 
 
