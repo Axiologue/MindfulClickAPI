@@ -29,7 +29,7 @@ INTERNAL_IPS = ('127.0.0.1','::ffff:10.0.2.2')
 
 
 # overwrite url_config with dev version
-ROOT_URLCONF = 'axiologue.dev_urls'
+ROOT_URLCONF = 'mindfulclick.dev_urls'
 
 # Email settings
 SITE_ID = 3

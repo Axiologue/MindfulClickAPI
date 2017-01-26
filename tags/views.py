@@ -6,7 +6,7 @@ from drf_multiple_model.views import MultipleModelAPIView
 from .models import EthicsTag, MetaTag, EthicsType, EthicsSubCategory, EthicsCategory
 from .serializers import  EthicsTagChangeSerializer, MetaTagSerializer, \
         EthicsTypeSerializer, EthicsSubSerializer, EthicsTypeUpdateSerializer, \
-        EthicsTagByObjectSerializer
+        EthicsTagByObjectSerializer, EthicsTagListSerializer
 from products.models import Company
 from products.serializers import CompanySerializer
 
@@ -105,3 +105,8 @@ class TagsByObjectView(generics.ListAPIView):
         data = [{'category': x.name, 'tags': [y for y in tag_data if y['category'] == x.name]} for x in categories]
 
         return Response(data)
+
+
+class RecentTagsView(generics.ListAPIView):
+    queryset = EthicsTag.objects.order_by('-submitted_at').select_related('company', 'product', 'reference', 'tag_type', 'added_by').all()[:10]
+    serializer_class = EthicsTagListSerializer

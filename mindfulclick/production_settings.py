@@ -1,7 +1,7 @@
 from .base_settings import *
 
 # Network settings
-ALLOWED_HOSTS = ['api.axiologue.org', '104.236.76.8' ]
+ALLOWED_HOSTS = ['api.axiologue.org', '104.236.76.8', 'api.mindful.click']
 
 # DEBUG Tools
 DEBUG = False
@@ -25,7 +25,7 @@ LOGGING = {
         'watched_file': {
             'level': 'INFO',
             'class': 'logging.handlers.WatchedFileHandler',
-            'filename': '/var/log/django/axiologue.log',
+            'filename': '/var/log/django/mindfulclick.log',
         },
     },
     'loggers': {

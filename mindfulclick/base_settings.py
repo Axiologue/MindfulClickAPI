@@ -1,5 +1,5 @@
 """
-    BASE SETTINGS FOR AXIOLOGUE API
+    BASE SETTINGS FOR MINDFUL CLICK API
     have shared settings, but either dev_settings or production_settings must be used
     to actually run the api
 """
@@ -39,9 +39,6 @@ INSTALLED_APPS = (
     'tags',
     'profile',
     'products',
-    'blog',
-    'events',
-    'landing',
     'forum',
     'common',
     'search',
@@ -61,7 +58,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'axiologue.urls'
+ROOT_URLCONF = 'mindfulclick.urls'
 
 
 TEMPLATES = [
@@ -80,7 +77,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = 'axiologue.wsgi.application'
+WSGI_APPLICATION = 'mindfulclick.wsgi.application'
 
 
 # Database
@@ -165,7 +162,7 @@ ACCOUNT_USERNAME_MIN_LENGTH = 6
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-LOGIN_REDIRECT_URL = 'http://data.axiologue.org'
+LOGIN_REDIRECT_URL = 'http://mindful.click'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

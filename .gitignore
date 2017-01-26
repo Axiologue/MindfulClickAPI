@@ -10,8 +10,7 @@ Thumbs.db
 
 # Private Keys #
 ################
-axiologue/secret_keys.py
-axiologue/secret_keys.json
+secret_keys.json
 
 # Running Vagrant Info #
 ########################
