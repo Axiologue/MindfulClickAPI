@@ -1,6 +1,21 @@
 from django.db import models
 
 from django.contrib.auth.models import User
+from mptt.models import MPTTModel, TreeForeignKey
+
+
+class ProductCategory(MPTTModel):
+    name = models.CharField(max_length=255, db_index=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        unique_together = ['name', 'parent']
+
+    def __str__(self):
+        return self.name
 
 
 # Model to hold company Data
@@ -17,9 +32,14 @@ class Company(models.Model):
         ordering = ('name',)
 
 
-# Model to hold product info
+def get_default_category():
+    category, _ = ProductCategory.objects.get_or_create(name="Athletic Shoes")
+    return category.id
+
+
 class Product(models.Model):
-    company = models.ForeignKey(Company,related_name='products')
+    company = models.ForeignKey(Company, related_name='products')
+    product_category = models.ForeignKey(ProductCategory, default=get_default_category, related_name="products")
 
     name = models.CharField(max_length=100)
     division = models.CharField(max_length=30,blank=True,null=True)
@@ -32,6 +52,5 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        unique_together = ('name','division')
         ordering = ('company','name')
 

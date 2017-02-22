@@ -47,6 +47,7 @@ cross.sublime-project
 ##################
 *.csv
 *.sql
+sql/
 
 # Server Files #
 ################

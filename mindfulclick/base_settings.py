@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'rest_auth',
     'rest_auth.registration',
+    'mptt',
     'tags',
     'profile',
     'products',

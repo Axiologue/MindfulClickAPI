@@ -1,0 +1,16 @@
+Django
+django-allauth
+django-cors-headers
+django-debug-toolbar
+django-extensions
+django-filter
+django-haystatck
+django-import-export
+django-mptt
+django-rest-auth
+django-rest-multiple-models
+djangorestframework
+elasticsearch
+fuzzywuzzy
+psycopg
+python-Levenshtein

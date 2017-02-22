@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, Company
+from .models import Product, Company, ProductCategory
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -8,13 +8,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('company','name','division','category','price')
+        fields = ('company','name','division','category','price', )
+
 
 class NewProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('company','name','price')
+        fields = ('company','name','price', )
 
     # Modified init function to add optional fields if they're in the data set
     def __init__(self, *args, **kwargs):
@@ -36,13 +37,14 @@ class ProductSimpleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name','id','company')
+        fields = ('name','id','company', )
 
 
 class CompanySimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ('name',)
+        fields = ('name', )
+
 
 class CompanySerializer(serializers.ModelSerializer):
     owned_by = serializers.StringRelatedField()
@@ -50,5 +52,10 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ('name','id', 'owns', 'owned_by')
+        fields = ('name','id', 'owns', 'owned_by', )
 
+
+class ProductCategory(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'parent', 'id', )
