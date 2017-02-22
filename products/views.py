@@ -33,7 +33,7 @@ class ProductListFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ['name','company_id','category','division','price', 'company']
+        fields = ['name', 'company_id', 'price', 'category', 'company']
 
 
 class ProductListView(generics.ListAPIView):
